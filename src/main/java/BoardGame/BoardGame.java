@@ -21,12 +21,13 @@ public class BoardGame extends JFrame {
     final int GRID_ROWS = GRID_COLUMNS;
 
     public static List<String> gridDistribution(int totalSquares, List<Integer> spawnLocations) {
-        int[] kpnRatio = {1, 2, 3}; //Knowledge : Pothole : Normal ratio
+        int[] distributionRatio = {1, 2, 2, 3}; //Knowledge : Pothole : Resource : Normal ratio
 
-        int totalWeight = kpnRatio[0] + kpnRatio[1] + kpnRatio[2];
-        int numKnowledge = totalSquares / totalWeight * kpnRatio[0];
-        int numPothole = totalSquares / totalWeight * kpnRatio[1];
-        int numNormal = totalSquares / totalWeight * kpnRatio[2];
+        int totalWeight = Arrays.stream(distributionRatio).sum();
+        int numKnowledge = totalSquares / totalWeight * distributionRatio[0];
+        int numPothole = totalSquares / totalWeight * distributionRatio[1];
+        int numResource = totalSquares / totalWeight * distributionRatio[2];
+        int numNormal = totalSquares / totalWeight * distributionRatio[3];
 
         List<String> squareTypes = new ArrayList<>();
         for (int i = 0; i < numNormal; i++) {
@@ -34,6 +35,9 @@ public class BoardGame extends JFrame {
         }
         for (int i = 0; i < numPothole; i++) {
             squareTypes.add("Pothole");
+        }
+        for (int i = 0; i < numResource; i++) {
+            squareTypes.add("Resource");
         }
         for (int i = 0; i < numKnowledge; i++) {
             squareTypes.add("Knowledge");
@@ -90,6 +94,9 @@ public class BoardGame extends JFrame {
                 break;
                 case "Knowledge":
                 panel.setBackground(Color.BLUE);
+                break;
+                case "Resource":
+                panel.setBackground(Color.ORANGE);
                 break;
                 case "Spawn":
                 panel.setBackground(Color.GREEN);
