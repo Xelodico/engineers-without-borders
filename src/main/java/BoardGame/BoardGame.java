@@ -5,7 +5,7 @@
 package BoardGame;
 
 /**
- *
+ * 
  * @author Nathan Watkins
  */
 import javax.swing.*;
@@ -68,9 +68,6 @@ public class BoardGame extends JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        //final int GRID_COLUMNS = 5;
-        //final int GRID_ROWS = GRID_COLUMNS;
-
         int totalSquares = GRID_COLUMNS*GRID_ROWS;
         final List<Integer> spawnLocations = Arrays.asList(0, GRID_COLUMNS-1, totalSquares-GRID_COLUMNS, totalSquares-1);
 
@@ -79,7 +76,7 @@ public class BoardGame extends JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        for (int i = 0; i < (GRID_COLUMNS*GRID_ROWS); i++) {
+        for (int i = 0; i < (totalSquares); i++) {
             JPanel panel = new JPanel();
             panel.setPreferredSize(new Dimension(40, 40));
             panel.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
@@ -157,10 +154,8 @@ public class BoardGame extends JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new BoardGame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new BoardGame().setVisible(true);
         });
     }
 
