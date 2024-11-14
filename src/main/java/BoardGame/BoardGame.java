@@ -157,7 +157,7 @@ public class BoardGame extends JFrame {
         arrowsContainer.add(arrowDown);
         arrowDown.setBounds(45, 46, 46, 46);
 
-        arrowUp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ArrowUp.png"))); // NOI18N
+        arrowUp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/arrows/ArrowUp.png"))); // NOI18N
         arrowUp.setBorder(null);
         arrowUp.setContentAreaFilled(false);
         arrowUp.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -165,7 +165,7 @@ public class BoardGame extends JFrame {
         arrowsContainer.add(arrowUp);
         arrowUp.setBounds(45, 1, 46, 46);
 
-        arrowLeft.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ArrowLeft.png"))); // NOI18N
+        arrowLeft.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/arrows/ArrowLeft.png"))); // NOI18N
         arrowLeft.setBorder(null);
         arrowLeft.setContentAreaFilled(false);
         arrowLeft.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -173,7 +173,7 @@ public class BoardGame extends JFrame {
         arrowsContainer.add(arrowLeft);
         arrowLeft.setBounds(0, 46, 46, 46);
 
-        arrowRight.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ArrowRight.png"))); // NOI18N
+        arrowRight.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/arrows/ArrowRight.png"))); // NOI18N
         arrowRight.setBorder(null);
         arrowRight.setContentAreaFilled(false);
         arrowRight.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -236,7 +236,7 @@ public class BoardGame extends JFrame {
         Player1Resources.add(player1Asphalt);
         player1Asphalt.setBounds(60, 23, 60, 40);
 
-        player1Resources.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/resources/Resources.png"))); // NOI18N
+        player1Resources.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Resources.png"))); // NOI18N
         Player1Resources.add(player1Resources);
         player1Resources.setBounds(0, 0, 373, 74);
 
@@ -265,7 +265,7 @@ public class BoardGame extends JFrame {
         Player2Resources.add(player1Asphalt1);
         player1Asphalt1.setBounds(60, 23, 60, 40);
 
-        player1Resources1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/resources/Resources.png"))); // NOI18N
+        player1Resources1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Resources.png"))); // NOI18N
         Player2Resources.add(player1Resources1);
         player1Resources1.setBounds(0, 0, 373, 74);
 
@@ -294,7 +294,7 @@ public class BoardGame extends JFrame {
         Player3Resources.add(player1Asphalt2);
         player1Asphalt2.setBounds(60, 23, 60, 40);
 
-        player1Resources2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/resources/Resources.png"))); // NOI18N
+        player1Resources2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Resources.png"))); // NOI18N
         Player3Resources.add(player1Resources2);
         player1Resources2.setBounds(0, 0, 373, 74);
 
@@ -323,7 +323,7 @@ public class BoardGame extends JFrame {
         Player4Resources.add(player1Asphalt3);
         player1Asphalt3.setBounds(60, 23, 60, 40);
 
-        player1Resources3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/resources/Resources.png"))); // NOI18N
+        player1Resources3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Resources.png"))); // NOI18N
         Player4Resources.add(player1Resources3);
         player1Resources3.setBounds(0, 0, 373, 74);
 
