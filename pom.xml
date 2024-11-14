@@ -11,4 +11,11 @@
         <exec.mainClass>BoardGame.BoardGame</exec.mainClass>
     </properties>
     <name>CSC2058 Project</name>
+    <dependencies>
+        <dependency>
+            <groupId>org.netbeans.external</groupId>
+            <artifactId>AbsoluteLayout</artifactId>
+            <version>RELEASE230</version>
+        </dependency>
+    </dependencies>
 </project>
