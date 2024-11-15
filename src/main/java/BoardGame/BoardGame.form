@@ -60,7 +60,7 @@
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="int totalSquares = GRID_COLUMNS*GRID_ROWS;&#xa;final List&lt;Integer&gt; spawnLocations = Arrays.asList(0, GRID_COLUMNS-1, totalSquares-GRID_COLUMNS, totalSquares-1);&#xa;&#xa;List&lt;String&gt; squareTypes = gridDistribution(totalSquares, spawnLocations);"/>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="for (int i = 0; i &lt; (totalSquares); i++) {&#xa;    JPanel panel = new JPanel();&#xa;    panel.setPreferredSize(new Dimension(40, 40));&#xa;    panel.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));&#xa;    &#xa;    String squareType = squareTypes.get(i);&#xa;        switch (squareType) {&#xa;            case &quot;Normal&quot;:&#xa;                panel.setBackground(Color.WHITE);&#xa;                break;&#xa;            case &quot;Pothole&quot;:&#xa;                panel.setBackground(Color.RED);&#xa;                break;&#xa;            case &quot;Knowledge&quot;:&#xa;                panel.setBackground(Color.BLUE);&#xa;                break;&#xa;case &quot;Resource&quot;:&#xa;    panel.setBackground(Color.ORANGE);&#xa;    break;&#xa;            case &quot;Spawn&quot;:&#xa;                panel.setBackground(Color.GREEN);&#xa;                break;&#xa;    }&#xa;&#xa;    gameBoard.add(panel);&#xa;}"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="for (int i = 0; i &lt; (totalSquares); i++) {&#xa;    JPanel panel = new JPanel();&#xa;    panel.setPreferredSize(new Dimension(40, 40));&#xa;    panel.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));&#xa;    &#xa;    String squareType = squareTypes.get(i);&#xa;        switch (squareType) {&#xa;            case &quot;Normal&quot;:&#xa;                panel.setBackground(Color.WHITE);&#xa;                break;&#xa;            case &quot;Pothole&quot;:&#xa;                panel.setBackground(Color.RED);&#xa;                break;&#xa;            case &quot;Knowledge&quot;:&#xa;                panel.setBackground(Color.BLUE);&#xa;                break;&#xa;            case &quot;Resource&quot;:&#xa;                panel.setBackground(Color.ORANGE);&#xa;                break;&#xa;            case &quot;Spawn&quot;:&#xa;                panel.setBackground(Color.GREEN);&#xa;                break;&#xa;    }&#xa;&#xa;    gameBoard.add(panel);&#xa;}"/>
         <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="NewJFrame_gridContainer"/>
       </AuxValues>
 
@@ -116,7 +116,7 @@
             <Component class="javax.swing.JButton" name="arrowUp">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/ArrowUp.png"/>
+                  <Image iconType="3" name="/images/arrows/ArrowUp.png"/>
                 </Property>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="null"/>
@@ -136,7 +136,7 @@
             <Component class="javax.swing.JButton" name="arrowLeft">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/ArrowLeft.png"/>
+                  <Image iconType="3" name="/images/arrows/ArrowLeft.png"/>
                 </Property>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="null"/>
@@ -156,7 +156,7 @@
             <Component class="javax.swing.JButton" name="arrowRight">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/ArrowRight.png"/>
+                  <Image iconType="3" name="/images/arrows/ArrowRight.png"/>
                 </Property>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="null"/>
@@ -319,7 +319,7 @@
             <Component class="javax.swing.JLabel" name="player1Resources">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/resources/Resources.png"/>
+                  <Image iconType="3" name="/images/Resources.png"/>
                 </Property>
               </Properties>
               <Constraints>
@@ -341,7 +341,7 @@
             <Property name="useNullLayout" type="boolean" value="true"/>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="player1ResourceTitle1">
+            <Component class="javax.swing.JLabel" name="player2ResourceTitle">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="18" style="1"/>
@@ -356,7 +356,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="player1Satisfaction1">
+            <Component class="javax.swing.JLabel" name="player2Satisfaction">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="36" style="0"/>
@@ -369,7 +369,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="player1Knowledge1">
+            <Component class="javax.swing.JLabel" name="player2Knowledge">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="36" style="0"/>
@@ -382,7 +382,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="player1Asphalt1">
+            <Component class="javax.swing.JLabel" name="player2Asphalt">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="36" style="0"/>
@@ -395,10 +395,10 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="player1Resources1">
+            <Component class="javax.swing.JLabel" name="player2Resources">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/resources/Resources.png"/>
+                  <Image iconType="3" name="/images/Resources.png"/>
                 </Property>
               </Properties>
               <Constraints>
@@ -420,7 +420,7 @@
             <Property name="useNullLayout" type="boolean" value="true"/>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="player1ResourceTitle2">
+            <Component class="javax.swing.JLabel" name="player3ResourceTitle">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="18" style="1"/>
@@ -435,7 +435,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="player1Satisfaction2">
+            <Component class="javax.swing.JLabel" name="player3Satisfaction">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="36" style="0"/>
@@ -448,7 +448,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="player1Knowledge2">
+            <Component class="javax.swing.JLabel" name="player3Knowledge">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="36" style="0"/>
@@ -461,7 +461,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="player1Asphalt2">
+            <Component class="javax.swing.JLabel" name="player3Asphalt">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="36" style="0"/>
@@ -474,10 +474,10 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="player1Resources2">
+            <Component class="javax.swing.JLabel" name="player3Resources">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/resources/Resources.png"/>
+                  <Image iconType="3" name="/images/Resources.png"/>
                 </Property>
               </Properties>
               <Constraints>
@@ -499,7 +499,7 @@
             <Property name="useNullLayout" type="boolean" value="true"/>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="player1ResourceTitle3">
+            <Component class="javax.swing.JLabel" name="player4ResourceTitle">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="18" style="1"/>
@@ -514,7 +514,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="player1Satisfaction3">
+            <Component class="javax.swing.JLabel" name="player4Satisfaction">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="36" style="0"/>
@@ -527,7 +527,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="player1Knowledge3">
+            <Component class="javax.swing.JLabel" name="player4Knowledge">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="36" style="0"/>
@@ -540,7 +540,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="player1Asphalt3">
+            <Component class="javax.swing.JLabel" name="player4Asphalt">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="36" style="0"/>
@@ -553,10 +553,10 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="player1Resources3">
+            <Component class="javax.swing.JLabel" name="player4Resources">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/resources/Resources.png"/>
+                  <Image iconType="3" name="/images/Resources.png"/>
                 </Property>
               </Properties>
               <Constraints>

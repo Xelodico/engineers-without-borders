@@ -20,10 +20,10 @@ public class BoardGame extends JFrame {
     final int GRID_COLUMNS = 10;
     final int GRID_ROWS = GRID_COLUMNS;
     
-    String player1Name = "Curtis";
-    String player2Name = "Nathan";
-    String player3Name = "Isaac";
-    String player4Name = "Peter";
+    String player1Name = "Player 1";
+    String player2Name = "Player 2";
+    String player3Name = "Player 3";
+    String player4Name = "Player 4";
     
     public static List<String> gridDistribution(int totalSquares, List<Integer> spawnLocations) {
         int[] distributionRatio = {1, 2, 2, 3}; //Knowledge : Pothole : Resource : Normal ratio
@@ -95,23 +95,23 @@ public class BoardGame extends JFrame {
         player1Asphalt = new javax.swing.JLabel();
         player1Resources = new javax.swing.JLabel();
         Player2Resources = new javax.swing.JPanel();
-        player1ResourceTitle1 = new javax.swing.JLabel();
-        player1Satisfaction1 = new javax.swing.JLabel();
-        player1Knowledge1 = new javax.swing.JLabel();
-        player1Asphalt1 = new javax.swing.JLabel();
-        player1Resources1 = new javax.swing.JLabel();
+        player2ResourceTitle = new javax.swing.JLabel();
+        player2Satisfaction = new javax.swing.JLabel();
+        player2Knowledge = new javax.swing.JLabel();
+        player2Asphalt = new javax.swing.JLabel();
+        player2Resources = new javax.swing.JLabel();
         Player3Resources = new javax.swing.JPanel();
-        player1ResourceTitle2 = new javax.swing.JLabel();
-        player1Satisfaction2 = new javax.swing.JLabel();
-        player1Knowledge2 = new javax.swing.JLabel();
-        player1Asphalt2 = new javax.swing.JLabel();
-        player1Resources2 = new javax.swing.JLabel();
+        player3ResourceTitle = new javax.swing.JLabel();
+        player3Satisfaction = new javax.swing.JLabel();
+        player3Knowledge = new javax.swing.JLabel();
+        player3Asphalt = new javax.swing.JLabel();
+        player3Resources = new javax.swing.JLabel();
         Player4Resources = new javax.swing.JPanel();
-        player1ResourceTitle3 = new javax.swing.JLabel();
-        player1Satisfaction3 = new javax.swing.JLabel();
-        player1Knowledge3 = new javax.swing.JLabel();
-        player1Asphalt3 = new javax.swing.JLabel();
-        player1Resources3 = new javax.swing.JLabel();
+        player4ResourceTitle = new javax.swing.JLabel();
+        player4Satisfaction = new javax.swing.JLabel();
+        player4Knowledge = new javax.swing.JLabel();
+        player4Asphalt = new javax.swing.JLabel();
+        player4Resources = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -245,87 +245,87 @@ public class BoardGame extends JFrame {
 
         Player2Resources.setLayout(null);
 
-        player1ResourceTitle1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        player1ResourceTitle1.setText(player2Name);
-        Player2Resources.add(player1ResourceTitle1);
-        player1ResourceTitle1.setBounds(10, -3, 350, 30);
+        player2ResourceTitle.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        player2ResourceTitle.setText(player2Name);
+        Player2Resources.add(player2ResourceTitle);
+        player2ResourceTitle.setBounds(10, -3, 350, 30);
 
-        player1Satisfaction1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        player1Satisfaction1.setText("999");
-        Player2Resources.add(player1Satisfaction1);
-        player1Satisfaction1.setBounds(310, 23, 60, 40);
+        player2Satisfaction.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        player2Satisfaction.setText("999");
+        Player2Resources.add(player2Satisfaction);
+        player2Satisfaction.setBounds(310, 23, 60, 40);
 
-        player1Knowledge1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        player1Knowledge1.setText("999");
-        Player2Resources.add(player1Knowledge1);
-        player1Knowledge1.setBounds(185, 23, 60, 40);
+        player2Knowledge.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        player2Knowledge.setText("999");
+        Player2Resources.add(player2Knowledge);
+        player2Knowledge.setBounds(185, 23, 60, 40);
 
-        player1Asphalt1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        player1Asphalt1.setText("999");
-        Player2Resources.add(player1Asphalt1);
-        player1Asphalt1.setBounds(60, 23, 60, 40);
+        player2Asphalt.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        player2Asphalt.setText("999");
+        Player2Resources.add(player2Asphalt);
+        player2Asphalt.setBounds(60, 23, 60, 40);
 
-        player1Resources1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Resources.png"))); // NOI18N
-        Player2Resources.add(player1Resources1);
-        player1Resources1.setBounds(0, 0, 373, 74);
+        player2Resources.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Resources.png"))); // NOI18N
+        Player2Resources.add(player2Resources);
+        player2Resources.setBounds(0, 0, 373, 74);
 
         sidePanelContainer.add(Player2Resources);
         Player2Resources.setBounds(0, 141, 373, 74);
 
         Player3Resources.setLayout(null);
 
-        player1ResourceTitle2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        player1ResourceTitle2.setText(player3Name);
-        Player3Resources.add(player1ResourceTitle2);
-        player1ResourceTitle2.setBounds(10, -3, 350, 30);
+        player3ResourceTitle.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        player3ResourceTitle.setText(player3Name);
+        Player3Resources.add(player3ResourceTitle);
+        player3ResourceTitle.setBounds(10, -3, 350, 30);
 
-        player1Satisfaction2.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        player1Satisfaction2.setText("999");
-        Player3Resources.add(player1Satisfaction2);
-        player1Satisfaction2.setBounds(310, 23, 60, 40);
+        player3Satisfaction.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        player3Satisfaction.setText("999");
+        Player3Resources.add(player3Satisfaction);
+        player3Satisfaction.setBounds(310, 23, 60, 40);
 
-        player1Knowledge2.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        player1Knowledge2.setText("999");
-        Player3Resources.add(player1Knowledge2);
-        player1Knowledge2.setBounds(185, 23, 60, 40);
+        player3Knowledge.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        player3Knowledge.setText("999");
+        Player3Resources.add(player3Knowledge);
+        player3Knowledge.setBounds(185, 23, 60, 40);
 
-        player1Asphalt2.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        player1Asphalt2.setText("999");
-        Player3Resources.add(player1Asphalt2);
-        player1Asphalt2.setBounds(60, 23, 60, 40);
+        player3Asphalt.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        player3Asphalt.setText("999");
+        Player3Resources.add(player3Asphalt);
+        player3Asphalt.setBounds(60, 23, 60, 40);
 
-        player1Resources2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Resources.png"))); // NOI18N
-        Player3Resources.add(player1Resources2);
-        player1Resources2.setBounds(0, 0, 373, 74);
+        player3Resources.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Resources.png"))); // NOI18N
+        Player3Resources.add(player3Resources);
+        player3Resources.setBounds(0, 0, 373, 74);
 
         sidePanelContainer.add(Player3Resources);
         Player3Resources.setBounds(0, 220, 373, 74);
 
         Player4Resources.setLayout(null);
 
-        player1ResourceTitle3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        player1ResourceTitle3.setText(player4Name);
-        Player4Resources.add(player1ResourceTitle3);
-        player1ResourceTitle3.setBounds(10, -3, 350, 30);
+        player4ResourceTitle.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        player4ResourceTitle.setText(player4Name);
+        Player4Resources.add(player4ResourceTitle);
+        player4ResourceTitle.setBounds(10, -3, 350, 30);
 
-        player1Satisfaction3.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        player1Satisfaction3.setText("999");
-        Player4Resources.add(player1Satisfaction3);
-        player1Satisfaction3.setBounds(310, 23, 60, 40);
+        player4Satisfaction.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        player4Satisfaction.setText("999");
+        Player4Resources.add(player4Satisfaction);
+        player4Satisfaction.setBounds(310, 23, 60, 40);
 
-        player1Knowledge3.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        player1Knowledge3.setText("999");
-        Player4Resources.add(player1Knowledge3);
-        player1Knowledge3.setBounds(185, 23, 60, 40);
+        player4Knowledge.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        player4Knowledge.setText("999");
+        Player4Resources.add(player4Knowledge);
+        player4Knowledge.setBounds(185, 23, 60, 40);
 
-        player1Asphalt3.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        player1Asphalt3.setText("999");
-        Player4Resources.add(player1Asphalt3);
-        player1Asphalt3.setBounds(60, 23, 60, 40);
+        player4Asphalt.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        player4Asphalt.setText("999");
+        Player4Resources.add(player4Asphalt);
+        player4Asphalt.setBounds(60, 23, 60, 40);
 
-        player1Resources3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Resources.png"))); // NOI18N
-        Player4Resources.add(player1Resources3);
-        player1Resources3.setBounds(0, 0, 373, 74);
+        player4Resources.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Resources.png"))); // NOI18N
+        Player4Resources.add(player4Resources);
+        player4Resources.setBounds(0, 0, 373, 74);
 
         sidePanelContainer.add(Player4Resources);
         Player4Resources.setBounds(0, 299, 373, 74);
@@ -403,25 +403,25 @@ public class BoardGame extends JFrame {
     private javax.swing.JPanel gameBoard;
     private javax.swing.JButton helpButton;
     private javax.swing.JLabel player1Asphalt;
-    private javax.swing.JLabel player1Asphalt1;
-    private javax.swing.JLabel player1Asphalt2;
-    private javax.swing.JLabel player1Asphalt3;
     private javax.swing.JLabel player1Knowledge;
-    private javax.swing.JLabel player1Knowledge1;
-    private javax.swing.JLabel player1Knowledge2;
-    private javax.swing.JLabel player1Knowledge3;
     private javax.swing.JLabel player1ResourceTitle;
-    private javax.swing.JLabel player1ResourceTitle1;
-    private javax.swing.JLabel player1ResourceTitle2;
-    private javax.swing.JLabel player1ResourceTitle3;
     private javax.swing.JLabel player1Resources;
-    private javax.swing.JLabel player1Resources1;
-    private javax.swing.JLabel player1Resources2;
-    private javax.swing.JLabel player1Resources3;
     private javax.swing.JLabel player1Satisfaction;
-    private javax.swing.JLabel player1Satisfaction1;
-    private javax.swing.JLabel player1Satisfaction2;
-    private javax.swing.JLabel player1Satisfaction3;
+    private javax.swing.JLabel player2Asphalt;
+    private javax.swing.JLabel player2Knowledge;
+    private javax.swing.JLabel player2ResourceTitle;
+    private javax.swing.JLabel player2Resources;
+    private javax.swing.JLabel player2Satisfaction;
+    private javax.swing.JLabel player3Asphalt;
+    private javax.swing.JLabel player3Knowledge;
+    private javax.swing.JLabel player3ResourceTitle;
+    private javax.swing.JLabel player3Resources;
+    private javax.swing.JLabel player3Satisfaction;
+    private javax.swing.JLabel player4Asphalt;
+    private javax.swing.JLabel player4Knowledge;
+    private javax.swing.JLabel player4ResourceTitle;
+    private javax.swing.JLabel player4Resources;
+    private javax.swing.JLabel player4Satisfaction;
     private javax.swing.JLabel playerTurnGraphic;
     private javax.swing.JButton rollDiceButton;
     private javax.swing.JLabel roundNumberGraphic;
