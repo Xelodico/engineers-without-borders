@@ -351,7 +351,8 @@ public class BoardGame extends JFrame {
                 .addGap(6, 6, 6))
         );
 
-        setBounds(0, 0, 916, 521);
+        setSize(new java.awt.Dimension(915, 550));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
  
     /**
