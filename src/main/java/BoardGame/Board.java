@@ -18,18 +18,25 @@ import java.util.Collections;
 public class Board extends JPanel {
 
     /**
-     * The number of columns in the grid.
+     * The side length of the grid.
      */
-    final int GRID_COLUMNS = 10;
+    private final static int boardSideLength = 10;
 
     /**
-     * The number of rows in the grid (square board).
+     * The distribution ratio of the square types on the board.
+     * The ratio is Knowledge : Pothole : Resource : Normal.
      */
-    final int GRID_ROWS = GRID_COLUMNS;
+    private final static int[] sqaureTypeRatios = { 1, 2, 2, 3 };
 
+    /**
+     * The list of player positions on the board.
+     */
     private List<Integer> playerPositions;
 
-    protected List<String> squareTypes;
+    /**
+     * The list of squares on the board.
+     */
+    protected List<String> squareArray;
 
     /**
      * Distributes the types of squares on the board based on a given ratio.
@@ -41,32 +48,37 @@ public class Board extends JPanel {
      * @return A list of strings representing the type of each square on the board.
      * @throws IllegalArgumentException if a spawn location is out of bounds.
      */
-    public static List<String> gridDistribution(int totalSquares, List<Integer> spawnLocations) {
-        int[] distributionRatio = { 1, 2, 2, 3 }; // Knowledge : Pothole : Resource : Normal ratio
+    private List<String> generateBoardSquares() {
 
-        int totalWeight = Arrays.stream(distributionRatio).sum();
-        int numKnowledge = totalSquares / totalWeight * distributionRatio[0];
-        int numPothole = totalSquares / totalWeight * distributionRatio[1];
-        int numResource = totalSquares / totalWeight * distributionRatio[2];
+        int totalSquares = boardSideLength * boardSideLength;
+        final List<Integer> spawnLocations = Arrays.asList(0, boardSideLength - 1, totalSquares - boardSideLength,
+                totalSquares - 1);
+
+        playerPositions = new ArrayList<>(spawnLocations);
+
+        int totalWeight = Arrays.stream(sqaureTypeRatios).sum();
+        int numKnowledge = totalSquares / totalWeight * sqaureTypeRatios[0];
+        int numPothole = totalSquares / totalWeight * sqaureTypeRatios[1];
+        int numResource = totalSquares / totalWeight * sqaureTypeRatios[2];
         int numNormal = totalSquares - (numKnowledge + numPothole + numResource);
 
-        List<String> squareTypes = new ArrayList<>();
+        List<String> squareArray = new ArrayList<>();
 
-        squareTypes.addAll(Collections.nCopies(numNormal, "Normal"));
-        squareTypes.addAll(Collections.nCopies(numPothole, "Pothole"));
-        squareTypes.addAll(Collections.nCopies(numResource, "Resource"));
-        squareTypes.addAll(Collections.nCopies(numKnowledge, "Knowledge"));
+        squareArray.addAll(Collections.nCopies(numNormal, "Normal"));
+        squareArray.addAll(Collections.nCopies(numPothole, "Pothole"));
+        squareArray.addAll(Collections.nCopies(numResource, "Resource"));
+        squareArray.addAll(Collections.nCopies(numKnowledge, "Knowledge"));
 
-        Collections.shuffle(squareTypes);
+        Collections.shuffle(squareArray);
 
         for (int location : spawnLocations) {
             if (location < 0 || location >= totalSquares) {
                 throw new IllegalArgumentException("Spawn location is out of bounds: " + location);
             }
-            squareTypes.set(location, "Spawn");
+            squareArray.set(location, "Spawn");
         }
 
-        return squareTypes;
+        return squareArray;
     }
 
     /**
@@ -74,35 +86,29 @@ public class Board extends JPanel {
      * settings.
      */
     public Board() {
-        int totalSquares = GRID_COLUMNS * GRID_ROWS;
-        final List<Integer> spawnLocations = Arrays.asList(0, GRID_COLUMNS - 1, totalSquares - GRID_COLUMNS,
-                totalSquares - 1);
-        squareTypes = gridDistribution(totalSquares, spawnLocations);
-
-        playerPositions = new ArrayList<>(spawnLocations);
-
         this.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        this.setLayout(new java.awt.GridLayout(GRID_ROWS, GRID_COLUMNS));
+        this.setLayout(new java.awt.GridLayout(boardSideLength, boardSideLength));
 
-        renderBoard(squareTypes);
+        squareArray = generateBoardSquares();
+        renderBoard(squareArray);
     }
 
     /**
      * Renders the board based on the types of squares and player positions.
      * 
-     * @param squareTypes A list of strings representing the type of each square on
+     * @param squareArray A list of strings representing the type of each square on
      *                    the board.
      */
-    private void renderBoard(List<String> squareTypes) {
+    private void renderBoard(List<String> squareArray) {
         this.removeAll();
 
-        int totalSquares = GRID_COLUMNS * GRID_ROWS;
+        int totalSquares = boardSideLength * boardSideLength;
 
         for (int i = 0; i < (totalSquares); i++) {
             JPanel panel = new JPanel();
             panel.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
 
-            String squareType = squareTypes.get(i);
+            String squareType = squareArray.get(i);
             switch (squareType) {
                 case "Normal":
                     panel.setBackground(Color.WHITE);
@@ -153,22 +159,22 @@ public class Board extends JPanel {
 
         switch (direction) {
             case UP:
-                if (currentPosition >= GRID_COLUMNS) {
-                    newPosition = currentPosition - GRID_COLUMNS;
+                if (currentPosition >= boardSideLength) {
+                    newPosition = currentPosition - boardSideLength;
                 }
                 break;
             case DOWN:
-                if (currentPosition < (GRID_ROWS - 1) * GRID_COLUMNS) {
-                    newPosition = currentPosition + GRID_COLUMNS;
+                if (currentPosition < (boardSideLength - 1) * boardSideLength) {
+                    newPosition = currentPosition + boardSideLength;
                 }
                 break;
             case LEFT:
-                if (currentPosition % GRID_COLUMNS != 0) {
+                if (currentPosition % boardSideLength != 0) {
                     newPosition = currentPosition - 1;
                 }
                 break;
             case RIGHT:
-                if (currentPosition % GRID_COLUMNS != GRID_COLUMNS - 1) {
+                if (currentPosition % boardSideLength != boardSideLength - 1) {
                     newPosition = currentPosition + 1;
                 }
                 break;
@@ -182,7 +188,7 @@ public class Board extends JPanel {
         }
 
         playerPositions.set(playerIndex, newPosition);
-        renderBoard(squareTypes);
+        renderBoard(squareArray);
         System.out.println("Player " + playerIndex + " moved to position " + newPosition);
     }
 
@@ -200,8 +206,34 @@ public class Board extends JPanel {
      * 
      * @return The list of square types on the board.
      */
-    public List<String> getSquareTypes() {
-        return squareTypes;
+    public List<String> getsquareArray() {
+        return squareArray;
+    }
+
+    /**
+     * Gets the square at a given index on the board.
+     * 
+     * @param index The index of the square to get.
+     * @return The type of square at the given index.
+     */
+    public String getSquareAt(int index) {
+        if (index < 0 || index >= squareArray.size()) {
+            throw new IllegalArgumentException("Index out of bounds: " + index);
+        }
+        return squareArray.get(index);
+    }
+
+    /**
+     * Sets the square at a given index on the board.
+     * 
+     * @param index      The index of the square to set.
+     * @param squareType The type of square to set at the given index.
+     */
+    public void setSquareAt(int index, String squareType) {
+        if (index < 0 || index >= squareArray.size()) {
+            throw new IllegalArgumentException("Index out of bounds: " + index);
+        }
+        squareArray.set(index, squareType);
     }
 
     /**

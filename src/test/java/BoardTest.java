@@ -81,10 +81,10 @@ public class BoardTest {
 
     @Test
     void testBoardInitialization() {
-        assertEquals(100, board.getSquareTypes().size(), "Board should have 100 squares");
+        assertEquals(100, board.getsquareArray().size(), "Board should have 100 squares");
         assertEquals(Arrays.asList(0, 9, 90, 99), board.getPlayerPositions(),
             "Players should start at spawn locations (0, 9, 90, 99)");
-        assertEquals(4, Collections.frequency(board.getSquareTypes(), "Spawn"), "Should have 4 spawn squares");
+        assertEquals(4, Collections.frequency(board.getsquareArray(), "Spawn"), "Should have 4 spawn squares");
     }
 
     @Test
@@ -95,9 +95,30 @@ public class BoardTest {
     }
 
     @Test
-    void testGetSquareTypes() {
-        List<String> squareTypes = board.getSquareTypes();
-        assertEquals(100, squareTypes.size(), "Board should have 100 squares");
+    void testGetsquareArray() {
+        List<String> squareArray = board.getsquareArray();
+        assertEquals(100, squareArray.size(), "Board should have 100 squares");
+    }
+
+    @Test
+    void testGetSquareAt() {
+        assertEquals("Spawn", board.getSquareAt(0), "Square at position 0 should be Spawn");
+    }
+
+    @Test
+    void testGetSquareAtInvalidPosition() {
+        assertThrows(IllegalArgumentException.class, () -> board.getSquareAt(-1), "Should not get square at invalid position");
+    }
+
+    @Test
+    void testSetSquareAt() {
+        board.setSquareAt(0, "Pothole");
+        assertEquals("Pothole", board.getSquareAt(0), "Square at position 0 should be Pothole");
+    }
+
+    @Test
+    void testSetSquareAtInvalidPosition() {
+        assertThrows(IllegalArgumentException.class, () -> board.setSquareAt(-1, "Pothole"), "Should not set square at invalid position");
     }
 
 }
