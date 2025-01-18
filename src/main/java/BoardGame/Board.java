@@ -29,7 +29,7 @@ public class Board extends JPanel {
 
     private List<Integer> playerPositions;
 
-    private List<String> squareTypes;
+    protected List<String> squareTypes;
 
     /**
      * Distributes the types of squares on the board based on a given ratio.
@@ -143,6 +143,9 @@ public class Board extends JPanel {
      *                    Direction enum.
      */
     public void movePlayer(int playerIndex, Direction direction) {
+        if (direction == null) {
+            throw new IllegalArgumentException("Direction cannot be null");
+        }
         int currentPosition = playerPositions.get(playerIndex);
         int newPosition = currentPosition;
 
@@ -179,6 +182,14 @@ public class Board extends JPanel {
         playerPositions.set(playerIndex, newPosition);
         renderBoard(squareTypes);
         System.out.println("Player " + playerIndex + " moved to position " + newPosition);
+    }
+
+    public List<Integer> getPlayerPositions() {
+        return playerPositions;
+    }
+
+    public List<String> getSquareTypes() {
+        return squareTypes;
     }
 
     /**
