@@ -10,7 +10,7 @@ import java.util.Collections;
 /**
  * The board class represents the game board.
  * It extends JPanel and is responsible for initializing the board and randomly
- * distributing the sqaure types.
+ * distributing the square types.
  * The board is a grid with a changeable, fixed number of columns and rows.
  * 
  * @author Nathan Watkins
@@ -26,6 +26,10 @@ public class Board extends JPanel {
      * The number of rows in the grid (square board).
      */
     final int GRID_ROWS = GRID_COLUMNS;
+
+    private List<Integer> playerPositions;
+
+    private List<String> squareTypes;
 
     /**
      * Distributes the types of squares on the board based on a given ratio.
@@ -68,13 +72,31 @@ public class Board extends JPanel {
     /**
      * Constructs a new Board object and initializes the board with the default
      * settings.
-     * The board is initialized with a grid of squares and specific spawn locations.
      */
     public Board() {
         int totalSquares = GRID_COLUMNS * GRID_ROWS;
         final List<Integer> spawnLocations = Arrays.asList(0, GRID_COLUMNS - 1, totalSquares - GRID_COLUMNS,
                 totalSquares - 1);
-        List<String> squareTypes = gridDistribution(totalSquares, spawnLocations);
+        squareTypes = gridDistribution(totalSquares, spawnLocations);
+
+        playerPositions = new ArrayList<>(spawnLocations);
+
+        this.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        this.setLayout(new java.awt.GridLayout(GRID_ROWS, GRID_COLUMNS));
+
+        renderBoard(squareTypes);
+    }
+
+    /**
+     * Renders the board based on the types of squares and player positions.
+     * 
+     * @param squareTypes A list of strings representing the type of each square on
+     *                    the board.
+     */
+    private void renderBoard(List<String> squareTypes) {
+        this.removeAll();
+
+        int totalSquares = GRID_COLUMNS * GRID_ROWS;
 
         for (int i = 0; i < (totalSquares); i++) {
             JPanel panel = new JPanel();
@@ -99,10 +121,64 @@ public class Board extends JPanel {
                     break;
             }
 
+            if (playerPositions.contains(i)) {
+                ImageIcon imageIcon = new ImageIcon("src/main/resources/images/playerIcon.png");
+                ImageIcon resizedImage = new ImageIcon(
+                        imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+                JLabel playerIcon = new JLabel(resizedImage);
+                panel.add(playerIcon, BorderLayout.CENTER);
+            }
+
             this.add(panel);
         }
-        this.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        this.setLayout(new java.awt.GridLayout(GRID_ROWS, GRID_COLUMNS));
+        this.revalidate();
+        this.repaint();
+    }
+
+    /**
+     * Moves a player in a given direction on the board.
+     * 
+     * @param playerIndex The index of the player to move.
+     * @param direction   The direction to move the player. This comes from the
+     *                    Direction enum.
+     */
+    public void movePlayer(int playerIndex, Direction direction) {
+        int currentPosition = playerPositions.get(playerIndex);
+        int newPosition = currentPosition;
+
+        switch (direction) {
+            case UP:
+                if (currentPosition >= GRID_COLUMNS) {
+                    newPosition = currentPosition - GRID_COLUMNS;
+                }
+                break;
+            case DOWN:
+                if (currentPosition < (GRID_ROWS - 1) * GRID_COLUMNS) {
+                    newPosition = currentPosition + GRID_COLUMNS;
+                }
+                break;
+            case LEFT:
+                if (currentPosition % GRID_COLUMNS != 0) {
+                    newPosition = currentPosition - 1;
+                }
+                break;
+            case RIGHT:
+                if (currentPosition % GRID_COLUMNS != GRID_COLUMNS - 1) {
+                    newPosition = currentPosition + 1;
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid direction: " + direction);
+        }
+
+        if (newPosition == currentPosition) {
+            System.out.println("Player " + playerIndex + " cannot move in direction " + direction);
+            return;
+        }
+
+        playerPositions.set(playerIndex, newPosition);
+        renderBoard(squareTypes);
+        System.out.println("Player " + playerIndex + " moved to position " + newPosition);
     }
 
     /**
