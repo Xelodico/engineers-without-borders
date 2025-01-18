@@ -1,8 +1,5 @@
 package BoardGame;
-/**
- * 
- * @author Nathan Watkins
- */
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
@@ -10,12 +7,34 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
+/**
+ * The board class represents the game board.
+ * It extends JPanel and is responsible for initializing the board and randomly distributing the sqaure types.
+ * The board is a grid with a changeable, fixed number of columns and rows.
+ * 
+ * @author Nathan Watkins
+ */
 public class Board extends JPanel {
     
+    /**
+     * The number of columns in the grid.
+     */
     final int GRID_COLUMNS = 10;
-    final int GRID_ROWS = GRID_COLUMNS;
 
+    /**
+     * The number of rows in the grid.
+     */
+    final int GRID_ROWS = GRID_COLUMNS; // Currently set equal to GRID_COLUMNS to make it an even square
+
+    /**
+     * Distributes the types of squares on the board based on a given ratio.
+     * The types of squares include Knowledge, Pothole, Resource, and Normal.
+     * Additionally, specific locations can be designated as Spawn points.
+     * 
+     * @param totalSquares The total number of squares on the board.
+     * @param spawnLocations A list of indices where spawn points should be placed.
+     * @return A list of strings representing the type of each square on the board.
+     */
     public static List<String> gridDistribution(int totalSquares, List<Integer> spawnLocations) {
         int[] distributionRatio = {1, 2, 2, 3}; //Knowledge : Pothole : Resource : Normal ratio
 
@@ -48,6 +67,10 @@ public class Board extends JPanel {
         return squareTypes;
     }
     
+    /**
+     * Constructs a new Board object and initializes the board with the default settings.
+     * The board is initialized with a grid of squares and specific spawn locations.
+     */
     public Board() {
         int totalSquares = GRID_COLUMNS*GRID_ROWS;
         final List<Integer> spawnLocations = Arrays.asList(0, GRID_COLUMNS-1, totalSquares-GRID_COLUMNS, totalSquares-1);
@@ -83,6 +106,11 @@ public class Board extends JPanel {
         this.setLayout(new java.awt.GridLayout(GRID_ROWS, GRID_COLUMNS));
     }
 
+
+    /**
+     * Main method for running the board by itself.
+     * @param args
+     */
     public static void main(String[] args) {
         JFrame frame = new JFrame("Board Game");
         Board board = new Board();
