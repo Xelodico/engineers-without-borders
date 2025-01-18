@@ -149,6 +149,8 @@ public class Board extends JPanel {
         int currentPosition = playerPositions.get(playerIndex);
         int newPosition = currentPosition;
 
+        // TODO: Check if the player has enough moves before moving them
+
         switch (direction) {
             case UP:
                 if (currentPosition >= GRID_COLUMNS) {
@@ -184,10 +186,20 @@ public class Board extends JPanel {
         System.out.println("Player " + playerIndex + " moved to position " + newPosition);
     }
 
+    /**
+     * Gets the list of player positions on the board.
+     * 
+     * @return The list of player positions on the board.
+     */
     public List<Integer> getPlayerPositions() {
         return playerPositions;
     }
 
+    /**
+     * Gets the list of square types on the board.
+     * 
+     * @return The list of square types on the board.
+     */
     public List<String> getSquareTypes() {
         return squareTypes;
     }
