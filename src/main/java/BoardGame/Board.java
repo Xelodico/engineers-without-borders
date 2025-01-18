@@ -42,7 +42,7 @@ public class Board extends JPanel {
         int numKnowledge = totalSquares / totalWeight * distributionRatio[0];
         int numPothole = totalSquares / totalWeight * distributionRatio[1];
         int numResource = totalSquares / totalWeight * distributionRatio[2];
-        int numNormal = totalSquares / totalWeight * distributionRatio[3];
+        int numNormal = totalSquares - (numKnowledge + numPothole + numResource);
 
         List<String> squareTypes = new ArrayList<>();
         for (int i = 0; i < numNormal; i++) {
