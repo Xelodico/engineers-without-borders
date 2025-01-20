@@ -9,53 +9,13 @@ package BoardGame;
  * @author Nathan Watkins
  */
 import javax.swing.*;
-import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class BoardGame extends JFrame {
-
-    final int GRID_COLUMNS = 10;
-    final int GRID_ROWS = GRID_COLUMNS;
     
     String player1Name = "Player 1";
     String player2Name = "Player 2";
     String player3Name = "Player 3";
     String player4Name = "Player 4";
-    
-    public static List<String> gridDistribution(int totalSquares, List<Integer> spawnLocations) {
-        int[] distributionRatio = {1, 2, 2, 3}; //Knowledge : Pothole : Resource : Normal ratio
-
-        int totalWeight = Arrays.stream(distributionRatio).sum();
-        int numKnowledge = totalSquares / totalWeight * distributionRatio[0];
-        int numPothole = totalSquares / totalWeight * distributionRatio[1];
-        int numResource = totalSquares / totalWeight * distributionRatio[2];
-        int numNormal = totalSquares / totalWeight * distributionRatio[3];
-
-        List<String> squareTypes = new ArrayList<>();
-        for (int i = 0; i < numNormal; i++) {
-            squareTypes.add("Normal");
-        }
-        for (int i = 0; i < numPothole; i++) {
-            squareTypes.add("Pothole");
-        }
-        for (int i = 0; i < numResource; i++) {
-            squareTypes.add("Resource");
-        }
-        for (int i = 0; i < numKnowledge; i++) {
-            squareTypes.add("Knowledge");
-        }
-
-        Collections.shuffle(squareTypes);
-
-        for (int location : spawnLocations) {
-            squareTypes.add(location, "Spawn");
-        }
-
-        return squareTypes;
-    }
     
     /**
      * Creates new form NewJFrame
@@ -72,12 +32,7 @@ public class BoardGame extends JFrame {
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
-        int totalSquares = GRID_COLUMNS*GRID_ROWS;
-        final List<Integer> spawnLocations = Arrays.asList(0, GRID_COLUMNS-1, totalSquares-GRID_COLUMNS, totalSquares-1);
-
-        List<String> squareTypes = gridDistribution(totalSquares, spawnLocations);
-        gameBoard = new javax.swing.JPanel();
+        gameBoard = new Board();
         sidePanelContainer = new javax.swing.JPanel();
         arrowsContainer = new javax.swing.JPanel();
         arrowDown = new javax.swing.JButton();
@@ -114,35 +69,6 @@ public class BoardGame extends JFrame {
         player4Resources = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        for (int i = 0; i < (totalSquares); i++) {
-            JPanel panel = new JPanel();
-            panel.setPreferredSize(new Dimension(40, 40));
-            panel.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
-
-            String squareType = squareTypes.get(i);
-            switch (squareType) {
-                case "Normal":
-                panel.setBackground(Color.WHITE);
-                break;
-                case "Pothole":
-                panel.setBackground(Color.RED);
-                break;
-                case "Knowledge":
-                panel.setBackground(Color.BLUE);
-                break;
-                case "Resource":
-                panel.setBackground(Color.ORANGE);
-                break;
-                case "Spawn":
-                panel.setBackground(Color.GREEN);
-                break;
-            }
-
-            gameBoard.add(panel);
-        }
-        gameBoard.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        gameBoard.setLayout(new java.awt.GridLayout(GRID_ROWS, GRID_COLUMNS));
 
         sidePanelContainer.setLayout(null);
 
@@ -401,7 +327,7 @@ public class BoardGame extends JFrame {
     private javax.swing.JButton arrowRight;
     private javax.swing.JButton arrowUp;
     private javax.swing.JPanel arrowsContainer;
-    private javax.swing.JPanel gameBoard;
+    private Board gameBoard;
     private javax.swing.JButton helpButton;
     private javax.swing.JLabel player1Asphalt;
     private javax.swing.JLabel player1Knowledge;
