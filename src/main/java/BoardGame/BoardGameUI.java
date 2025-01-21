@@ -4,13 +4,16 @@
  */
 package BoardGame;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 /**
  * 
  * @author Nathan Watkins
  */
 import javax.swing.*;
 
-public class BoardGame extends JFrame {
+public class BoardGameUI extends JFrame {
     
     String player1Name = "Player 1";
     String player2Name = "Player 2";
@@ -22,7 +25,7 @@ public class BoardGame extends JFrame {
     /**
      * Creates new form NewJFrame
      */
-    public BoardGame() {
+    public BoardGameUI() {
         initComponents();
     }
 
@@ -108,7 +111,7 @@ public class BoardGame extends JFrame {
         arrowRight.setFocusPainted(false);
         arrowsContainer.add(arrowRight);
         arrowRight.setBounds(90, 46, 46, 46);
-
+        
         sidePanelContainer.add(arrowsContainer);
         arrowsContainer.setBounds(10, 405, 138, 92);
 
