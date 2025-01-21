@@ -94,6 +94,9 @@ public class Player {
      * @param name The new name to assign to the player
      */
     public void setName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("Name cannot be null");
+        }
         this.name = name;
     }
 
@@ -112,6 +115,11 @@ public class Player {
      * @param coord The new coordinates to assign to the player
      */
     public void setCoord(int coord) {
+        if (coord < 0) {
+            throw new IllegalArgumentException("Coordinate cannot be negative");
+        } else if (coord > 100) {
+            throw new IllegalArgumentException("Coordinate cannot be greater than 100");
+        }
         this.coord = coord;
     }
 
@@ -130,6 +138,9 @@ public class Player {
      * @param resources The new resource value to assign to the player
      */
     public void setResources(int resources) {
+        if (resources < 0) {
+            throw new IllegalArgumentException("Resources cannot be negative");
+        }
         this.resources = resources;
     }
 
@@ -148,6 +159,11 @@ public class Player {
      * @param movesLeft The new number of moves left to assign to the player
      */
     public void setMovesLeft(int movesLeft) {
+        if (movesLeft < 0) {
+            throw new IllegalArgumentException("Moves left cannot be negative");
+        } else if (movesLeft > 6) {
+            throw new IllegalArgumentException("Moves left cannot be greater than 6");
+        }
         this.movesLeft = movesLeft;
     }
 
