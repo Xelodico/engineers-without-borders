@@ -11,37 +11,49 @@ public class Player {
     private int coord;
     private int resources;
     private int movesLeft;
+    private int id;
+
+    static int nextID;
     
     // Default Constructor for Player Object
     public Player() {
-        name = "";
-        coord = 0;
-        resources = 0;
-        movesLeft = 1;
+        this.id = nextID;
+        this.name = "";
+        this.coord = 0;
+        this.resources = 0;
+        this.movesLeft = 0;
     }
 
     /**
      * Constructor for Player Object with just their name, coords and default values.
      * @param newName
      */
-    public Player(String newName, int newCoords) {
-        name = newName;
-        coord = newCoords;
-        resources = 0;
-        movesLeft = 1;
+    public Player(String name, int coords) {
+        this.id = nextID;
+        this.name = name;
+        this.coord = coords;
+        this.resources = 0;
+        this.movesLeft = 0;
+        nextID++;
     }
     
     // Parameterized Constructor for the Player Class
-    public Player(String newName, int newCoord, int newResources, int newMovesLeft) {
-        name = newName;
-        coord = newCoord;
-        resources = newResources;
-        movesLeft = newMovesLeft;
+    public Player(String name, int coord, int resources, int movesLeft) {
+        this.id = nextID;
+        this.name = name;
+        this.coord = coord;
+        this.resources = resources;
+        this.movesLeft = movesLeft;
+        nextID++;
     }
-
+    
+    public int getID() {
+        return this.id;
+    }
+    
     // Getter and Setter methods for the Player attributes
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -49,7 +61,7 @@ public class Player {
     }
 
     public int getCoord() {
-        return coord;
+        return this.coord;
     }
 
     public void setCoord(int coord) {
@@ -57,7 +69,7 @@ public class Player {
     }
 
     public int getResources() {
-        return resources;
+        return this.resources;
     }
 
     public void setResources(int resources) {
@@ -65,7 +77,7 @@ public class Player {
     }
 
     public int getMovesLeft() {
-        return movesLeft;
+        return this.movesLeft;
     }
 
     public void setMovesLeft(int movesLeft) {
@@ -73,10 +85,12 @@ public class Player {
     }
 
     // Roll a die for movement or other game mechanics
-    private void rollDie() {
+    public int rollDie() {
         Random randomGen = new Random();
         int randomNumber = randomGen.nextInt(6) + 1;
         System.out.println(randomNumber);
+        movesLeft = randomNumber;
+        return randomNumber;
     }
     
     /**

@@ -4,6 +4,7 @@
  */
 package BoardGame;
 
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,18 +16,61 @@ import javax.swing.*;
 
 public class BoardGameUI extends JFrame {
     
-    String player1Name = "Player 1";
-    String player2Name = "Player 2";
-    String player3Name = "Player 3";
-    String player4Name = "Player 4";
+    List<Player> players;
+    String player1Name;
+    String player2Name;
+    String player3Name;
+    String player4Name;
 
-    Player player1 = new Player(player1Name, 0);
-    
     /**
      * Creates new form NewJFrame
      */
-    public BoardGameUI() {
+    public BoardGameUI(List<Player> players) {
+        this.players = players;
+        player1Name = players.get(0).getName();
+        player2Name = players.get(1).getName();
         initComponents();
+    }
+
+    public void movePlayer(Player player, int boardSideLength, Direction direction) {
+        if (player.getMovesLeft() > 0) {
+            int currentCoord = player.getCoord();
+            int newCoord = currentCoord;
+
+            // Determine the new coordinate based on the direction
+            switch (direction) {
+                case UP:
+                    if (currentCoord >= boardSideLength) {
+                        newCoord = currentCoord - boardSideLength;
+                    }
+                    break;
+                case DOWN:
+                    if (currentCoord < (boardSideLength - 1) * boardSideLength) {
+                        newCoord = currentCoord + boardSideLength;
+                    }
+                    break;
+                case LEFT:
+                    if (currentCoord % boardSideLength != 0) {
+                        newCoord = currentCoord - 1;
+                    }
+                    break;
+                case RIGHT:
+                    if (currentCoord % boardSideLength != boardSideLength - 1) {
+                        newCoord = currentCoord + 1;
+                    }
+                    break;
+            }
+
+            // Only move if the new coordinate is valid
+            if (newCoord != currentCoord) {
+                player.setCoord(newCoord);
+                player.setMovesLeft(player.getMovesLeft() - 1);  // Decrease moves after moving
+                gameBoard.refresh();
+                System.out.println(player.getName() + " moved to position " + newCoord);
+            }
+        } else {
+            System.out.println(player.getName() + " has no moves left this turn.");
+        }
     }
 
     /**
@@ -37,7 +81,7 @@ public class BoardGameUI extends JFrame {
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        gameBoard = new Board();
+        gameBoard = new Board(players);
         sidePanelContainer = new javax.swing.JPanel();
         arrowsContainer = new javax.swing.JPanel();
         arrowDown = new javax.swing.JButton();
@@ -111,7 +155,35 @@ public class BoardGameUI extends JFrame {
         arrowRight.setFocusPainted(false);
         arrowsContainer.add(arrowRight);
         arrowRight.setBounds(90, 46, 46, 46);
+
+        arrowRight.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                movePlayer(players.get(0), 10, Direction.RIGHT);
+            }
+        });
+
+        arrowLeft.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                movePlayer(players.get(0), 10, Direction.LEFT);
+            }
+        });
         
+        arrowUp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                movePlayer(players.get(0), 10, Direction.UP);
+            }
+        });
+
+        arrowDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                movePlayer(players.get(0), 10, Direction.DOWN);
+            }
+        });
+
         sidePanelContainer.add(arrowsContainer);
         arrowsContainer.setBounds(10, 405, 138, 92);
 
@@ -144,6 +216,13 @@ public class BoardGameUI extends JFrame {
         rollDiceButton.setFocusPainted(false);
         sidePanelContainer.add(rollDiceButton);
         rollDiceButton.setBounds(170, 450, 192, 47);
+
+        rollDiceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                players.get(0).rollDie();
+            }
+        });
 
         Player1Resources.setLayout(null);
 
@@ -303,23 +382,23 @@ public class BoardGameUI extends JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(BoardGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BoardGameUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(BoardGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BoardGameUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(BoardGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BoardGameUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(BoardGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BoardGameUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            BoardGame game = new BoardGame();
-            game.setVisible(true);
-            game.setTitle("CSC2058 Potholes Board Game");
-        });
+        // java.awt.EventQueue.invokeLater(() -> {
+        //     BoardGameUI game = new BoardGameUI(players);
+        //     game.setVisible(true);
+        //     game.setTitle("CSC2058 Potholes Board Game");
+        // });
 
         
     }
@@ -334,7 +413,7 @@ public class BoardGameUI extends JFrame {
     private javax.swing.JButton arrowRight;
     private javax.swing.JButton arrowUp;
     private javax.swing.JPanel arrowsContainer;
-    private Board gameBoard;
+    public Board gameBoard;
     private javax.swing.JButton helpButton;
     private javax.swing.JLabel player1Asphalt;
     private javax.swing.JLabel player1Knowledge;

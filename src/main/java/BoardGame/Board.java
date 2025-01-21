@@ -34,17 +34,13 @@ public class Board extends JPanel {
      * Constructs a new Board object and initializes the board with the default
      * settings.
      */
-    public Board() {
+    public Board(List<Player> players) {
         this.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         this.setLayout(new java.awt.GridLayout(boardSideLength, boardSideLength));
 
-        squareArray = generateBoardSquares();
-        players = new ArrayList<>();
+        this.players = players;
         
-        players.add(new Player("Placeholder Name 1", 0));
-        players.add(new Player("Placeholder Name 2", 9));
-        players.add(new Player("Placeholder Name 3", 90));
-        players.add(new Player("Placeholder Name 4", 99));
+        squareArray = generateBoardSquares();
         renderBoard(squareArray);
     }
 
@@ -90,8 +86,6 @@ public class Board extends JPanel {
      *                    the board.
      */
     private void renderBoard(List<String> squareArray) {
-        this.removeAll();
-
         int totalSquares = boardSideLength * boardSideLength;
 
         for (int i = 0; i < totalSquares; i++) {
@@ -125,13 +119,17 @@ public class Board extends JPanel {
                     panel.add(playerIcon, BorderLayout.CENTER);
                 }
             }
-
             this.add(panel);
         }
+    }
 
+    public void refresh() {
+        this.removeAll();
+        renderBoard(squareArray);
         this.revalidate();
         this.repaint();
     }
+
     
     /**
      * Gets the list of square types on the board.
@@ -175,14 +173,14 @@ public class Board extends JPanel {
      * 
      * @param args Command line arguments (not used).
      */
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Board Game");
-        Board board = new Board();
+    // public static void main(String[] args) {
+    //     JFrame frame = new JFrame("Board Game");
+    //     Board board = new Board();
 
-        frame.add(board);
-        frame.setPreferredSize(new Dimension(500, 500));
-        frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-    }
+    //     frame.add(board);
+    //     frame.setPreferredSize(new Dimension(500, 500));
+    //     frame.pack();
+    //     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //     frame.setVisible(true);
+    // }
 }
