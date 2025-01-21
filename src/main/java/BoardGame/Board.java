@@ -12,7 +12,7 @@ public class Board extends JPanel {
     /**
      * The side length of the grid.
      */
-    private final static int boardSideLength = 10;
+    protected final int boardSideLength = 10;
 
     /**
      * The distribution ratio of the square types on the board.
@@ -24,7 +24,7 @@ public class Board extends JPanel {
      * The List of all the Players in the game.
      */
     private List<Player> players;
-    
+
     /**
      * The list of squares on the board.
      */
@@ -39,12 +39,12 @@ public class Board extends JPanel {
         this.setLayout(new java.awt.GridLayout(boardSideLength, boardSideLength));
 
         this.players = players;
-        
+
         squareArray = generateBoardSquares();
         renderBoard(squareArray);
     }
 
-   /**
+    /**
      * Distributes the types of squares on the board based on a given ratio.
      * The types of squares include Knowledge, Pothole, Resource, and Normal.
      * Additionally, specific locations can be designated as Spawn points.
@@ -56,7 +56,8 @@ public class Board extends JPanel {
      */
     private List<String> generateBoardSquares() {
         int totalSquares = boardSideLength * boardSideLength;
-        final List<Integer> spawnLocations = Arrays.asList(0, boardSideLength - 1, totalSquares - boardSideLength, totalSquares - 1);
+        final List<Integer> spawnLocations = Arrays.asList(0, boardSideLength - 1, totalSquares - boardSideLength,
+                totalSquares - 1);
         List<String> squareArray = new ArrayList<>();
 
         int totalWeight = Arrays.stream(squareTypeRatios).sum();
@@ -114,7 +115,8 @@ public class Board extends JPanel {
             for (Player player : players) {
                 if (player.getCoord() == i) {
                     ImageIcon imageIcon = new ImageIcon("src/main/resources/images/playerIcon.png");
-                    ImageIcon resizedImage = new ImageIcon(imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+                    ImageIcon resizedImage = new ImageIcon(
+                            imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
                     JLabel playerIcon = new JLabel(resizedImage);
                     panel.add(playerIcon, BorderLayout.CENTER);
                 }
@@ -130,7 +132,6 @@ public class Board extends JPanel {
         this.repaint();
     }
 
-    
     /**
      * Gets the list of square types on the board.
      * 
@@ -165,22 +166,4 @@ public class Board extends JPanel {
         }
         squareArray.set(index, squareType);
     }
-
-
-/**
-     * The main method creates a JFrame and adds a new Board object to it.
-     * Can be used to run the game board as a standalone application.
-     * 
-     * @param args Command line arguments (not used).
-     */
-    // public static void main(String[] args) {
-    //     JFrame frame = new JFrame("Board Game");
-    //     Board board = new Board();
-
-    //     frame.add(board);
-    //     frame.setPreferredSize(new Dimension(500, 500));
-    //     frame.pack();
-    //     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    //     frame.setVisible(true);
-    // }
 }
