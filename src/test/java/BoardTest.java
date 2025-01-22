@@ -11,6 +11,7 @@ public class BoardTest {
     private BoardGameUI boardGameUI;
     private Player player;
     private List<Player> players;
+    private Board board;
 
     @BeforeEach
     public void setUp() {
@@ -19,8 +20,11 @@ public class BoardTest {
         player = new Player();
         player.setMovesLeft(1);
         players.add(player);
+        players.add(player);
+        board = new Board(players);
 
-        boardGameUI = new BoardGameUI(players);
+        boardGameUI = new BoardGameUI(board, players);
+        boardGameUI.setVisible(false); 
     }
 
     @Test
@@ -58,8 +62,7 @@ public class BoardTest {
 
     @Test
     void testMovePlayerInvalidPosition() {
-        player.setCoord(-1);
-        assertThrows(IllegalArgumentException.class, () -> boardGameUI.movePlayer(player, Direction.UP), "Player should not move from an invalid position");
+        assertThrows(IllegalArgumentException.class, () -> player.setCoord(-1), "Player should not move from an invalid position");
     }
     
     @Test
