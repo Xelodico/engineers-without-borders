@@ -35,8 +35,9 @@ public class BoardGameUI extends JFrame {
      * 
      * @param players A list of Player objects representing the players in the game.
      */
-    public BoardGameUI(List<Player> players) {
+    public BoardGameUI(Board gameBoard, List<Player> players) {
         this.players = players;
+        this.gameBoard = gameBoard;
         player1Name = players.get(0).getName();
         player2Name = players.get(1).getName();
         initComponents();
@@ -110,7 +111,6 @@ public class BoardGameUI extends JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        gameBoard = new Board(players);
         sidePanelContainer = new  JPanel();
         arrowsContainer = new  JPanel();
         arrowDown = new  JButton();
