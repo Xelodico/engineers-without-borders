@@ -20,9 +20,9 @@ public class GameSystem {
     public GameSystem() {
     	input = new Scanner(System.in);
     	
-    	gameBoard = new Board();
-    	gameBoardUI = new BoardGameUI();
-    	gameBoardUI.setVisible();
+    	gameBoard = new Board(this.turnOrder);
+    	gameBoardUI = new BoardGameUI(this.gameBoard, this.turnOrder);
+    	gameBoardUI.setVisible(true);
     	
         startGame();
     }
@@ -54,7 +54,7 @@ public class GameSystem {
     }
 
     public void setTurnOrder(Player[] players) {
-
+    	this.turnOrder = players;
     }
 
     public void setRoundNumber(int number) {
@@ -69,8 +69,12 @@ public class GameSystem {
         return this.turnOrder;
     }
 
-    public Player getPlayerAt(int index = turnNumber){
+    public Player getPlayerAt(int index){
         return this.turnOrder[index];
+    }
+    
+    public Player getPlayerAt() {
+    	return this.turnOrder[turnNumber];
     }
 
     public int getRoundNumber(){
@@ -81,11 +85,21 @@ public class GameSystem {
         return this.turnNumber;
     }
 
-    private void endTurn(){
-
+    public void movePlayer() {
+    	
+    }
+    
+    private void nextTurn(){
+    	// Change turn & round number
+    	if(turnNumber >= turnOrder.length) {
+    		turnNumber = 0;
+    		roundNumber++;
+    	} else {
+    		turnNumber++;
+    	}
     }
 
-    private void endRound(){
+    private void nextRound(){
 
     }
 
