@@ -31,8 +31,8 @@ public class TaskSquare extends Square {
      * @return true if the task was successfully activated and completed,
      *         false if the player's role does not match the task's requirements.
      */
-    public boolean activateSquareTask(Player p) {
-        if (p.getRole() == task.getRole()) {
+    public boolean activateSquareTask() {
+        if (primaryOccupier.getRole() == task.getRole()) {
             // Execute the task
             task.doTask();  // Perform the task's actions
             return true;  // Indicate success
