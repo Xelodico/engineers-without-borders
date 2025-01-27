@@ -30,32 +30,19 @@ public class RoleSquare extends Square {
      * Activates the effect of the RoleSquare, assigning the randomly selected job role
      * to one of the players. The specific player is determined by the input parameter.
      *
-     * @param p1 The first player in the game.
-     * @param p2 The second player in the game.
-     * @param p3 The third player in the game.
-     * @param p4 The fourth player in the game.
+     * @param players array of players in game
+     * @param playerRoleAssignment the player to get the role of the square
      */
     @Override
-    public void activateSquareEffect(Player p1, Player p2, Player p3, Player p4) {
+    public void activateSquareEffect(Player[] players, int playerRoleAssignment) {
         // Determine which player to assign the role to
-        int playerRoleAssignment;  // This variable should have been initialized based on game logic
-        switch (playerRoleAssignment) {
-        case 1:
-            p1.setJobRole(this.playerRole);
-            break;
-        case 2:
-            p2.setJobRole(this.playerRole);
-            break;
-        case 3:
-            p3.setJobRole(this.playerRole);
-            break;
-        case 4:
-            p4.setJobRole(this.playerRole);
-            break;
-        default:
-            // Error: invalid player role assignment, try again
-            break;
+        //TODO use UI to get player's choice
+        if (playerRoleAssignment > players.length) {
+            //invalid option
+        } else {
+            players[playerRoleAssignment].setJobRole(this.playerRole);
         }
+        break;
     }
 }
 
