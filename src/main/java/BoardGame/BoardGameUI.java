@@ -24,7 +24,7 @@ import javax.swing.*;
  */
 public class BoardGameUI extends JFrame {
 
-    List<Player> players;
+    Player[] players;
     String player1Name;
     String player2Name;
     String player3Name;
@@ -35,7 +35,7 @@ public class BoardGameUI extends JFrame {
      * 
      * @param players A list of Player objects representing the players in the game.
      */
-    public BoardGameUI(Board gameBoard, List<Player> players) {
+    public BoardGameUI(Board gameBoard, Player[] players) {
         this.players = players;
         this.gameBoard = gameBoard;
         player1Name = players.get(0).getName();

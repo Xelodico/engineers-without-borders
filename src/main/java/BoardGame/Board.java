@@ -12,7 +12,7 @@ public class Board extends JPanel {
     /**
      * The side length of the grid.
      */
-    protected final int boardSideLength = 10;
+    public final int boardSideLength = 10;
 
     /**
      * The distribution ratio of the square types on the board.
@@ -23,7 +23,7 @@ public class Board extends JPanel {
     /**
      * The List of all the Players in the game.
      */
-    private List<Player> players;
+    private Player[] players;
 
     /**
      * The list of squares on the board.
@@ -34,7 +34,7 @@ public class Board extends JPanel {
      * Constructs a new Board object and initializes the board with the default
      * settings.
      */
-    public Board(List<Player> players) {
+    public Board(Player[] players) {
         this.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         this.setLayout(new java.awt.GridLayout(boardSideLength, boardSideLength));
 
