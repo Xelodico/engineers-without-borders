@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 /**
- * @author isaac
+ * @author Isaac Edmonds
  * 
  * An object representing a responsibility or job that a player can have. An assigned JobRole has corresponding subtasks.
  * Be careful when handling the responsiblePlayer values as they default to null whenever the roll has not been assigned
