@@ -38,69 +38,11 @@ public class BoardGameUI extends JFrame {
     public BoardGameUI(Board gameBoard, Player[] players) {
         this.players = players;
         this.gameBoard = gameBoard;
-        player1Name = players.get(0).getName();
-        player2Name = players.get(1).getName();
         initComponents();
         this.setVisible(true);
     }
 
-    /**
-     * Moves the player in the specified direction on the game board.
-     * 
-     * @param player The player to move.
-     * @param direction The direction to move the player.
-     */
-    public void movePlayer(Player player, Direction direction) {
-        int currentCoord = player.getCoord();
-        int boardSideLength = gameBoard.boardSideLength;
-        int totalSquares = boardSideLength * boardSideLength;
-
-        if (currentCoord < 0 || currentCoord >= totalSquares) {
-            throw new IllegalArgumentException("Player position is out of bounds");
-        }
-
-        if (direction == null) {
-            throw new IllegalArgumentException("Direction cannot be null");
-        }
-
-        if (player.getMovesLeft() > 0) {
-            int newCoord = currentCoord;
-
-            // Determine the new coordinate based on the direction
-            switch (direction) {
-                case UP:
-                    if (currentCoord >= boardSideLength) {
-                        newCoord = currentCoord - boardSideLength;
-                    }
-                    break;
-                case DOWN:
-                    if (currentCoord < (boardSideLength - 1) * boardSideLength) {
-                        newCoord = currentCoord + boardSideLength;
-                    }
-                    break;
-                case LEFT:
-                    if (currentCoord % boardSideLength != 0) {
-                        newCoord = currentCoord - 1;
-                    }
-                    break;
-                case RIGHT:
-                    if (currentCoord % boardSideLength != boardSideLength - 1) {
-                        newCoord = currentCoord + 1;
-                    }
-                    break;
-            }
-
-            // Only move if the new coordinate is valid
-            if (newCoord != currentCoord) {
-                player.setCoord(newCoord);
-                player.setMovesLeft(player.getMovesLeft() - 1); // Decrease moves after moving
-                gameBoard.refresh();
-                System.out.println(player.getName() + " moved to position " + newCoord);
-            }
-        } else {
-            System.out.println(player.getName() + " has no moves left this turn.");
-        }
-    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -141,6 +83,8 @@ public class BoardGameUI extends JFrame {
         player4Satisfaction = new  JLabel();
         player4Knowledge = new  JLabel();
         player4Asphalt = new  JLabel();
+        endTurnButton = new JButton();
+        movesLeftLabel = new JLabel();
 
         setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE);
 
@@ -235,9 +179,44 @@ public class BoardGameUI extends JFrame {
         rollDiceButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                players.get(0).rollDie();
+                GameSystem.getPlayerAt().rollDie();
+                rollDiceButton.setVisible(false);
+                movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+                movesLeftLabel.setVisible(true);
             }
         });
+
+        movesLeftLabel.setIcon(new  ImageIcon(getClass().getResource("/images/buttonBackground.png")));
+        movesLeftLabel.setBounds(170, 450, 192, 47);
+        movesLeftLabel.setVisible(false);
+        movesLeftLabel.setHorizontalTextPosition( SwingConstants.CENTER);
+        movesLeftLabel.setFont(new java.awt.Font("Segoe UI", 0, 26));
+        sidePanelContainer.add(movesLeftLabel);
+
+        endTurnButton.setIcon(new  ImageIcon(getClass().getResource("/images/buttonBackground.png")));
+        endTurnButton.setBounds(170, 450, 192, 47);
+        endTurnButton.setVisible(false);
+        endTurnButton.setText("End Turn");
+        endTurnButton.setFont(new java.awt.Font("Segoe UI", 0, 26));
+        endTurnButton.setHorizontalTextPosition( SwingConstants.CENTER);
+        endTurnButton.setContentAreaFilled(false);
+        endTurnButton.setBorder(null);
+        endTurnButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        sidePanelContainer.add(endTurnButton);
+
+        endTurnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameSystem.nextTurn();
+                playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
+                roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
+                movesLeftLabel.setVisible(false);
+                endTurnButton.setVisible(false);
+                rollDiceButton.setVisible(true);
+            }
+        });
+
+
 
         JPanel[] playerResources = { Player1Resources, Player2Resources, Player3Resources, Player4Resources };
         JLabel[] playerResourceTitles = { player1ResourceTitle, player2ResourceTitle, player3ResourceTitle, player4ResourceTitle };
@@ -245,8 +224,8 @@ public class BoardGameUI extends JFrame {
         JLabel[] playerKnowledges = { player1Knowledge, player2Knowledge, player3Knowledge, player4Knowledge };
         JLabel[] playerAsphalts = { player1Asphalt, player2Asphalt, player3Asphalt, player4Asphalt };
 
-        for (int i = 0; i < players.size(); i++) {
-            Player currentPlayer = players.get(i);
+        for (int i = 0; i < players.length; i++) {
+            Player currentPlayer = players[i];
 
             playerResources[i].setLayout(null);
 
@@ -278,7 +257,7 @@ public class BoardGameUI extends JFrame {
             sidePanelContainer.add(playerResources[i]);
         }
 
-        for (int i = players.size(); i < 4; i++) {
+        for (int i = players.length; i < 4; i++) {
             playerResources[i].setVisible(false);
         }
 
@@ -310,6 +289,8 @@ public class BoardGameUI extends JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JLabel movesLeftLabel;
+    private JButton endTurnButton;
     private  JPanel Player1Resources;
     private  JPanel Player2Resources;
     private  JPanel Player3Resources;
