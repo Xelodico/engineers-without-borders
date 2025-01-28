@@ -4,9 +4,11 @@
  */
 package BoardGame;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import GameSystem.GameSystem;
 
@@ -42,8 +44,6 @@ public class BoardGameUI extends JFrame {
         initComponents();
         this.setVisible(true);
     }
-
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -88,6 +88,9 @@ public class BoardGameUI extends JFrame {
         movesLeftLabel = new JLabel();
 
         setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE);
+
+        Popup popup = new Popup("Title", "Description", "Yes", "No");
+        this.add(popup);
 
         sidePanelContainer.setLayout(null);
 
