@@ -72,7 +72,6 @@ public abstract class GameSystem {
                     continue;
                 }
 
-                input.nextLine();
                 isValid = true;
             } catch (InputMismatchException e) {
                 System.err.print("ERROR: Invalid number. Please try again.");
