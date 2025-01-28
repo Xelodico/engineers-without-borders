@@ -52,7 +52,7 @@ public abstract class GameSystem {
         input.nextLine();
 
         roundNumber++;
-        nextTurn();
+        // nextTurn();
 
     }
 
@@ -89,6 +89,7 @@ public abstract class GameSystem {
                 try {
                     // TODO: Check if name is not empty
                     String name = input.nextLine();
+                    turnOrder[i] = new Player();
                     turnOrder[i].setName(name);
                     isValid = true;
                 } catch (InputMismatchException e) {
@@ -97,6 +98,8 @@ public abstract class GameSystem {
             }
             
         }
+        turnOrder[0].setCoord(0);
+        turnOrder[1].setCoord(9);
     }
 
     public static int getCurrentStage() {
@@ -139,35 +142,34 @@ public abstract class GameSystem {
         return tasks;
     }
 
-    public static ArrayList<JobRoles> getRoles() {
+    public static ArrayList<JobRole> getRoles() {
         return roles;
     }
 
     public static void movePlayer(Direction direction) {
         // Tell player to move (update coordinates)
         Player currentPlayer = getPlayerAt();
-        currentPlayer.rollDie();
         if (currentPlayer.getMovesLeft() > 0) {
-            currentPlayer.moveAction(direction);
+            currentPlayer.moveAction(direction, gameBoard.boardSideLength);
         }
 
         // Update players on board and activate the tile they fell on
         gameBoard.refresh();
 
-        Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
-        if (sqrAtPosition.getPrimaryOccupier != currentPlayer) { // If another player is already on the square
-            sqrAtPosition.alreadyOccupiedEffect(currentPlayer); // Activate the specific effect for multiple players
-        } else {
-            sqrAtPosition.activateSquareEffect();
-        }
+        // Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
+        // if (sqrAtPosition.getPrimaryOccupier != currentPlayer) { // If another player is already on the square
+        //     sqrAtPosition.alreadyOccupiedEffect(currentPlayer); // Activate the specific effect for multiple players
+        // } else {
+        //     sqrAtPosition.activateSquareEffect();
+        // }
 
         // TODO: Check if the player's role matches the tasks square
 
     }
 
-    private static void nextTurn() {
+    public static void nextTurn() {
         // Change turn & round number
-        if (turnNumber >= turnOrder.length) {
+        if (turnNumber >= turnOrder.length-1) {
             turnNumber = 0;
             nextRound();
         } else {
@@ -209,6 +211,10 @@ public abstract class GameSystem {
     }
 
     public static void endGame() {
+    }
+
+    public static void main(String[] args) {
+        initialise();
     }
 
 }

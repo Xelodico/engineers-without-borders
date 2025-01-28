@@ -4,10 +4,11 @@
  */
 package BoardGame;
 
-import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+
+import GameSystem.GameSystem;
 
 /**
  * The BoardGameUI class represents the user interface for the board game.
@@ -118,29 +119,51 @@ public class BoardGameUI extends JFrame {
         arrowRight.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                movePlayer(players.get(0), Direction.RIGHT);
+                GameSystem.movePlayer(Direction.RIGHT);
+                if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
+                    movesLeftLabel.setVisible(false);
+                    endTurnButton.setVisible(true);
+                } else {
+                    movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+                }
             }
         });
 
         arrowLeft.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                movePlayer(players.get(0), Direction.LEFT);
+                GameSystem.movePlayer(Direction.LEFT);
+                if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
+                    movesLeftLabel.setVisible(false);
+                    endTurnButton.setVisible(true);
+                } else {
+                    movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+                }            
             }
         });
 
         arrowUp.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                movePlayer(players.get(0), Direction.UP);
-            }
+                GameSystem.movePlayer(Direction.UP);
+                if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
+                    movesLeftLabel.setVisible(false);
+                    endTurnButton.setVisible(true);
+                } else {
+                    movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+                }            }
         });
 
         arrowDown.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                movePlayer(players.get(0), Direction.DOWN);
-            }
+                GameSystem.movePlayer(Direction.DOWN);
+                if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
+                    movesLeftLabel.setVisible(false);
+                    endTurnButton.setVisible(true);
+                } else {
+                    movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+                }            }
         });
 
         sidePanelContainer.add(arrowsContainer);
@@ -148,14 +171,14 @@ public class BoardGameUI extends JFrame {
 
         roundNumberGraphic.setFont(new java.awt.Font("Segoe UI", 0, 26)); // NOI18N
         roundNumberGraphic.setIcon(new  ImageIcon(getClass().getResource("/images/Round.png"))); // NOI18N
-        roundNumberGraphic.setText("Round 1");
+        roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
         roundNumberGraphic.setHorizontalTextPosition( SwingConstants.CENTER);
         sidePanelContainer.add(roundNumberGraphic);
         roundNumberGraphic.setBounds(251, 0, 122, 57);
 
         playerTurnGraphic.setFont(new java.awt.Font("Segoe UI", 0, 26)); // NOI18N
         playerTurnGraphic.setIcon(new  ImageIcon(getClass().getResource("/images/PlayerTurn.png"))); // NOI18N
-        playerTurnGraphic.setText("     " + player1Name + "'s Turn");
+        playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
         playerTurnGraphic.setToolTipText("");
         playerTurnGraphic.setHorizontalTextPosition( SwingConstants.CENTER);
         sidePanelContainer.add(playerTurnGraphic);
