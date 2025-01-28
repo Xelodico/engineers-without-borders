@@ -7,7 +7,7 @@ import BoardGame.*;
 
 import java.util.Scanner;
 
-public abstract class GameSystemStatic {
+public abstract class GameSystem {
     // Attributes
     private static Scanner input;
 
@@ -59,13 +59,14 @@ public abstract class GameSystemStatic {
     private static void enterPlayers() {
         // TODO: Integrate into UI
         boolean isValid = false;
-
+        int playerNum = 0;
         // Check if the number entered is a valid number (No characters; Between 1-4)
         while (!isValid){
             System.out.print("Please enter the number of players (1-4): ");
             try {
-                int playerNum = input.nextInt();
-
+                playerNum = input.nextInt();
+                input.nextLine();
+                
                 if (playerNum <= 0 || playerNum > 4){
                     System.err.print("ERROR: Outside the valid range (1-4). Try again.");
                     continue;
@@ -91,7 +92,7 @@ public abstract class GameSystemStatic {
                     turnOrder[i].setName(name);
                     isValid = true;
                 } catch (InputMismatchException e) {
-                    System.err.print("ERROR: Invalid name. Please try again.")
+                    System.err.print("ERROR: Invalid name. Please try again.");
                 }
             }
             
