@@ -1,5 +1,6 @@
 package BoardGame;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -19,6 +20,8 @@ public class Player {
     private int id;
 
     private int nextID = 0;
+    private ArrayList<JobRole> roles;
+    
 
     /**
      * Default constructor for a blank player object.
@@ -153,6 +156,26 @@ public class Player {
         return this.movesLeft;
     }
 
+    /**
+     * Adds a new role to the player
+     * 
+     * @param newRole The new role to add to this player's responsibilities
+     * @return True if the role was added successfully, False if there was a problem
+     */
+    public boolean addRole(JobRole newRole) {
+    	return roles.add(newRole);
+    }
+    
+    /**
+     * Removes a role from the player
+     * 
+     * @param roleToRemove The role to remove from this player's responsibilities
+     * @return True if the role was removed successfully, False if there was a problem
+     */
+    public boolean removeRole(JobRole roleToRemove) {
+    	return roles.remove(roleToRemove);
+    }
+    
     /**
      * Sets the moves left for the player.
      * 
