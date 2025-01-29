@@ -11,6 +11,24 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
+/**
+ * Popup is a custom JPanel that displays a popup window with a title, description,
+ * and two buttons (Yes and No). The popup can be customized with specific text for
+ * the title, description, and buttons.
+ * 
+ * This class extends JPanel and uses various Swing components to create the popup
+ * window. It includes a JLabel for the title, a JTextArea for the description, and
+ * two JButtons for the Yes and No actions. The layout and appearance of the popup
+ * are set within the constructor.
+ * 
+ * When either button is clicked, the popup is removed from its parent container
+ * and set to null.
+ * 
+ * @param title The title text to be displayed at the top of the popup.
+ * @param desc The description text to be displayed in the body of the popup.
+ * @param yesButton The text to be displayed on the Yes button.
+ * @param noButton The text to be displayed on the No button.
+ */
 public class Popup extends JPanel {
 
     private JPanel popup;

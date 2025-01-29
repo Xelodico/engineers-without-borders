@@ -39,6 +39,11 @@ public class BoardGameUI extends JFrame {
         this.setVisible(true);
     }
 
+    /**
+     * Initializes the UI components for the game window, including the game board,
+     * side panel with player resources, and control buttons for moving players and
+     * ending turns.
+     */
     private void initComponents() {
         sidePanelContainer = new  JPanel();
         arrowsContainer = new  JPanel();
