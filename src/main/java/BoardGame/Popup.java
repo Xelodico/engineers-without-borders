@@ -24,6 +24,9 @@ import javax.swing.SwingConstants;
  * When either button is clicked, the popup is removed from its parent container
  * and set to null.
  * 
+ * @author Nathan Watkins
+ * @author Curtis McCartney
+ * 
  * @param title The title text to be displayed at the top of the popup.
  * @param desc The description text to be displayed in the body of the popup.
  * @param yesButton The text to be displayed on the Yes button.
