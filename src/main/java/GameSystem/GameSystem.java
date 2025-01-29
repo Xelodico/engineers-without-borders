@@ -40,6 +40,7 @@ public abstract class GameSystem {
 
             gameBoard = new Board(turnOrder);
             gameBoardUI = new BoardGameUI(gameBoard, turnOrder);
+            gameBoardUI.setTitle("Pavers Valley");
 
             gameBoardUI.setVisible(true);
             gameActive = true;
