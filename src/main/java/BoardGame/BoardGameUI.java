@@ -289,7 +289,7 @@ public class BoardGameUI extends JFrame {
                                                  GroupLayout.PREFERRED_SIZE)
                                         .addComponent(sidePanelContainer,  GroupLayout.PREFERRED_SIZE, 500,
                                                  GroupLayout.PREFERRED_SIZE))
-                                .addGap(6, 6, 6)));
+                                .addGap(10, 10, 10)));
 
         setSize(new java.awt.Dimension(920, 555));
         setLocationRelativeTo(null);
