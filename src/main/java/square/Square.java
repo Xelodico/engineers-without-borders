@@ -7,7 +7,7 @@ import GameSystem.*;
 public class Square {
 
     private Player primaryOccupier;
-
+    private final SquareType sType = SquareType.SQUARE;
     /**
      * Constructs a new Square instance with no primary occupier.
      */
@@ -23,8 +23,9 @@ public class Square {
      * Activates the effect associated with the square.
      * This method should be overridden in subclasses to provide specific effects.
      */
-    public void activateSquareEffect() {
+    public boolean activateSquareEffect() {
         // No default behavior. Override for specific effects.
+        return true;
     }
 
     /**
@@ -52,5 +53,9 @@ public class Square {
      */
     public void setPrimaryOccupier(Player occupier) {
         this.primaryOccupier = occupier;
+    }
+
+    public SquareType getSquareType() {
+        return this.sType;
     }
 }

@@ -13,6 +13,7 @@ public class RoleSquare extends Square {
      * The job role that is assigned to the player when this square is activated.
      */
     private JobRole playerRole;
+    private final SquareType sType = SquareType.ROLESQUARE;
 
     /**
     * Constructs a RoleSquare with the specified job role.
@@ -32,10 +33,15 @@ public class RoleSquare extends Square {
      * @param playerRoleAssignment the player to get the role of the square
      */
     @Override
-    public void activateSquareEffect(Player[] players, int playerRoleAssignment) {
+    public boolean activateSquareEffect(Player[] players, int playerRoleAssignment) {
         // Determine which player to assign the role to
         //TODO use UI to get player's choice
         players[playerRoleAssignment].setJobRole(this.playerRole);
+        return true;
+    }
+
+    public SquareType getSquareType() {
+        return this.sType;
     }
 }
 
