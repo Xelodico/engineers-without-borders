@@ -37,10 +37,6 @@ public class BoardGameUI extends JFrame {
     public BoardGameUI(Board gameBoard, Player[] players) {
         this.players = players;
         this.gameBoard = gameBoard;
-
-        popup = new Popup("", "", "Yes", "No");
-        add(popup);
-
         initComponents();
         this.setVisible(true);
     }
