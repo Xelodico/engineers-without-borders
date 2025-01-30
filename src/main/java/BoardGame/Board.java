@@ -137,7 +137,7 @@ public class Board extends JPanel {
      * 
      * @return The list of square types on the board.
      */
-    public List<String> getsquareArray() {
+    public List<String> getSquareArray() {
         return squareArray;
     }
 
