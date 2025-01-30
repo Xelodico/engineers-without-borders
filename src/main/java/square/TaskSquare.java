@@ -11,7 +11,7 @@ public class TaskSquare extends Square {
      * The task associated with this square, which players can attempt to complete.
      */
     private Task task;
-
+    private final SquareType sType = SquareType.TASKSQUARE;
     /**
      * Constructs a TaskSquare object with the specified task.
      * This task will be available for players who land on this square.
@@ -32,6 +32,7 @@ public class TaskSquare extends Square {
      * @return true if the task was successfully activated and completed,
      *         false if the player's role does not match the task's requirements.
      */
+    @Override
     public boolean activateSquareEffect() {
         if (primaryOccupier.getRole() == task.getRole()) {
             // Execute the task
@@ -41,5 +42,9 @@ public class TaskSquare extends Square {
             // Notify the player that their role is not suitable for this task
             return false;  // Indicate failure
         }
+    }
+
+    public SquareType getSquareType() {
+        return this.sType;
     }
 }
