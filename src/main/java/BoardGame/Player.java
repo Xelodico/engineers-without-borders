@@ -190,6 +190,14 @@ public class Player {
         this.movesLeft = movesLeft;
     }
 
+    public void getRoles() {
+        return this.roles;
+    }
+
+    public void setRoles(ArrayList<JobRole> roles) {
+        this.roles = roles;
+    }
+
     /**
      * Rolls a die to determine movement or other game mechanics.
      * A random number between 1 and 6 is generated, and the number of moves left
