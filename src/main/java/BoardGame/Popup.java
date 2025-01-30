@@ -51,7 +51,7 @@ public class Popup extends JPanel {
         setBounds(62, 56, width, height);
         setBackground(new java.awt.Color(240, 240, 240));
         setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-        setVisible(true);
+        setVisible(false);
 
         popupTitle = new JLabel(title);
         popupTitle.setFont(new java.awt.Font("Segoe UI", 1, 24));
@@ -93,17 +93,30 @@ public class Popup extends JPanel {
         yesButtonComponent.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 popup.setVisible(false);
-                popup.getParent().remove(popup);
-                popup = null;
             }
         });
 
         noButtonComponent.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 popup.setVisible(false);
-                popup.getParent().remove(popup);
-                popup = null;
             }
         });
     }
+
+    public void setTitle(String title) {
+        popupTitle.setText("<html>" + title + "</html>");
+    }
+
+    public void setDescription(String desc) {
+        popupDesc.setText(desc);
+    }
+
+    public void setYesButtonText(String text) {
+        yesButtonComponent.setText(text);
+    }
+
+    public void setNoButtonText(String text) {
+        noButtonComponent.setText(text);
+    }
+
 }
