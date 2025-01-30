@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import GameSystem.GameSystem;
+
 /**
  * The StartScreen class represents the initial screen of the board game
  * application.
@@ -100,12 +102,20 @@ public class StartScreen extends JPanel {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Start game logic here
+                // Start game logic
+                GameSystem.setTurnOrder(getPlayers());
+                GameSystem.startGame();
             }
         });
         add(startButton);
     }
 
+    
+    /**
+     * Gets the players from the text fields on the start screen.
+     * 
+     * @return An array of Player objects representing the players.
+     */
     public Player[] getPlayers() {
         Player[] players = new Player[numOfPlayers];
         for (int i = 0; i < numOfPlayers; i++) {
