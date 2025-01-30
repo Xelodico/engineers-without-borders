@@ -1,7 +1,6 @@
 package BoardGame;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
@@ -34,16 +33,12 @@ import javax.swing.SwingConstants;
  */
 public class Popup extends JPanel {
 
-    private JPanel popup;
     private JLabel popupTitle;
     private JTextArea popupDesc;
     private JButton yesButtonComponent;
     private JButton noButtonComponent;
 
     public Popup(String title, String desc, String yesButtonText, String noButtonText, ActionListener yesAction, ActionListener noAction) {
-
-        popup = this;
-
         final int width = 400;
         final int height = 400;
 
