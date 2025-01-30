@@ -32,11 +32,11 @@ public class RoleSquare extends Square {
      * @param players array of players in game
      * @param playerRoleAssignment the player to get the role of the square
      */
-    @Override
-    public boolean activateSquareEffect(Player[] players, int playerRoleAssignment) {
+    public boolean activateSquareEffect() {
         // Determine which player to assign the role to
         //TODO use UI to get player's choice
-        players[playerRoleAssignment].setJobRole(this.playerRole);
+        //Player[] players = GameSystem.getTurnOrder();
+        getPrimaryOccupier().addRole(this.playerRole);
         return true;
     }
 
