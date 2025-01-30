@@ -1,5 +1,6 @@
 package BoardGame;
 
+import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -27,16 +28,40 @@ public class BoardGameUI extends JFrame {
     String player3Name;
     String player4Name;
 
+    public StartScreen startScreen;
+
+    CardLayout cardLayout = new CardLayout();
+
     /**
      * Creates a new BoardGameUI instance with the specified list of players.
      * 
      * @param players A list of Player objects representing the players in the game.
      */
-    public BoardGameUI(Board gameBoard, Player[] players) {
-        this.players = players;
+    public BoardGameUI(Board gameBoard) {
+        this.players = GameSystem.getTurnOrder();
         this.gameBoard = gameBoard;
+
+        startScreen = new StartScreen();
+        add(startScreen);
+        startScreen.setVisible(true);
+
         initComponents();
         this.setVisible(true);
+    }
+
+    public void refresh() {
+        this.players = GameSystem.getTurnOrder();
+        gameBoard.refresh();
+        remove(sidePanelContainer);
+        initComponents();
+        revalidate();
+        repaint();
+        sidePanelContainer.setVisible(true);
+    }
+
+    public void startGame() {
+        startScreen.setVisible(false);
+        remove(startScreen);
     }
 
     /**
@@ -81,6 +106,7 @@ public class BoardGameUI extends JFrame {
         setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE);
 
         sidePanelContainer.setLayout(null);
+        sidePanelContainer.setVisible(false);
 
         arrowsContainer.setName(""); // NOI18N
         arrowsContainer.setLayout(null);
