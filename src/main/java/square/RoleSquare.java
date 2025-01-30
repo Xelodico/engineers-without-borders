@@ -1,4 +1,6 @@
 package square;
+import BoardGame.*;
+import GameSystem.*;
 
 /**
  * The RoleSquare class extends the Square class and represents a square on the game board that assigns

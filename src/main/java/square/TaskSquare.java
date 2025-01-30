@@ -1,4 +1,6 @@
 package square;
+import BoardGame.*;
+import GameSystem.*;
 
 /**
  * The TaskSquare class represents a square on the game board that contains a specific task.
