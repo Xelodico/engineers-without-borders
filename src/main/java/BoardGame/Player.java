@@ -190,7 +190,7 @@ public class Player {
         this.movesLeft = movesLeft;
     }
 
-    public void getRoles() {
+    public ArrayList<JobRole> getRoles() {
         return this.roles;
     }
 
