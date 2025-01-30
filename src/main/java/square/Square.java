@@ -1,5 +1,6 @@
 package square;
-
+import BoardGame.*;
+import GameSystem.*;
 /**
  * Represents a square on a game board that can be occupied by a player.
  */
@@ -12,6 +13,10 @@ public class Square {
      */
     public Square() {
         this.primaryOccupier = null;
+    }
+
+    public Square(Player occupier) {
+        this.primaryOccupier = occupier;
     }
 
     /**

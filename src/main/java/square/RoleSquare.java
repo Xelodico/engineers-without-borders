@@ -1,7 +1,5 @@
 package square;
 
-import java.util.Random;
-
 /**
  * The RoleSquare class extends the Square class and represents a square on the game board that assigns
  * a job role to a player. The job role is randomly selected, and the selected role is assigned to a specific player
@@ -15,15 +13,13 @@ public class RoleSquare extends Square {
     private JobRole playerRole;
 
     /**
-     * Constructs a RoleSquare object and randomly selects a job role for the player.
-     * The role is selected from a range of 4 possible roles.
-     * If the game is in phase 2 or 3, an additional offset (4) could be added to the random selection.
-     */
-    RoleSquare() {
-        Random random = new Random();
-        // Randomly select a job role from a range of 4 roles
-        int roleReturned = random.nextInt(4);
-        playerRole.setJobRole(roleReturned);
+    * Constructs a RoleSquare with the specified job role.
+    *
+    * @param role the job role assigned to this square
+    */
+    public RoleSquare(JobRole role) {
+        super();
+        this.playerRole = role;
     }
 
     /**
@@ -37,12 +33,7 @@ public class RoleSquare extends Square {
     public void activateSquareEffect(Player[] players, int playerRoleAssignment) {
         // Determine which player to assign the role to
         //TODO use UI to get player's choice
-        if (playerRoleAssignment > players.length) {
-            //invalid option
-        } else {
-            players[playerRoleAssignment].setJobRole(this.playerRole);
-        }
-        break;
+        players[playerRoleAssignment].setJobRole(this.playerRole);
     }
 }
 
