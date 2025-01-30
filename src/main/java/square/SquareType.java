@@ -1,4 +1,4 @@
 package square;
-enum SquareType() {
+public enum SquareType {
     SQUARE, ROLESQUARE, TASKSQUARE, SHOPSQUARE;
 }
