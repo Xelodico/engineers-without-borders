@@ -40,7 +40,7 @@ public class Popup extends JPanel {
     private JButton yesButtonComponent;
     private JButton noButtonComponent;
 
-    public Popup(String title, String desc, String yesButton, String noButton) {
+    public Popup(String title, String desc, String yesButtonText, String noButtonText, ActionListener yesAction, ActionListener noAction) {
 
         popup = this;
 
@@ -72,7 +72,7 @@ public class Popup extends JPanel {
         popupDesc.setBounds(10, 80, width - 20, height - 200);
         add(popupDesc);
 
-        yesButtonComponent = new JButton(yesButton);
+        yesButtonComponent = new JButton(yesButtonText);
         yesButtonComponent.setFont(new java.awt.Font("Segoe UI", 0, 18));
         yesButtonComponent.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         yesButtonComponent.setFocusPainted(false);
@@ -81,7 +81,7 @@ public class Popup extends JPanel {
         yesButtonComponent.setBounds((width / 2) - 110, height - 60, 100, 30);
         add(yesButtonComponent);
 
-        noButtonComponent = new JButton(noButton);
+        noButtonComponent = new JButton(noButtonText);
         noButtonComponent.setFont(new java.awt.Font("Segoe UI", 0, 18));
         noButtonComponent.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         noButtonComponent.setFocusPainted(false);
@@ -90,17 +90,8 @@ public class Popup extends JPanel {
         noButtonComponent.setBounds((width / 2) + 10, height - 60, 100, 30);
         add(noButtonComponent);
 
-        yesButtonComponent.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                popup.setVisible(false);
-            }
-        });
-
-        noButtonComponent.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                popup.setVisible(false);
-            }
-        });
+        yesButtonComponent.addActionListener(yesAction);
+        noButtonComponent.addActionListener(noAction);
     }
 
     public void setTitle(String title) {
