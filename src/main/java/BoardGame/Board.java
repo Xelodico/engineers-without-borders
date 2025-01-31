@@ -1,6 +1,9 @@
 package BoardGame;
 
 import javax.swing.*;
+
+import GameSystem.GameSystem;
+
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
@@ -30,15 +33,15 @@ public class Board extends JPanel {
      */
     protected List<String> squareArray;
 
+    private List<JPanel> squarePanels;
+
     /**
      * Constructs a new Board object and initializes the board with the default
      * settings.
      */
-    public Board(Player[] players) {
+    public Board() {
         this.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         this.setLayout(new java.awt.GridLayout(boardSideLength, boardSideLength));
-
-        this.players = players;
 
         squareArray = generateBoardSquares();
         renderBoard(squareArray);
@@ -88,6 +91,7 @@ public class Board extends JPanel {
      */
     private void renderBoard(List<String> squareArray) {
         int totalSquares = boardSideLength * boardSideLength;
+        squarePanels = new ArrayList<JPanel>();
 
         for (int i = 0; i < totalSquares; i++) {
             JPanel panel = new JPanel();
@@ -112,20 +116,16 @@ public class Board extends JPanel {
                     break;
             }
 
-            for (Player player : players) {
-                if (player.getCoord() == i) {
-                    ImageIcon imageIcon = new ImageIcon("src/main/resources/images/playerIcon.png");
-                    ImageIcon resizedImage = new ImageIcon(
-                            imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-                    JLabel playerIcon = new JLabel(resizedImage);
-                    panel.add(playerIcon, BorderLayout.CENTER);
-                }
+            squarePanels.add(panel);
+            if (players != null) {
+                renderPlayers(players);
             }
             this.add(panel);
         }
     }
 
     public void refresh() {
+        players = GameSystem.getTurnOrder();
         this.removeAll();
         renderBoard(squareArray);
         this.revalidate();
@@ -137,7 +137,7 @@ public class Board extends JPanel {
      * 
      * @return The list of square types on the board.
      */
-    public List<String> getsquareArray() {
+    public List<String> getSquareArray() {
         return squareArray;
     }
 
@@ -165,5 +165,24 @@ public class Board extends JPanel {
             throw new IllegalArgumentException("Index out of bounds: " + index);
         }
         squareArray.set(index, squareType);
+    }
+
+    public void renderPlayers(Player[] players) {
+        this.players = players;
+        for (int i = 0; i < squarePanels.size(); i++) {
+            JPanel panel = squarePanels.get(i);
+            panel.removeAll();
+            for (Player player : players) {
+                if (player.getCoord() == i) {
+                    ImageIcon imageIcon = new ImageIcon("src/main/resources/images/playerIcon.png");
+                    ImageIcon resizedImage = new ImageIcon(
+                            imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+                    JLabel playerIcon = new JLabel(resizedImage);
+                    panel.add(playerIcon, BorderLayout.CENTER);
+                    revalidate();
+                    repaint();
+                }
+            }
+        }
     }
 }
