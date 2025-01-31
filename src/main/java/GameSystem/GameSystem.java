@@ -97,7 +97,7 @@ public abstract class GameSystem {
         }
 
         // Update players on board and activate the tile they fell on
-        gameBoard.refresh();
+        gameBoard.renderPlayers(turnOrder);
 
         // Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
         // if (sqrAtPosition.getPrimaryOccupier != currentPlayer) { // If another player is already on the square
