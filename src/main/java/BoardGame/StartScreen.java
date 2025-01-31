@@ -1,8 +1,6 @@
 package BoardGame;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,6 +24,12 @@ public class StartScreen extends JPanel {
     private final int WIDTH = 904;
     private final int HEIGHT = 516;
 
+    private final int buttonWidth = 240;
+    private final int buttonHeight = 55;
+
+    private final ImageIcon playerBackgroundIcon = new ImageIcon(getClass().getResource("/images/playerTurn.png"));
+    private final ImageIcon addPlayerIcon = new ImageIcon(getClass().getResource("/images/addPlayer.png"));
+
     private JButton[] playerButtons = new JButton[4]; // Array to hold buttons
     private JTextField[] playerTextFields = new JTextField[4]; // Array to hold text fields for player names
     private int numOfPlayers = 1;
@@ -42,19 +46,9 @@ public class StartScreen extends JPanel {
         title.setFont(new java.awt.Font("Segoe UI", 0, 26));
         add(title);
 
-        String imagePath = "/images/addPlayer.png";
-        int buttonWidth = 240;
-        int buttonHeight = 55;
-        int yOffset = (int) (HEIGHT * 0.2);
 
         for (int i = 0; i < playerButtons.length; i++) {
-            playerButtons[i] = new JButton();
-            playerButtons[i].setBorderPainted(false);
-            playerButtons[i].setFocusPainted(false);
-            playerButtons[i].setContentAreaFilled(false);
-            playerButtons[i].setBounds((WIDTH - buttonWidth) / 2, yOffset + (i * (buttonHeight + 10)), buttonWidth,
-                    buttonHeight);
-            playerButtons[i].setHorizontalTextPosition(JButton.CENTER);
+            playerButtons[i] = createPlayerButton(i);
 
             playerTextFields[i] = new JTextField();
             playerTextFields[i].setBounds(0, 0, buttonWidth, buttonHeight);
@@ -64,28 +58,25 @@ public class StartScreen extends JPanel {
             playerTextFields[i].setOpaque(false);
 
             if (i != 0) {
-                playerButtons[i].setIcon(new ImageIcon(getClass().getResource(imagePath)));
+                playerButtons[i].setIcon(addPlayerIcon);
                 playerButtons[i].setVisible(false);
                 playerButtons[i].setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
                 playerTextFields[i].setText("Player " + (i + 1));
 
                 final int index = i;
-                playerButtons[i].addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        playerButtons[index].setIcon(new ImageIcon(getClass().getResource("/images/playerTurn.png")));
-                        playerButtons[index].setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                        if (index < playerButtons.length - 1) {
-                            playerButtons[index + 1].setVisible(true);
-                        }
-                        playerButtons[index].add(playerTextFields[index]);
-                        numOfPlayers++;
+                playerButtons[i].addActionListener(_ -> {
+                    playerButtons[index].setIcon(playerBackgroundIcon);
+                    playerButtons[index].setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    if (index < playerButtons.length - 1) {
+                        playerButtons[index + 1].setVisible(true);
                     }
-
+                    playerButtons[index].add(playerTextFields[index]);
+                    numOfPlayers++;
                 });
+
             } else {
-                playerButtons[i].setIcon(new ImageIcon(getClass().getResource("/images/playerTurn.png")));
+                playerButtons[i].setIcon(playerBackgroundIcon);
                 playerTextFields[i].setText("Player 1");
                 playerButtons[i].add(playerTextFields[i]);
             }
@@ -99,20 +90,27 @@ public class StartScreen extends JPanel {
         startButton.setBounds((WIDTH - buttonWidth) / 2, (int) (HEIGHT * 0.8), buttonWidth, buttonHeight);
         startButton.setFont(new java.awt.Font("Segoe UI", 0, 16));
         startButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Start game logic
-                GameSystem.setTurnOrder(getPlayers());
-                GameSystem.startGame();
-            }
+        startButton.addActionListener(_ -> {
+            GameSystem.setTurnOrder(getPlayers());
+            GameSystem.startGame();
         });
+
         add(startButton);
     }
 
-    
+    private JButton createPlayerButton(int index) {
+        JButton button = new JButton();
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setContentAreaFilled(false);
+        button.setBounds((WIDTH - 240) / 2, (int) (HEIGHT * 0.2) + (index * (55 + 10)), 240, 55);
+        button.setHorizontalTextPosition(JButton.CENTER);
+        return button;
+    }
+
     /**
-     * Gets the players from the text fields on the start screen.
+     * Gets the players from the text fields on the start screen and initializes
+     * them.
      * 
      * @return An array of Player objects representing the players.
      */
@@ -122,28 +120,10 @@ public class StartScreen extends JPanel {
             players[i] = new Player();
             players[i].setName(playerTextFields[i].getText());
         }
-        switch (numOfPlayers) {
-            case 1:
-                players[0].setCoord(0);
-                break;
-            case 2:
-                players[0].setCoord(0);
-                players[1].setCoord(9);
-                break;
-            case 3:
-                players[0].setCoord(0);
-                players[1].setCoord(9);
-                players[2].setCoord(90);
-                break;
-            case 4:
-                players[0].setCoord(0);
-                players[1].setCoord(9);
-                players[2].setCoord(90);
-                players[3].setCoord(99);
-                break;
 
-            default:
-                break;
+        int[] startingCoords = { 0, 9, 90, 99 };
+        for (int i = 0; i < numOfPlayers; i++) {
+            players[i].setCoord(startingCoords[i]);
         }
         return players;
     }
