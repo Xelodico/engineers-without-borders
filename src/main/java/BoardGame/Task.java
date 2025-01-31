@@ -54,7 +54,7 @@ public class Task {
 	/**
 	 * @return the JobRole this task belongs to
 	 */
-	public JobRole getBelongsTo() {
+	public JobRole getRole() {
 		return belongsTo;
 	}
 
@@ -91,7 +91,7 @@ public class Task {
 	/**
 	 * @param belongsTo - The new JobRole this task is a subtask of
 	 */
-	public void setBelongsTo(JobRole belongsTo) {
+	public void setRole(JobRole belongsTo) {
 		this.belongsTo = belongsTo;
 	}
 

@@ -36,6 +36,7 @@ public abstract class GameSystem {
             
             gameBoardUI.setVisible(true);
             gameActive = true;
+            gameBoardUI.showPopup("Title", "Desc", "Yes", "No");
         }
     }
 
@@ -148,6 +149,10 @@ public abstract class GameSystem {
     }
 
     public static void endGame() {
+    }
+
+    public static void showPopup(String title, String desc, String yesButton, String noButton) {
+        gameBoardUI.showPopup(title, desc, yesButton, noButton);
     }
 
     public static void main(String[] args) {

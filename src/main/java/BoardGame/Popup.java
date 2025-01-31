@@ -1,7 +1,6 @@
 package BoardGame;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
@@ -34,16 +33,12 @@ import javax.swing.SwingConstants;
  */
 public class Popup extends JPanel {
 
-    private JPanel popup;
     private JLabel popupTitle;
     private JTextArea popupDesc;
     private JButton yesButtonComponent;
     private JButton noButtonComponent;
 
-    public Popup(String title, String desc, String yesButton, String noButton) {
-
-        popup = this;
-
+    public Popup(String title, String desc, String yesButtonText, String noButtonText, ActionListener yesAction, ActionListener noAction) {
         final int width = 400;
         final int height = 400;
 
@@ -51,7 +46,7 @@ public class Popup extends JPanel {
         setBounds(62, 56, width, height);
         setBackground(new java.awt.Color(240, 240, 240));
         setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-        setVisible(true);
+        setVisible(false);
 
         popupTitle = new JLabel(title);
         popupTitle.setFont(new java.awt.Font("Segoe UI", 1, 24));
@@ -72,7 +67,7 @@ public class Popup extends JPanel {
         popupDesc.setBounds(10, 80, width - 20, height - 200);
         add(popupDesc);
 
-        yesButtonComponent = new JButton(yesButton);
+        yesButtonComponent = new JButton(yesButtonText);
         yesButtonComponent.setFont(new java.awt.Font("Segoe UI", 0, 18));
         yesButtonComponent.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         yesButtonComponent.setFocusPainted(false);
@@ -81,7 +76,7 @@ public class Popup extends JPanel {
         yesButtonComponent.setBounds((width / 2) - 110, height - 60, 100, 30);
         add(yesButtonComponent);
 
-        noButtonComponent = new JButton(noButton);
+        noButtonComponent = new JButton(noButtonText);
         noButtonComponent.setFont(new java.awt.Font("Segoe UI", 0, 18));
         noButtonComponent.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         noButtonComponent.setFocusPainted(false);
@@ -90,20 +85,24 @@ public class Popup extends JPanel {
         noButtonComponent.setBounds((width / 2) + 10, height - 60, 100, 30);
         add(noButtonComponent);
 
-        yesButtonComponent.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                popup.setVisible(false);
-                popup.getParent().remove(popup);
-                popup = null;
-            }
-        });
-
-        noButtonComponent.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                popup.setVisible(false);
-                popup.getParent().remove(popup);
-                popup = null;
-            }
-        });
+        yesButtonComponent.addActionListener(yesAction);
+        noButtonComponent.addActionListener(noAction);
     }
+
+    public void setTitle(String title) {
+        popupTitle.setText("<html>" + title + "</html>");
+    }
+
+    public void setDescription(String desc) {
+        popupDesc.setText(desc);
+    }
+
+    public void setYesButtonText(String text) {
+        yesButtonComponent.setText(text);
+    }
+
+    public void setNoButtonText(String text) {
+        noButtonComponent.setText(text);
+    }
+
 }

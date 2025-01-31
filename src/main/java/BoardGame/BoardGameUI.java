@@ -46,6 +46,14 @@ public class BoardGameUI extends JFrame {
         this.setVisible(true);
     }
 
+    public void showPopup(String title, String desc, String yesButton, String noButton) {
+        popup.setTitle(title);
+        popup.setDescription(desc);
+        popup.setYesButtonText(yesButton);
+        popup.setNoButtonText(noButton);
+        popup.setVisible(true);
+    }
+
     /**
      * Refreshes the game window to update the player resources and board state.
      */
