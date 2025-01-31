@@ -1,7 +1,7 @@
 package BoardGame;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.*;
 
 import GameSystem.GameSystem;
@@ -27,16 +27,21 @@ public class BoardGameUI extends JFrame {
     String player3Name;
     String player4Name;
 
-    private Popup popup;
+    public StartScreen startScreen;
 
     /**
      * Creates a new BoardGameUI instance with the specified list of players.
      * 
      * @param players A list of Player objects representing the players in the game.
      */
-    public BoardGameUI(Board gameBoard, Player[] players) {
-        this.players = players;
+    public BoardGameUI(Board gameBoard) {
+        this.players = GameSystem.getTurnOrder();
         this.gameBoard = gameBoard;
+
+        startScreen = new StartScreen();
+        add(startScreen);
+        startScreen.setVisible(true);
+
         initComponents();
         this.setVisible(true);
     }
@@ -50,49 +55,33 @@ public class BoardGameUI extends JFrame {
     }
 
     /**
-     * Initializes the UI components for the game window, including the game board,
-     * side panel with player resources, and control buttons for moving players and
-     * ending turns.
+     * Refreshes the game window to update the player resources and board state.
      */
-    private void initComponents() {
-        sidePanelContainer = new JPanel();
+    public void refresh() {
+        this.players = GameSystem.getTurnOrder();
+        gameBoard.refresh();
+        remove(sidePanelContainer);
+        initComponents();
+        revalidate();
+        repaint();
+        sidePanelContainer.setVisible(true);
+    }
+
+    /**
+     * Starts the game by hiding the start screen and showing the game board.
+     */
+    public void startGame() {
+        startScreen.setVisible(false);
+        remove(startScreen);
+    }
+    
+    private void setupArrowButtons() {
         arrowsContainer = new JPanel();
         arrowDown = new JButton();
         arrowUp = new JButton();
         arrowLeft = new JButton();
         arrowRight = new JButton();
-        roundNumberGraphic = new JLabel();
-        playerTurnGraphic = new JLabel();
-        helpButton = new JButton();
-        rollDiceButton = new JButton();
-        Player1Resources = new JPanel();
-        player1ResourceTitle = new JLabel();
-        player1Satisfaction = new JLabel();
-        player1Knowledge = new JLabel();
-        player1Asphalt = new JLabel();
-        Player2Resources = new JPanel();
-        player2ResourceTitle = new JLabel();
-        player2Satisfaction = new JLabel();
-        player2Knowledge = new JLabel();
-        player2Asphalt = new JLabel();
-        Player3Resources = new JPanel();
-        player3ResourceTitle = new JLabel();
-        player3Satisfaction = new JLabel();
-        player3Knowledge = new JLabel();
-        player3Asphalt = new JLabel();
-        Player4Resources = new JPanel();
-        player4ResourceTitle = new JLabel();
-        player4Satisfaction = new JLabel();
-        player4Knowledge = new JLabel();
-        player4Asphalt = new JLabel();
-        endTurnButton = new JButton();
-        movesLeftLabel = new JLabel();
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        sidePanelContainer.setLayout(null);
-
-        arrowsContainer.setName(""); // NOI18N
         arrowsContainer.setLayout(null);
 
         JButton[] arrowButtons = { arrowDown, arrowUp, arrowLeft, arrowRight };
@@ -118,60 +107,47 @@ public class BoardGameUI extends JFrame {
             arrowsContainer.add(arrowButtons[i]);
         }
 
-        arrowRight.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.movePlayer(Direction.RIGHT);
-                if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
-                    movesLeftLabel.setVisible(false);
-                    endTurnButton.setVisible(true);
-                } else {
-                    movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
-                }
-            }
-        });
-
-        arrowLeft.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.movePlayer(Direction.LEFT);
-                if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
-                    movesLeftLabel.setVisible(false);
-                    endTurnButton.setVisible(true);
-                } else {
-                    movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
-                }
-            }
-        });
-
-        arrowUp.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.movePlayer(Direction.UP);
-                if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
-                    movesLeftLabel.setVisible(false);
-                    endTurnButton.setVisible(true);
-                } else {
-                    movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
-                }
-            }
-        });
-
-        arrowDown.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.movePlayer(Direction.DOWN);
-                if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
-                    movesLeftLabel.setVisible(false);
-                    endTurnButton.setVisible(true);
-                } else {
-                    movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
-                }
-            }
-        });
+        setupArrowButtonAction(arrowRight, Direction.RIGHT);
+        setupArrowButtonAction(arrowLeft, Direction.LEFT);
+        setupArrowButtonAction(arrowUp, Direction.UP);
+        setupArrowButtonAction(arrowDown, Direction.DOWN);
 
         sidePanelContainer.add(arrowsContainer);
         arrowsContainer.setBounds(10, 405, 138, 92);
+    }
+
+    private void setupArrowButtonAction(JButton button, Direction direction) {
+        button.addActionListener(_ -> {
+            GameSystem.movePlayer(direction);
+            if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
+                movesLeftLabel.setVisible(false);
+                endTurnButton.setVisible(true);
+            } else {
+                movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+            }
+        });
+
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GameSystem.movePlayer(direction);
+                if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
+                    movesLeftLabel.setVisible(false);
+                    endTurnButton.setVisible(true);
+                } else {
+                    movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+                }
+            }
+        });
+    }
+
+    private void setupLabelsAndButtons() {
+        roundNumberGraphic = new JLabel();
+        playerTurnGraphic = new JLabel();
+        helpButton = new JButton();
+        rollDiceButton = new JButton();
+        endTurnButton = new JButton();
+        movesLeftLabel = new JLabel();
 
         roundNumberGraphic.setFont(new java.awt.Font("Segoe UI", 0, 26)); // NOI18N
         roundNumberGraphic.setIcon(new ImageIcon(getClass().getResource("/images/Round.png"))); // NOI18N
@@ -203,14 +179,11 @@ public class BoardGameUI extends JFrame {
         sidePanelContainer.add(rollDiceButton);
         rollDiceButton.setBounds(170, 450, 192, 47);
 
-        rollDiceButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.getPlayerAt().rollDie();
-                rollDiceButton.setVisible(false);
-                movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
-                movesLeftLabel.setVisible(true);
-            }
+        rollDiceButton.addActionListener(_ -> {
+            GameSystem.getPlayerAt().rollDie();
+            rollDiceButton.setVisible(false);
+            movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+            movesLeftLabel.setVisible(true);
         });
 
         movesLeftLabel.setIcon(new ImageIcon(getClass().getResource("/images/buttonBackground.png")));
@@ -231,17 +204,37 @@ public class BoardGameUI extends JFrame {
         endTurnButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         sidePanelContainer.add(endTurnButton);
 
-        endTurnButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.nextTurn();
-                playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
-                roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
-                movesLeftLabel.setVisible(false);
-                endTurnButton.setVisible(false);
-                rollDiceButton.setVisible(true);
-            }
+        endTurnButton.addActionListener(_ -> {
+            GameSystem.nextTurn();
+            playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
+            roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
+            movesLeftLabel.setVisible(false);
+            endTurnButton.setVisible(false);
+            rollDiceButton.setVisible(true);
         });
+    }
+
+    private void setupPlayerPanels() {
+        Player1Resources = new JPanel();
+        player1ResourceTitle = new JLabel();
+        player1Satisfaction = new JLabel();
+        player1Knowledge = new JLabel();
+        player1Asphalt = new JLabel();
+        Player2Resources = new JPanel();
+        player2ResourceTitle = new JLabel();
+        player2Satisfaction = new JLabel();
+        player2Knowledge = new JLabel();
+        player2Asphalt = new JLabel();
+        Player3Resources = new JPanel();
+        player3ResourceTitle = new JLabel();
+        player3Satisfaction = new JLabel();
+        player3Knowledge = new JLabel();
+        player3Asphalt = new JLabel();
+        Player4Resources = new JPanel();
+        player4ResourceTitle = new JLabel();
+        player4Satisfaction = new JLabel();
+        player4Knowledge = new JLabel();
+        player4Asphalt = new JLabel();
 
         JPanel[] playerResources = { Player1Resources, Player2Resources, Player3Resources, Player4Resources };
         JLabel[] playerResourceTitles = { player1ResourceTitle, player2ResourceTitle, player3ResourceTitle,
@@ -283,10 +276,24 @@ public class BoardGameUI extends JFrame {
             playerResources[i].setBounds(0, 62 + (i * 79), 373, 74);
             sidePanelContainer.add(playerResources[i]);
         }
+    }
 
-        for (int i = players.length; i < 4; i++) {
-            playerResources[i].setVisible(false);
-        }
+    /**
+     * Initializes the UI components for the game window, including the game board,
+     * side panel with player resources, and control buttons for moving players and
+     * ending turns.
+     */
+    private void initComponents() {
+        sidePanelContainer = new JPanel();
+
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        sidePanelContainer.setLayout(null);
+        sidePanelContainer.setVisible(false);
+
+        setupArrowButtons();
+        setupLabelsAndButtons();
+        setupPlayerPanels();
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
