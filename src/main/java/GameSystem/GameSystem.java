@@ -36,7 +36,6 @@ public abstract class GameSystem {
             
             gameBoardUI.setVisible(true);
             gameActive = true;
-            gameBoardUI.showPopup("Title", "Desc", "Yes", "No");
         }
     }
 

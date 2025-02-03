@@ -42,10 +42,14 @@ public class BoardGameUI extends JFrame {
         this.players = GameSystem.getTurnOrder();
         this.gameBoard = gameBoard;
 
+        
         startScreen = new StartScreen();
         add(startScreen);
         startScreen.setVisible(true);
-
+        
+        popup = new Popup("", "", "", "", null, null);
+        add(popup);
+        
         initComponents();
         setVisible(true);
         setResizable(false);
@@ -277,7 +281,6 @@ public class BoardGameUI extends JFrame {
      */
     private void initComponents() {
         sidePanelContainer = new JPanel();
-        popup = new Popup("", "", "", "", null, null);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
