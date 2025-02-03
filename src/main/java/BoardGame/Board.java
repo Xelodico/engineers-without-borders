@@ -157,17 +157,46 @@ public class Board extends JPanel {
         for (int i = 0; i < squarePanels.size(); i++) {
             JPanel panel = squarePanels.get(i);
             panel.removeAll();
-            for (Player player : players) {
-                if (player.getCoord() == i) {
-                    ImageIcon imageIcon = new ImageIcon("src/main/resources/images/playerIcon.png");
-                    ImageIcon resizedImage = new ImageIcon(
-                            imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-                    JLabel playerIcon = new JLabel(resizedImage);
-                    panel.add(playerIcon, BorderLayout.CENTER);
-                    revalidate();
-                    repaint();
-                }
+            final int squareIndex = i;
+
+            // Count the number of players on this square
+            long playersOnSquare = Arrays.stream(players).filter(player -> player.getCoord() == squareIndex).count();
+
+            ImageIcon imageIcon = null;
+            switch ((int) playersOnSquare) {
+            case 1:
+                imageIcon = new ImageIcon("src/main/resources/images/players/playerIcon.png");
+                break;
+            case 2:
+                imageIcon = new ImageIcon("src/main/resources/images/players/twoPlayerIcon.png");
+                break;
+            case 3:
+                imageIcon = new ImageIcon("src/main/resources/images/players/threePlayerIcon.png");
+                break;
+            case 4:
+                imageIcon = new ImageIcon("src/main/resources/images/players/fourPlayerIcon.png");
+                break;
+            default:
+                break;
             }
-        }
+
+            if (imageIcon != null) {
+            ImageIcon resizedImage = new ImageIcon(
+                imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+            JLabel playerIcon = new JLabel(resizedImage);
+            panel.add(playerIcon, BorderLayout.CENTER);
+            }
+
+            revalidate();
+            repaint();
+        }   
+    }
+
+        public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(650, 650);
+        frame.add(new Board());
+        frame.setVisible(true);
     }
 }
