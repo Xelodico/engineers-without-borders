@@ -40,6 +40,7 @@ public class TaskSquare extends Square {
      */
     @Override
     public boolean activateSquareEffect() {
+        super().activateSquareEffect();
         if (getPrimaryOccupier().getRoles().contains(task.getRole())) {
             // Execute the task
             task.doTask();  // Perform the task's actions

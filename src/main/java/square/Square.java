@@ -28,6 +28,7 @@ public class Square {
      */
     public boolean activateSquareEffect() {
         // No default behavior. Override for specific effects.
+        setPrimaryOccupier(GameSystem.getPlayerAt())
         return true;
     }
 
