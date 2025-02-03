@@ -2,6 +2,7 @@ package square;
 import java.awt.Color;
 
 import BoardGame.*;
+import GameSystem.GameSystem;
 /**
  * Represents a square on a game board that can be occupied by a player.
  */
@@ -28,7 +29,7 @@ public class Square {
      */
     public boolean activateSquareEffect() {
         // No default behavior. Override for specific effects.
-        setPrimaryOccupier(GameSystem.getPlayerAt())
+        setPrimaryOccupier(GameSystem.getPlayerAt());
         return true;
     }
 
