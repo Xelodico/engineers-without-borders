@@ -33,6 +33,7 @@ public class MoneySquare extends Square {
     @Override
     public boolean activateSquareEffect() {
         super.activateSquareEffect(); // Calls the superclass method.
+        getPrimaryOccupier().changeMoney(this.money)
         return true;
     }
 }
