@@ -1,6 +1,7 @@
 package square;
+import java.awt.Color;
+
 import BoardGame.*;
-import GameSystem.*;
 /**
  * Represents a square on a game board that can be occupied by a player.
  */
@@ -8,6 +9,8 @@ public class Square {
 
     private Player primaryOccupier;
     private final SquareType sType = SquareType.SQUARE;
+    private final Color squareColor = Color.WHITE;
+
     /**
      * Constructs a new Square instance with no primary occupier.
      */
@@ -57,5 +60,9 @@ public class Square {
 
     public SquareType getSquareType() {
         return this.sType;
+    }
+
+    public Color getColor() {
+        return this.squareColor;
     }
 }

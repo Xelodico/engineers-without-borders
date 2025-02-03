@@ -1,4 +1,6 @@
 package square;
+import java.awt.Color;
+
 import BoardGame.*;
 import GameSystem.*;
 
@@ -14,6 +16,8 @@ public class TaskSquare extends Square {
      */
     private Task task;
     private final SquareType sType = SquareType.TASKSQUARE;
+    private final Color squareColor = Color.RED;
+
     /**
      * Constructs a TaskSquare object with the specified task.
      * This task will be available for players who land on this square.
@@ -48,5 +52,9 @@ public class TaskSquare extends Square {
 
     public SquareType getSquareType() {
         return this.sType;
+    }
+
+    public Color getColor() {
+        return this.squareColor;
     }
 }

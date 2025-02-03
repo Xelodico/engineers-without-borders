@@ -1,4 +1,6 @@
 package square;
+import java.awt.Color;
+
 import BoardGame.*;
 import GameSystem.*;
 
@@ -14,6 +16,7 @@ public class RoleSquare extends Square {
      */
     private JobRole playerRole;
     private final SquareType sType = SquareType.ROLESQUARE;
+    private final Color squareColor = Color.ORANGE;
 
     /**
     * Constructs a RoleSquare with the specified job role.
@@ -42,6 +45,10 @@ public class RoleSquare extends Square {
 
     public SquareType getSquareType() {
         return this.sType;
+    }
+
+    public Color getColor() {
+        return this.squareColor;
     }
 }
 
