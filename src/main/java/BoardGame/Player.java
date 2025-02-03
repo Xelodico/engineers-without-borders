@@ -120,8 +120,8 @@ public class Player {
     public void setCoord(int coord) {
         if (coord < 0) {
             throw new IllegalArgumentException("Coordinate cannot be negative");
-        } else if (coord > 100) {
-            throw new IllegalArgumentException("Coordinate cannot be greater than 100");
+        } else if (coord > 143) {
+            throw new IllegalArgumentException("Coordinate cannot be greater than 143");
         }
         this.coord = coord;
     }

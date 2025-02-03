@@ -21,15 +21,15 @@ import GameSystem.GameSystem;
  */
 public class StartScreen extends JPanel {
 
-    private static final int WIDTH = 904;
-    private static final int HEIGHT = 516;
+    private static final int WIDTH = BoardGameUI.WINDOW_WIDTH;
+    private static final int HEIGHT = BoardGameUI.WINDOW_HEIGHT;
 
     private static final int BUTTON_WIDTH = 240;
     private static final int BUTTON_HEIGHT = 55;
     private static final int BUTTON_SPACING = 10;
     private static final int MAX_PLAYERS = 4;
 
-    private static final int[] STARTING_COORDS = { 0, 9, 90, 99 };
+    private static final int[] STARTING_COORDS = { 65, 66, 77, 78 };
 
     private final ImageIcon playerBackgroundIcon = new ImageIcon(getClass().getResource("/images/playerTurn.png"));
     private final ImageIcon addPlayerIcon = new ImageIcon(getClass().getResource("/images/addPlayer.png"));

@@ -1,10 +1,9 @@
 package BoardGame;
 
-import java.awt.event.ActionListener;
-
 import javax.swing.*;
 
 import GameSystem.GameSystem;
+import square.SquareType;
 
 /**
  * The BoardGameUI class represents the user interface for the board game.
@@ -27,6 +26,11 @@ public class BoardGameUI extends JFrame {
     String player3Name;
     String player4Name;
 
+    protected static final int WINDOW_WIDTH = 1075;
+    protected static final int WINDOW_HEIGHT = 705;
+    private static final int BOARD_WIDTH = 650;
+    private static final int BOARD_HEIGHT = BOARD_WIDTH;
+
     public StartScreen startScreen;
 
     /**
@@ -43,7 +47,8 @@ public class BoardGameUI extends JFrame {
         startScreen.setVisible(true);
 
         initComponents();
-        this.setVisible(true);
+        setVisible(true);
+        setResizable(false);
     }
 
     public void showPopup(String title, String desc, String yesButton, String noButton) {
@@ -113,7 +118,7 @@ public class BoardGameUI extends JFrame {
         setupArrowButtonAction(arrowDown, Direction.DOWN);
 
         sidePanelContainer.add(arrowsContainer);
-        arrowsContainer.setBounds(10, 405, 138, 92);
+        arrowsContainer.setBounds(10, BOARD_HEIGHT - 92, 138, 92);
     }
 
     private void setupArrowButtonAction(JButton button, Direction direction) {
@@ -124,19 +129,6 @@ public class BoardGameUI extends JFrame {
                 endTurnButton.setVisible(true);
             } else {
                 movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
-            }
-        });
-
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GameSystem.movePlayer(direction);
-                if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
-                    movesLeftLabel.setVisible(false);
-                    endTurnButton.setVisible(true);
-                } else {
-                    movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
-                }
             }
         });
     }
@@ -169,7 +161,7 @@ public class BoardGameUI extends JFrame {
         helpButton.setContentAreaFilled(false);
         helpButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         sidePanelContainer.add(helpButton);
-        helpButton.setBounds(330, 380, 37, 37);
+        helpButton.setBounds(330, BOARD_HEIGHT - 55 - 37, 37, 37);
 
         rollDiceButton.setIcon(new ImageIcon(getClass().getResource("/images/RollDiceButton.png"))); // NOI18N
         rollDiceButton.setBorder(null);
@@ -177,7 +169,7 @@ public class BoardGameUI extends JFrame {
         rollDiceButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         rollDiceButton.setFocusPainted(false);
         sidePanelContainer.add(rollDiceButton);
-        rollDiceButton.setBounds(170, 450, 192, 47);
+        rollDiceButton.setBounds(170, BOARD_HEIGHT - 47, 192, 47);
 
         rollDiceButton.addActionListener(_ -> {
             GameSystem.getPlayerAt().rollDie();
@@ -187,14 +179,14 @@ public class BoardGameUI extends JFrame {
         });
 
         movesLeftLabel.setIcon(new ImageIcon(getClass().getResource("/images/buttonBackground.png")));
-        movesLeftLabel.setBounds(170, 450, 192, 47);
+        movesLeftLabel.setBounds(170, BOARD_HEIGHT - 47, 192, 47);
         movesLeftLabel.setVisible(false);
         movesLeftLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         movesLeftLabel.setFont(new java.awt.Font("Segoe UI", 0, 26));
         sidePanelContainer.add(movesLeftLabel);
 
         endTurnButton.setIcon(new ImageIcon(getClass().getResource("/images/buttonBackground.png")));
-        endTurnButton.setBounds(170, 450, 192, 47);
+        endTurnButton.setBounds(170, BOARD_HEIGHT - 47, 192, 47);
         endTurnButton.setVisible(false);
         endTurnButton.setText("End Turn");
         endTurnButton.setFont(new java.awt.Font("Segoe UI", 0, 26));
@@ -285,6 +277,7 @@ public class BoardGameUI extends JFrame {
      */
     private void initComponents() {
         sidePanelContainer = new JPanel();
+        popup = new Popup("", "", "", "", null, null);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -301,7 +294,7 @@ public class BoardGameUI extends JFrame {
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, 500,
+                                .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, BOARD_WIDTH,
                                         GroupLayout.PREFERRED_SIZE)
                                 .addGap(10, 10, 10)
                                 .addComponent(sidePanelContainer, GroupLayout.DEFAULT_SIZE, 384,
@@ -312,13 +305,13 @@ public class BoardGameUI extends JFrame {
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, 500,
+                                        .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, BOARD_HEIGHT,
                                                 GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(sidePanelContainer, GroupLayout.PREFERRED_SIZE, 500,
+                                        .addComponent(sidePanelContainer, GroupLayout.PREFERRED_SIZE, BOARD_HEIGHT,
                                                 GroupLayout.PREFERRED_SIZE))
                                 .addGap(10, 10, 10)));
 
-        setSize(new java.awt.Dimension(920, 555));
+        setSize(new java.awt.Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         setLocationRelativeTo(null);
     }
 
@@ -355,4 +348,5 @@ public class BoardGameUI extends JFrame {
     private JButton rollDiceButton;
     private JLabel roundNumberGraphic;
     private JPanel sidePanelContainer;
+    private Popup popup;
 }

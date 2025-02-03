@@ -3,6 +3,7 @@ package BoardGame;
 import javax.swing.*;
 
 import GameSystem.GameSystem;
+import square.*;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -15,13 +16,13 @@ public class Board extends JPanel {
     /**
      * The side length of the grid.
      */
-    public final int boardSideLength = 10;
+    public final int boardSideLength = 12;
 
     /**
      * The distribution ratio of the square types on the board.
-     * The ratio is Knowledge : Pothole : Resource : Normal.
+     * The ratio is Pothole : Resource : Normal.
      */
-    private final static int[] squareTypeRatios = { 1, 2, 2, 3 };
+    private final static int[] squareTypeRatios = { 2, 2, 6 };
 
     /**
      * The List of all the Players in the game.
@@ -31,7 +32,7 @@ public class Board extends JPanel {
     /**
      * The list of squares on the board.
      */
-    protected List<String> squareArray;
+    protected List<Square> squareArray;
 
     private List<JPanel> squarePanels;
 
@@ -57,27 +58,25 @@ public class Board extends JPanel {
      * @return A list of strings representing the type of each square on the board.
      * @throws IllegalArgumentException if a spawn location is out of bounds.
      */
-    private List<String> generateBoardSquares() {
+    private List<Square> generateBoardSquares() {
         int totalSquares = boardSideLength * boardSideLength;
-        final List<Integer> spawnLocations = Arrays.asList(0, boardSideLength - 1, totalSquares - boardSideLength,
-                totalSquares - 1);
-        List<String> squareArray = new ArrayList<>();
+        final List<Integer> spawnLocations = Arrays.asList(65, 66, 77, 78);
+        List<Square> squareArray = new ArrayList<>();
 
         int totalWeight = Arrays.stream(squareTypeRatios).sum();
-        int numKnowledge = totalSquares / totalWeight * squareTypeRatios[0];
-        int numPothole = totalSquares / totalWeight * squareTypeRatios[1];
-        int numResource = totalSquares / totalWeight * squareTypeRatios[2];
-        int numNormal = totalSquares - (numKnowledge + numPothole + numResource);
+        // int numKnowledge = totalSquares / totalWeight * squareTypeRatios[0];
+        int numPothole = totalSquares / totalWeight * squareTypeRatios[0];
+        int numResource = totalSquares / totalWeight * squareTypeRatios[1];
+        int numNormal = totalSquares - (numPothole + numResource);
 
-        squareArray.addAll(Collections.nCopies(numNormal, "Normal"));
-        squareArray.addAll(Collections.nCopies(numPothole, "Pothole"));
-        squareArray.addAll(Collections.nCopies(numResource, "Resource"));
-        squareArray.addAll(Collections.nCopies(numKnowledge, "Knowledge"));
+        squareArray.addAll(Collections.nCopies(numNormal, new Square()));
+        squareArray.addAll(Collections.nCopies(numPothole, new TaskSquare(null)));
+        squareArray.addAll(Collections.nCopies(numResource, new RoleSquare(null)));
 
         Collections.shuffle(squareArray);
 
         for (int location : spawnLocations) {
-            squareArray.set(location, "Spawn");
+            squareArray.set(location, new ShopSquare());
         }
 
         return squareArray;
@@ -89,32 +88,14 @@ public class Board extends JPanel {
      * @param squareArray A list of strings representing the type of each square on
      *                    the board.
      */
-    private void renderBoard(List<String> squareArray) {
+    private void renderBoard(List<Square> squareArray) {
         int totalSquares = boardSideLength * boardSideLength;
         squarePanels = new ArrayList<JPanel>();
 
         for (int i = 0; i < totalSquares; i++) {
             JPanel panel = new JPanel();
             panel.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
-
-            String squareType = squareArray.get(i);
-            switch (squareType) {
-                case "Normal":
-                    panel.setBackground(Color.WHITE);
-                    break;
-                case "Pothole":
-                    panel.setBackground(Color.RED);
-                    break;
-                case "Knowledge":
-                    panel.setBackground(Color.BLUE);
-                    break;
-                case "Resource":
-                    panel.setBackground(Color.ORANGE);
-                    break;
-                case "Spawn":
-                    panel.setBackground(Color.GREEN);
-                    break;
-            }
+            panel.setBackground(squareArray.get(i).getColor());
 
             squarePanels.add(panel);
             if (players != null) {
@@ -137,7 +118,7 @@ public class Board extends JPanel {
      * 
      * @return The list of square types on the board.
      */
-    public List<String> getSquareArray() {
+    public List<Square> getSquareArray() {
         return squareArray;
     }
 
@@ -147,7 +128,7 @@ public class Board extends JPanel {
      * @param index The index of the square to get.
      * @return The type of square at the given index.
      */
-    public String getSquareAt(int index) {
+    public Square getSquareAt(int index) {
         if (index < 0 || index >= squareArray.size()) {
             throw new IllegalArgumentException("Index out of bounds: " + index);
         }
@@ -160,11 +141,15 @@ public class Board extends JPanel {
      * @param index      The index of the square to set.
      * @param squareType The type of square to set at the given index.
      */
-    public void setSquareAt(int index, String squareType) {
+    public void setSquareAt(int index, Square square) {
         if (index < 0 || index >= squareArray.size()) {
             throw new IllegalArgumentException("Index out of bounds: " + index);
+        } else if (square == null) {
+            throw new IllegalArgumentException("Square type cannot be null.");
         }
-        squareArray.set(index, squareType);
+
+        squareArray.set(index, square);
+        refresh();
     }
 
     public void renderPlayers(Player[] players) {
