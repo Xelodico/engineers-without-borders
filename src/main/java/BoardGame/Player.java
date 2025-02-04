@@ -1,5 +1,6 @@
 package BoardGame;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -19,6 +20,8 @@ public class Player {
     private int id;
 
     private int nextID = 0;
+    private ArrayList<JobRole> roles;
+    
 
     /**
      * Default constructor for a blank player object.
@@ -117,8 +120,8 @@ public class Player {
     public void setCoord(int coord) {
         if (coord < 0) {
             throw new IllegalArgumentException("Coordinate cannot be negative");
-        } else if (coord > 100) {
-            throw new IllegalArgumentException("Coordinate cannot be greater than 100");
+        } else if (coord > 143) {
+            throw new IllegalArgumentException("Coordinate cannot be greater than 143");
         }
         this.coord = coord;
     }
@@ -154,6 +157,26 @@ public class Player {
     }
 
     /**
+     * Adds a new role to the player
+     * 
+     * @param newRole The new role to add to this player's responsibilities
+     * @return True if the role was added successfully, False if there was a problem
+     */
+    public boolean addRole(JobRole newRole) {
+    	return roles.add(newRole);
+    }
+    
+    /**
+     * Removes a role from the player
+     * 
+     * @param roleToRemove The role to remove from this player's responsibilities
+     * @return True if the role was removed successfully, False if there was a problem
+     */
+    public boolean removeRole(JobRole roleToRemove) {
+    	return roles.remove(roleToRemove);
+    }
+    
+    /**
      * Sets the moves left for the player.
      * 
      * @param movesLeft The new number of moves left to assign to the player
@@ -167,6 +190,14 @@ public class Player {
         this.movesLeft = movesLeft;
     }
 
+    public ArrayList<JobRole> getRoles() {
+        return this.roles;
+    }
+
+    public void setRoles(ArrayList<JobRole> roles) {
+        this.roles = roles;
+    }
+
     /**
      * Rolls a die to determine movement or other game mechanics.
      * A random number between 1 and 6 is generated, and the number of moves left
@@ -178,7 +209,63 @@ public class Player {
         Random randomGen = new Random();
         int randomNumber = randomGen.nextInt(6) + 1;
         System.out.println(randomNumber);
-        movesLeft = randomNumber;
+        this.movesLeft = randomNumber;
         return randomNumber;
+    }
+
+    /**
+     * Moves the player in the specified direction on the game board.
+     * 
+     * @param player The player to move.
+     * @param direction The direction to move the player.
+     */
+    public void moveAction(Direction direction, int boardSideLength) {
+        int currentCoord = this.getCoord();
+        int totalSquares = boardSideLength * boardSideLength;
+
+        if (currentCoord < 0 || currentCoord >= totalSquares) {
+            throw new IllegalArgumentException("Player position is out of bounds");
+        }
+
+        if (direction == null) {
+            throw new IllegalArgumentException("Direction cannot be null");
+        }
+
+        if (this.getMovesLeft() > 0) {
+            int newCoord = currentCoord;
+
+            // Determine the new coordinate based on the direction
+            switch (direction) {
+                case UP:
+                    if (currentCoord >= boardSideLength) {
+                        newCoord = currentCoord - boardSideLength;
+                    }
+                    break;
+                case DOWN:
+                    if (currentCoord < (boardSideLength - 1) * boardSideLength) {
+                        newCoord = currentCoord + boardSideLength;
+                    }
+                    break;
+                case LEFT:
+                    if (currentCoord % boardSideLength != 0) {
+                        newCoord = currentCoord - 1;
+                    }
+                    break;
+                case RIGHT:
+                    if (currentCoord % boardSideLength != boardSideLength - 1) {
+                        newCoord = currentCoord + 1;
+                    }
+                    break;
+            }
+
+            // Only move if the new coordinate is valid
+            if (newCoord != currentCoord) {
+                this.setCoord(newCoord);
+                this.setMovesLeft(this.getMovesLeft() - 1); // Decrease moves after moving
+                System.out.println(this.getName() + " moved to position " + newCoord);
+            }
+        } else {
+            System.out.println(this.getName() + " has no moves left this turn.");
+        }
     }
 }

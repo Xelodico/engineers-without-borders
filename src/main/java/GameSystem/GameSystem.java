@@ -1,16 +1,11 @@
 package GameSystem;
 
-import java.util.InputMismatchException;
 import java.util.ArrayList;
 
 import BoardGame.*;
 
-import java.util.Scanner;
-
 public abstract class GameSystem {
     // Attributes
-    private static Scanner input;
-
     private static Board gameBoard;
     private static BoardGameUI gameBoardUI;
     private static Player[] turnOrder;
@@ -26,7 +21,6 @@ public abstract class GameSystem {
     // Methods
     public static void initialise() {
         if (!gameActive) {
-            input = new Scanner(System.in);
             currentStage = 0;
             turnNumber = 0;
             roundNumber = 0;
@@ -34,68 +28,21 @@ public abstract class GameSystem {
             roles = new ArrayList<JobRole>();
             tasks = new ArrayList<Task>();
 
-            // TODO: Worry about this later
-            enterPlayers();
-            startGame();
-
-            gameBoard = new Board(turnOrder);
-            gameBoardUI = new BoardGameUI(gameBoard, turnOrder);
-
+            turnOrder = new Player[]{new Player()}; // Need to initialise with at least one player to start with
+            
+            gameBoard = new Board();
+            gameBoardUI = new BoardGameUI(gameBoard);
+            gameBoardUI.setTitle("Pavers Valley");
+            
             gameBoardUI.setVisible(true);
             gameActive = true;
         }
     }
 
-    private static void startGame() {
-        // TODO: Integrate into UI
-        System.out.println("Press Enter to start new game");
-        input.nextLine();
-
+    public static void startGame() {
         roundNumber++;
-        nextTurn();
-
-    }
-
-    private static void enterPlayers() {
-        // TODO: Integrate into UI
-        boolean isValid = false;
-        int playerNum = 0;
-        // Check if the number entered is a valid number (No characters; Between 1-4)
-        while (!isValid){
-            System.out.print("Please enter the number of players (1-4): ");
-            try {
-                playerNum = input.nextInt();
-                input.nextLine();
-                
-                if (playerNum <= 0 || playerNum > 4){
-                    System.err.print("ERROR: Outside the valid range (1-4). Try again.");
-                    continue;
-                }
-
-                isValid = true;
-            } catch (InputMismatchException e) {
-                System.err.print("ERROR: Invalid number. Please try again.");
-            }
-        }
-
-        turnOrder = new Player[playerNum];
-
-        for (int i = 0; i < turnOrder.length; i++) {
-            isValid = false;
-            // Check if the player name is valid, otherwise catch an InputMismatchException
-            while (!isValid){
-                System.out.print("Please enter the name of Player " + (i + 1) + ": ");
-                try {
-                    // TODO: Check if name is not empty
-                    String name = input.nextLine();
-                    turnOrder[i].setName(name);
-                    isValid = true;
-                } catch (InputMismatchException e) {
-                    System.err.print("ERROR: Invalid name. Please try again.");
-                }
-            }
-            
-        }
+        gameBoardUI.startGame();
+        gameBoardUI.refresh();
     }
 
     public static int getCurrentStage() {
@@ -138,35 +85,34 @@ public abstract class GameSystem {
         return tasks;
     }
 
-    public static ArrayList<JobRoles> getRoles() {
+    public static ArrayList<JobRole> getRoles() {
         return roles;
     }
 
     public static void movePlayer(Direction direction) {
         // Tell player to move (update coordinates)
         Player currentPlayer = getPlayerAt();
-        currentPlayer.rollDie();
         if (currentPlayer.getMovesLeft() > 0) {
-            currentPlayer.moveAction(direction);
+            currentPlayer.moveAction(direction, gameBoard.boardSideLength);
         }
 
         // Update players on board and activate the tile they fell on
-        gameBoard.refresh();
+        gameBoard.renderPlayers(turnOrder);
 
-        Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
-        if (sqrAtPosition.getPrimaryOccupier != currentPlayer) { // If another player is already on the square
-            sqrAtPosition.alreadyOccupiedEffect(currentPlayer); // Activate the specific effect for multiple players
-        } else {
-            sqrAtPosition.activateSquareEffect();
-        }
+        // Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
+        // if (sqrAtPosition.getPrimaryOccupier != currentPlayer) { // If another player is already on the square
+        //     sqrAtPosition.alreadyOccupiedEffect(currentPlayer); // Activate the specific effect for multiple players
+        // } else {
+        //     sqrAtPosition.activateSquareEffect();
+        // }
 
         // TODO: Check if the player's role matches the tasks square
 
     }
 
-    private static void nextTurn() {
+    public static void nextTurn() {
         // Change turn & round number
-        if (turnNumber >= turnOrder.length) {
+        if (turnNumber >= turnOrder.length-1) {
             turnNumber = 0;
             nextRound();
         } else {
@@ -175,8 +121,6 @@ public abstract class GameSystem {
     }
 
     private static void nextRound() {
-        // TODO: Update the board
-
         // Update the round number
         roundNumber++;
 
@@ -203,11 +147,15 @@ public abstract class GameSystem {
 
     }
 
-    public static void updatePlayerDisplay() {
-        // TODO: Check if method is needed
+    public static void endGame() {
     }
 
-    public static void endGame() {
+    public static void showPopup(String title, String desc, String yesButton, String noButton) {
+        gameBoardUI.showPopup(title, desc, yesButton, noButton);
+    }
+
+    public static void main(String[] args) {
+        initialise();
     }
 
 }
