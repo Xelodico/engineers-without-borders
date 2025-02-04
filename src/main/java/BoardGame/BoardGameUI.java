@@ -1,9 +1,9 @@
 package BoardGame;
 
+import java.awt.Image;
 import javax.swing.*;
 
 import GameSystem.GameSystem;
-import square.SquareType;
 
 /**
  * The BoardGameUI class represents the user interface for the board game.
@@ -49,7 +49,16 @@ public class BoardGameUI extends JFrame {
         
         popup = new Popup("", "", "", "", null, null);
         add(popup);
+
+        journal = new Journal();
+        add(journal);
         
+        journalDim = new JPanel();
+        journalDim.setBounds(0, 0, 1075, 705);
+        journalDim.setBackground(new java.awt.Color(0, 0, 0, 150));
+        journalDim.setVisible(false);
+        add(journalDim);
+
         initComponents();
         setVisible(true);
         setResizable(false);
@@ -102,6 +111,7 @@ public class BoardGameUI extends JFrame {
             arrowButtons[i].setContentAreaFilled(false);
             arrowButtons[i].setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
             arrowButtons[i].setFocusPainted(false);
+            arrowButtons[i].setRolloverEnabled(false);
 
             if (i == 0) { // Arrow Down
                 arrowButtons[i].setBounds(45, 46, 46, 46);
@@ -141,6 +151,7 @@ public class BoardGameUI extends JFrame {
         roundNumberGraphic = new JLabel();
         playerTurnGraphic = new JLabel();
         helpButton = new JButton();
+        journalButton = new JButton();
         rollDiceButton = new JButton();
         endTurnButton = new JButton();
         movesLeftLabel = new JLabel();
@@ -160,12 +171,28 @@ public class BoardGameUI extends JFrame {
         sidePanelContainer.add(playerTurnGraphic);
         playerTurnGraphic.setBounds(0, 0, 241, 57);
 
-        helpButton.setIcon(new ImageIcon(getClass().getResource("/images/Help.png"))); // NOI18N
+        ImageIcon helpIcon = new ImageIcon(getClass().getResource("/images/help.png"));
+        helpButton.setIcon(new ImageIcon(helpIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH))); // NOI18N
         helpButton.setBorder(null);
         helpButton.setContentAreaFilled(false);
         helpButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         sidePanelContainer.add(helpButton);
+        helpButton.setRolloverEnabled(false);
         helpButton.setBounds(330, BOARD_HEIGHT - 55 - 37, 37, 37);
+
+        ImageIcon journalIcon = new ImageIcon(getClass().getResource("/images/journalButton.png"));
+        journalButton.setIcon(new ImageIcon(journalIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH)));
+        journalButton.setBorder(null);
+        journalButton.setContentAreaFilled(false);
+        journalButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        sidePanelContainer.add(journalButton);
+        journalButton.setBounds(283, BOARD_HEIGHT - 55 - 37, 37, 37);
+        journalButton.setRolloverEnabled(false);
+        journalButton.addActionListener(_ -> {
+            journal.setVisible(true);
+            journalDim.setVisible(true);
+            toggleEnableButtons();
+        });
 
         rollDiceButton.setIcon(new ImageIcon(getClass().getResource("/images/RollDiceButton.png"))); // NOI18N
         rollDiceButton.setBorder(null);
@@ -174,6 +201,7 @@ public class BoardGameUI extends JFrame {
         rollDiceButton.setFocusPainted(false);
         sidePanelContainer.add(rollDiceButton);
         rollDiceButton.setBounds(170, BOARD_HEIGHT - 47, 192, 47);
+        rollDiceButton.setRolloverEnabled(false);
 
         rollDiceButton.addActionListener(_ -> {
             GameSystem.getPlayerAt().rollDie();
@@ -198,6 +226,7 @@ public class BoardGameUI extends JFrame {
         endTurnButton.setContentAreaFilled(false);
         endTurnButton.setBorder(null);
         endTurnButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        endTurnButton.setRolloverEnabled(false);
         sidePanelContainer.add(endTurnButton);
 
         endTurnButton.addActionListener(_ -> {
@@ -318,6 +347,26 @@ public class BoardGameUI extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    private void toggleEnableButtons() {
+        if (arrowDown.isEnabled()) {
+            arrowDown.setEnabled(false);
+            arrowUp.setEnabled(false);
+            arrowLeft.setEnabled(false);
+            arrowRight.setEnabled(false);
+            rollDiceButton.setEnabled(false);
+            helpButton.setEnabled(false);
+            journalButton.setEnabled(false);
+        } else {
+            arrowDown.setEnabled(true);
+            arrowUp.setEnabled(true);
+            arrowLeft.setEnabled(true);
+            arrowRight.setEnabled(true);
+            rollDiceButton.setEnabled(true);
+            helpButton.setEnabled(true);
+            journalButton.setEnabled(true);
+        }
+    }
+
     private JLabel movesLeftLabel;
     private JButton endTurnButton;
     private JPanel Player1Resources;
@@ -352,4 +401,7 @@ public class BoardGameUI extends JFrame {
     private JLabel roundNumberGraphic;
     private JPanel sidePanelContainer;
     private Popup popup;
+    private JButton journalButton;
+    private Journal journal;
+    private JPanel journalDim;
 }
