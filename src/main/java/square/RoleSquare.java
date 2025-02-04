@@ -40,7 +40,7 @@ public class RoleSquare extends Square {
         //TODO use UI to get player's choice
         //Player[] players = GameSystem.getTurnOrder();
         super.activateSquareEffect();
-        getPrimaryOccupier().addRole(this.playerRole);
+        //getPrimaryOccupier().addRole(this.playerRole);
         return true;
     }
 

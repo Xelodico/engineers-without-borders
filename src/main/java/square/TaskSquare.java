@@ -21,6 +21,7 @@ public class TaskSquare extends Square {
     /**
      * Constructs a TaskSquare object with the specified task.
      * This task will be available for players who land on this square.
+     * Initializes the squareColor to Color.RED and sType to SquareType.TASKSQUARE.
      *
      * @param ts The task associated with this square.
      */
@@ -30,25 +31,52 @@ public class TaskSquare extends Square {
     }
 
     /**
-     * Activates the task associated with this square for a specific player.
-     * If the player's role matches the required role for the task, the task is executed.
-     * Otherwise, a message is displayed indicating that the player's role is not suitable for the task.
-     *
-     * @param p The player who landed on the TaskSquare.
-     * @return true if the task was successfully activated and completed,
-     *         false if the player's role does not match the task's requirements.
+     * When a player lands on a TaskSquare, if it is not claimed by another player, they have the opportunity to claim it.
+     * If the player doesn't wish to claim this task, they can choose to pass it to another player or leave it unclaimed.
+     * However, if the task is already claimed by another player, the current player can choose to help complete the task.
+     * 
+     * @return {@code true} if the task was successfully activated, {@code false} otherwise.
      */
     @Override
     public boolean activateSquareEffect() {
-        super.activateSquareEffect();
-        if (getPrimaryOccupier().getRoles().contains(task.getRole())) {
-            // Execute the task
-            task.doTask();  // Perform the task's actions
-            return true;  // Indicate success
+        /*
+        super.activateSquareEffect(); 
+        if (task.getOwner() == null) {
+             popup("Do you want to get this task?", "Yes", "No");
+                if (yes) {
+                    task.setOwner(getPrimaryOccupier());
+                } else {
+                    popup("Who wants this task?", "Player 1", "Player 2", "Player 3", "Player 4", "Nobody");
+                    if(player1) {
+                        task.setOwner(player1);
+                    } else if(player2) {
+                        task.setOwner(player2);
+                    } else if(player3) {
+                        task.setOwner(player3);
+                    } else if(player4) {
+                        task.setOwner(player4);
+                    } else {
+                        task.setOwner(null);
+                    }
+                }
+        } else if (task.getOwner() != getPrimaryOccupier()) {
+            popup("Do you want to help complete this task?", "Yes", "No");
+            if (yes) {
+                task.addHelper(getPrimaryOccupier());
+            }
         } else {
-            // Notify the player that their role is not suitable for this task
-            return false;  // Indicate failure
+            popup("You already own this task!", "OK"); 
         }
+        */
+        return true;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     public SquareType getSquareType() {

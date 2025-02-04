@@ -3,6 +3,7 @@ package GameSystem;
 import java.util.ArrayList;
 
 import BoardGame.*;
+import square.*;
 
 public abstract class GameSystem {
     // Attributes
@@ -92,22 +93,20 @@ public abstract class GameSystem {
     public static void movePlayer(Direction direction) {
         // Tell player to move (update coordinates)
         Player currentPlayer = getPlayerAt();
+        Square previousSquare = gameBoard.getSquareAt(currentPlayer.getCoord());
         if (currentPlayer.getMovesLeft() > 0) {
             currentPlayer.moveAction(direction, gameBoard.boardSideLength);
         }
 
+        // Once the Player has moved off the square, remove them as primary occupier of the square.
+        previousSquare.setPrimaryOccupier(null);
+
         // Update players on board and activate the tile they fell on
         gameBoard.renderPlayers(turnOrder);
 
-        // Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
-        // if (sqrAtPosition.getPrimaryOccupier != currentPlayer) { // If another player is already on the square
-        //     sqrAtPosition.alreadyOccupiedEffect(currentPlayer); // Activate the specific effect for multiple players
-        // } else {
-        //     sqrAtPosition.activateSquareEffect();
-        // }
-
-        // TODO: Check if the player's role matches the tasks square
-
+        // Get the square the player has landed on, and activate it's effect (later added using a button).
+        Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
+        sqrAtPosition.activateSquareEffect();
     }
 
     public static void nextTurn() {
