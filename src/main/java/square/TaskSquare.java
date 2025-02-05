@@ -94,4 +94,16 @@ public class TaskSquare extends Square {
     public void setTask(Task task) {
         this.task = task;
     }
+
+    public SquareType getSquareType() {
+        return this.sType;
+    }
+
+    public Color getColor() {
+        return this.squareColor;
+    }
+
+
+    
+
 }
