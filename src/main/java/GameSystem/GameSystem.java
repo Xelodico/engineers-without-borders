@@ -14,7 +14,8 @@ public abstract class GameSystem {
     private static int turnNumber;
     private static int currentStage;
 
-    private static ArrayList<JobRole> roles;
+    // private static ArrayList<JobRole> roles;
+    private static ArrayList<Objective> objectives;
     private static ArrayList<Task> tasks;
 
     private static boolean gameActive = false;
@@ -26,7 +27,8 @@ public abstract class GameSystem {
             turnNumber = 0;
             roundNumber = 0;
 
-            roles = new ArrayList<JobRole>();
+            // roles = new ArrayList<JobRole>();
+            objectives = new ArrayList<Objective>();
             tasks = new ArrayList<Task>();
 
             turnOrder = new Player[]{new Player()}; // Need to initialise with at least one player to start with
@@ -86,9 +88,12 @@ public abstract class GameSystem {
         return tasks;
     }
 
-    public static ArrayList<JobRole> getRoles() {
-        return roles;
+    public static ArrayList<Objective> getObjectives() {
+        return objectives;
     }
+    // public static ArrayList<JobRole> getRoles() {
+    //     return roles;
+    // }
 
     public static void movePlayer(Direction direction) {
         // Tell player to move (update coordinates)
@@ -131,14 +136,11 @@ public abstract class GameSystem {
     }
 
     private static boolean checkWinCondition() {
-        // for (Task task : tasks) {
-        //     // If the task isn't completed
-        //     // and the task belongs to the current stage, return false
-        //     if (!task.isCompleted() && task.getAvailableStage() == currentStage)
-        //         return false;
-
-        // }
-
+        for (Task task : tasks) {
+            // If the task isn't completed return false
+            if (!task.isCompleted())
+                return false;
+        }
         return true;
     }
 
