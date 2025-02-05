@@ -41,7 +41,6 @@ public class BoardGameUI extends JFrame {
     public BoardGameUI(Board gameBoard) {
         this.players = GameSystem.getTurnOrder();
         this.gameBoard = gameBoard;
-
         
         startScreen = new StartScreen();
         add(startScreen);
@@ -348,7 +347,7 @@ public class BoardGameUI extends JFrame {
     }
 
     private void toggleEnableButtons() {
-        if (arrowDown.isEnabled()) {
+        if (helpButton.isEnabled()) {
             arrowDown.setEnabled(false);
             arrowUp.setEnabled(false);
             arrowLeft.setEnabled(false);
