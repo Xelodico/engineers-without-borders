@@ -1,17 +1,12 @@
 package square;
 
 import java.awt.Color;
+import java.util.Scanner;
 
 import BoardGame.*;
 import GameSystem.*;
 
-/**
- * The TaskSquare class represents a square on the game board that contains a
- * specific task.
- * When a player lands on this square, they have the opportunity to activate and
- * complete the task,
- * provided their role matches the role required for the task.
- */
+
 public class TaskSquare extends Square {
 
     /**
@@ -46,36 +41,49 @@ public class TaskSquare extends Square {
      */
     @Override
     public boolean activateSquareEffect() {
-        /*
-         * super.activateSquareEffect();
-         * if (task.getOwner() == null) {
-         * popup("Do you want to get this task?", "Yes", "No");
-         * if (yes) {
-         * task.setOwner(getPrimaryOccupier());
-         * } else {
-         * popup("Who wants this task?", "Player 1", "Player 2", "Player 3", "Player 4",
-         * "Nobody");
-         * if(player1) {
-         * player1.addTask(task);
-         * } else if(player2) {
-         * player2.addTask(task);
-         * } else if(player3) {
-         * player3.addTask(task);
-         * } else if(player4) {
-         * player4.addTask(task);
-         * } else {
-         * popup("Nodoby claimed the task, -15 satisfaction points", "OK");
-         * }
-         * }
-         * } else if (task.getOwner() != getPrimaryOccupier()) {
-         * popup("Do you want to help complete this task?", "Yes", "No");
-         * if (yes) {
-         * task.addHelper(getPrimaryOccupier());
-         * }
-         * } else {
-         * popup("You already own this task!", "OK");
-         * }
-         */
+        super.activateSquareEffect();
+        if(task.getOwnedBy() == null) {
+            // GameSystem.showPopup("Do you want to get this task?", task.getDescription(), "Yes", "No");
+            System.out.println("Do you want to get this task?");
+            Scanner keyb = new Scanner(System.in);
+            String input = keyb.nextLine();
+            if("y".equals(input)) {
+                task.setOwnedBy(getPrimaryOccupier());
+                System.out.println("Task claimed!");
+            } else {
+                System.out.println("Who wants this task?");
+                input = keyb.nextLine();
+                switch (input) {
+                    case "1":
+                        GameSystem.getPlayerAt(0).addTask(task);
+                        break;
+                    case "2":
+                        GameSystem.getPlayerAt(1).addTask(task);
+                        break;
+                    case "3":
+                        GameSystem.getPlayerAt(2).addTask(task);
+                        break;
+                    case "4":
+                        GameSystem.getPlayerAt(3).addTask(task);
+                        break;
+                    default:
+                        System.out.println("Nobody claimed the task, -15 satisfaction points");
+                        break;
+                }
+            }
+        } else if (task.getOwnedBy() != getPrimaryOccupier()) {
+            // GameSystem.showPopup("Do you want to help complete this task?", task.getDescription(), "Yes", "No");
+            System.out.println("Do you want to help complete this task?");
+            Scanner keyb = new Scanner(System.in);
+            String input = keyb.nextLine();
+            if("y".equals(input)) {
+                // Discount the task.
+                System.out.println("Discounting the task!");
+            }
+        } else {
+            // GameSystem.showPopup("You already own this task!", "OK");
+            System.out.println("You already own this task!");
+        }
         return true;
     }
 
@@ -85,13 +93,5 @@ public class TaskSquare extends Square {
 
     public void setTask(Task task) {
         this.task = task;
-    }
-
-    public SquareType getSquareType() {
-        return this.sType;
-    }
-
-    public Color getColor() {
-        return this.squareColor;
     }
 }

@@ -70,7 +70,8 @@ public class Board extends JPanel {
         int numNormal = totalSquares - (numPothole + numResource);
 
         squareArray.addAll(Collections.nCopies(numNormal, new Square()));
-        squareArray.addAll(Collections.nCopies(numPothole, new TaskSquare(null)));
+        // squareArray.addAll(Collections.nCopies(numPothole, new TaskSquare(null)));
+        squareArray.addAll(Collections.nCopies(numPothole, new TaskSquare(new Task())));
         squareArray.addAll(Collections.nCopies(numResource, new RoleSquare(null)));
 
         Collections.shuffle(squareArray);
