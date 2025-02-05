@@ -131,13 +131,13 @@ public abstract class GameSystem {
     }
 
     private static boolean checkWinCondition() {
-        for (Task task : tasks) {
-            // If the task isn't completed
-            // and the task belongs to the current stage, return false
-            if (!task.isCompleted() && task.getAvailableStage() == currentStage)
-                return false;
+        // for (Task task : tasks) {
+        //     // If the task isn't completed
+        //     // and the task belongs to the current stage, return false
+        //     if (!task.isCompleted() && task.getAvailableStage() == currentStage)
+        //         return false;
 
-        }
+        // }
 
         return true;
     }
