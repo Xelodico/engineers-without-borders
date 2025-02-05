@@ -1,12 +1,15 @@
 package square;
+
 import java.awt.Color;
 
 import BoardGame.*;
 import GameSystem.*;
 
 /**
- * The TaskSquare class represents a square on the game board that contains a specific task.
- * When a player lands on this square, they have the opportunity to activate and complete the task,
+ * The TaskSquare class represents a square on the game board that contains a
+ * specific task.
+ * When a player lands on this square, they have the opportunity to activate and
+ * complete the task,
  * provided their role matches the role required for the task.
  */
 public class TaskSquare extends Square {
@@ -31,43 +34,48 @@ public class TaskSquare extends Square {
     }
 
     /**
-     * When a player lands on a TaskSquare, if it is not claimed by another player, they have the opportunity to claim it.
-     * If the player doesn't wish to claim this task, they can choose to pass it to another player or leave it unclaimed.
-     * However, if the task is already claimed by another player, the current player can choose to help complete the task.
+     * When a player lands on a TaskSquare, if it is not claimed by another player,
+     * they have the opportunity to claim it.
+     * If the player doesn't wish to claim this task, they can choose to pass it to
+     * another player or leave it unclaimed.
+     * However, if the task is already claimed by another player, the current player
+     * can choose to help complete the task.
      * 
-     * @return {@code true} if the task was successfully activated, {@code false} otherwise.
+     * @return {@code true} if the task was successfully activated, {@code false}
+     *         otherwise.
      */
     @Override
     public boolean activateSquareEffect() {
         /*
-        super.activateSquareEffect(); 
-        if (task.getOwner() == null) {
-             popup("Do you want to get this task?", "Yes", "No");
-                if (yes) {
-                    task.setOwner(getPrimaryOccupier());
-                } else {
-                    popup("Who wants this task?", "Player 1", "Player 2", "Player 3", "Player 4", "Nobody");
-                    if(player1) {
-                        task.setOwner(player1);
-                    } else if(player2) {
-                        task.setOwner(player2);
-                    } else if(player3) {
-                        task.setOwner(player3);
-                    } else if(player4) {
-                        task.setOwner(player4);
-                    } else {
-                        task.setOwner(null);
-                    }
-                }
-        } else if (task.getOwner() != getPrimaryOccupier()) {
-            popup("Do you want to help complete this task?", "Yes", "No");
-            if (yes) {
-                task.addHelper(getPrimaryOccupier());
-            }
-        } else {
-            popup("You already own this task!", "OK"); 
-        }
-        */
+         * super.activateSquareEffect();
+         * if (task.getOwner() == null) {
+         * popup("Do you want to get this task?", "Yes", "No");
+         * if (yes) {
+         * task.setOwner(getPrimaryOccupier());
+         * } else {
+         * popup("Who wants this task?", "Player 1", "Player 2", "Player 3", "Player 4",
+         * "Nobody");
+         * if(player1) {
+         * player1.addTask(task);
+         * } else if(player2) {
+         * player2.addTask(task);
+         * } else if(player3) {
+         * player3.addTask(task);
+         * } else if(player4) {
+         * player4.addTask(task);
+         * } else {
+         * popup("Nodoby claimed the task, -15 satisfaction points", "OK");
+         * }
+         * }
+         * } else if (task.getOwner() != getPrimaryOccupier()) {
+         * popup("Do you want to help complete this task?", "Yes", "No");
+         * if (yes) {
+         * task.addHelper(getPrimaryOccupier());
+         * }
+         * } else {
+         * popup("You already own this task!", "OK");
+         * }
+         */
         return true;
     }
 
