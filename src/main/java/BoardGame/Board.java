@@ -164,7 +164,7 @@ public class Board extends JPanel {
      *                                  squares on the board or if the amount is
      *                                  negative.
      */
-    public void generateSquares(int amount, SquareType squareType) {
+    public void generateNewSquares(int amount, SquareType squareType) {
         if (amount > squareArray.size()) {
             throw new IllegalArgumentException("Amount of potholes cannot exceed the number of squares on the board.");
         }
