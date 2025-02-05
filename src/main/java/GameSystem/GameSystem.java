@@ -210,11 +210,18 @@ public abstract class GameSystem {
      * If all players have taken their turn, the game progresses to the next round.
      */
     public static void nextTurn() {
+        // Check if the player has completed all objectives
+        if (checkWinCondition()) {
+            endGame();
+        }
+
         // If the last player in the turn order has finished their turn, reset to the
         // first player
         if (turnNumber >= turnOrder.length - 1) {
             turnNumber = 0; // Reset turn number to first player
             roundNumber++; // Start a new round
+
+            // TODO: Implement logic to handle end of round events
         } else {
             // Otherwise, move to the next player's turn
             turnNumber++;
