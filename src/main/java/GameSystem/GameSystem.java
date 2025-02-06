@@ -1,6 +1,10 @@
 package GameSystem;
 
 import java.util.ArrayList;
+import java.io.File; // File class for reading files
+import java.util.Scanner; // Scanner for reading files
+import java.io.FileNotFoundException; // Exception for file not found
+import java.util.concurrent.TimeUnit; // TimeUnit for pausing epilogue output
 
 import BoardGame.*;
 
@@ -166,7 +170,7 @@ public abstract class GameSystem {
      * @return An ArrayList of Objective objects.
      */
     // public static ArrayList<Objective> getObjectives() {
-    //     return objectives;
+    // return objectives;
     // }
 
     /**
@@ -211,9 +215,10 @@ public abstract class GameSystem {
      */
     public static void nextTurn() {
         // Check if the player has completed all objectives
-        if (checkWinCondition()) {
-            endGame();
-        }
+        // if (checkWinCondition()) {
+        // endGame();
+        // return;
+        // }
 
         // If the last player in the turn order has finished their turn, reset to the
         // first player
@@ -233,34 +238,78 @@ public abstract class GameSystem {
      * can progress.
      * 
      * @return true if all objectives have been completed; false otherwise.
-    //  */
+     *         //
+     */
     // private static boolean checkWinCondition() {
-    //     for (Objective objective : objectives) {
-    //         // If any task within the objectives is incomplete, return false
-    //         if (!objective.isCompleted()) {
-    //             return false;
-    //         }
-    //     }
+    // for (Objective objective : objectives) {
+    // // If any task within the objectives is incomplete, return false
+    // if (!objective.isCompleted()) {
+    // return false;
+    // }
+    // }
 
-    //     // If all objectives are completed, return true
-    //     return true;
+    // // If all objectives are completed, return true
+    // return true;
     // }
 
     /**
      * Ends the game and handles any necessary cleanup or victory conditions.
-     * (Currently, no implementation provided.)
+     * This method determines whether the player has won or lost, displays an
+     * epilogue based on the outcome, and prompts the player to start a new game.
      */
-    // public static void endGame() {
-    //     boolean win = checkWinCondition();
+    public static void endGame() {
+        // TODO: Replace placeholder value with checkWinCondition() when ready
+        boolean win = false;
 
-    //     if (win) {
+        // Declare message and file path for epilogue event storage
+        String winMessage;
+        String filePath;
 
-    //     } else {
+        // Determine the appropriate ending based on game outcome
+        if (win) {
+            winMessage = "Congratulations! You have completed all objectives!";
+            System.out.println(winMessage);
+            filePath = "src\\main\\resources\\data\\goodEndingEvents.txt";
+        } else {
+            winMessage = "You have failed to complete all objectives.";
+            System.out.println(winMessage);
+            filePath = "src\\main\\resources\\data\\badEndingEvents.txt";
+        }
 
-    //     }
-    //     // TODO: Implement end game logic such as displaying final scores and resetting
-    //     // the game state
-    // }
+        // Display epilogue to the player
+        System.out.println("\nThe path ahead...");
+        File file = new File(filePath);
+        int year = 2025; // Starting year for event projections
+
+        try (Scanner fileReader = new Scanner(file)) {
+            while (fileReader.hasNextLine()) {
+                String data = fileReader.nextLine();
+                if (data.isEmpty())
+                    continue;
+                System.out.println("By " + year + "...\n" + data);
+                year++;
+
+                // Introduce a brief pause for readability
+                // This also fulfils the requirement for a pause between events
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    // Handle thread interruption exception
+                    e.printStackTrace();
+                }
+            }
+        } catch (FileNotFoundException exception) {
+            // Handle the case where the epilogue file is missing
+            System.err.print("File not found.");
+        }
+
+        // TODO: Implement final game logic, such as displaying scores and resetting the
+        // game state
+        showPopup("Thanks for playing Pavers Valley!", "Start a new game?", "Yes", "No");
+
+        // Terminate the game process
+        System.exit(0);
+    }
 
     /**
      * Displays a popup message to the player with customizable buttons.
@@ -292,5 +341,6 @@ public abstract class GameSystem {
     public static void main(String[] args) {
         // Initialize the game system and set up necessary components
         initialise();
+        endGame();
     }
 }
