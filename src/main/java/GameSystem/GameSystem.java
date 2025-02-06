@@ -34,7 +34,7 @@ public abstract class GameSystem {
     private static int turnNumber;
 
     // List of objectives available in the game
-    private static ArrayList<Objective> objectives;
+    // private static ArrayList<Objective> objectives;
 
     // List of tasks and subtasks to be completed within the game, linked to
     // objectives
@@ -53,7 +53,7 @@ public abstract class GameSystem {
             turnNumber = 0; // Reset turn number
             roundNumber = 0; // Reset round count
 
-            objectives = new ArrayList<Objective>(); // Initialize the list of job roles
+            // objectives = new ArrayList<Objective>(); // Initialize the list of job roles
             tasks = new ArrayList<Task>(); // Initialize the list of tasks
 
             // Setting up a default player array with at least one player to avoid errors
@@ -165,9 +165,9 @@ public abstract class GameSystem {
      * 
      * @return An ArrayList of Objective objects.
      */
-    public static ArrayList<Objective> getObjectives() {
-        return objectives;
-    }
+    // public static ArrayList<Objective> getObjectives() {
+    //     return objectives;
+    // }
 
     /**
      * Moves the current player in the specified direction on the game board.
@@ -226,34 +226,34 @@ public abstract class GameSystem {
      * can progress.
      * 
      * @return true if all objectives have been completed; false otherwise.
-     */
-    private static boolean checkWinCondition() {
-        for (Objective objective : objectives) {
-            // If any task within the objectives is incomplete, return false
-            if (!objective.isCompleted()) {
-                return false;
-            }
-        }
+    //  */
+    // private static boolean checkWinCondition() {
+    //     for (Objective objective : objectives) {
+    //         // If any task within the objectives is incomplete, return false
+    //         if (!objective.isCompleted()) {
+    //             return false;
+    //         }
+    //     }
 
-        // If all objectives are completed, return true
-        return true;
-    }
+    //     // If all objectives are completed, return true
+    //     return true;
+    // }
 
     /**
      * Ends the game and handles any necessary cleanup or victory conditions.
      * (Currently, no implementation provided.)
      */
-    public static void endGame() {
-        boolean win = checkWinCondition();
+    // public static void endGame() {
+    //     boolean win = checkWinCondition();
 
-        if (win) {
+    //     if (win) {
 
-        } else {
+    //     } else {
 
-        }
-        // TODO: Implement end game logic such as displaying final scores and resetting
-        // the game state
-    }
+    //     }
+    //     // TODO: Implement end game logic such as displaying final scores and resetting
+    //     // the game state
+    // }
 
     /**
      * Displays a popup message to the player with customizable buttons.
