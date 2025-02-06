@@ -43,7 +43,7 @@ public class TaskSquare extends Square {
         super.activateSquareEffect();
         if (getPrimaryOccupier().getRoles().contains(task.getRole())) {
             // Execute the task
-            task.doTask();  // Perform the task's actions
+            // task.doTask();  // Perform the task's actions
             return true;  // Indicate success
         } else {
             // Notify the player that their role is not suitable for this task
