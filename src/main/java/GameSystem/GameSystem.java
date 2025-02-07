@@ -292,7 +292,7 @@ public abstract class GameSystem {
                 // Introduce a brief pause for readability
                 // This also fulfils the requirement for a pause between events
                 try {
-                    TimeUnit.SECONDS.sleep(1);
+                    TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException e) {
                     // Handle thread interruption exception
                     e.printStackTrace();
@@ -305,7 +305,11 @@ public abstract class GameSystem {
 
         // TODO: Implement final game logic, such as displaying scores and resetting the
         // game state
-        showPopup("Thanks for playing Pavers Valley!", "Start a new game?", "Yes", "No");
+        showPopup("Thanks for playing Pavers Valley!", "Start a new game?", "Yes",
+        "No");
+
+        // Highest score, spent most money, travelled the most
+
 
         // Terminate the game process
         System.exit(0);
