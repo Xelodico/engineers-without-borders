@@ -1,6 +1,7 @@
 Package Square;
 
 import java.util.random.*;
+import GameSystem.*;
 
 public class MoneySquare extends Square {
     private int money; // Stores the money value for this square.
@@ -33,7 +34,7 @@ public class MoneySquare extends Square {
     @Override
     public boolean activateSquareEffect() {
         super.activateSquareEffect(); // Calls the superclass method.
-        getPrimaryOccupier().changeMoney(this.money)
+        getPrimaryOccupier().changeMoney(this.money);
         return true;
     }
 }
