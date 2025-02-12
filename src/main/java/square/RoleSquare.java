@@ -5,51 +5,64 @@ import BoardGame.*;
 import GameSystem.*;
 
 /**
- * The RoleSquare class extends the Square class and represents a square on the game board that assigns
- * a job role to a player. The job role is randomly selected, and the selected role is assigned to a specific player
- * when the square is activated.
+ * Represents a square on the game board that assigns a job role to a player.
+ * The job role is pre-defined and assigned to a specific player when the square is activated.
  */
 public class RoleSquare extends Square {
-    
+
     /**
-     * The job role that is assigned to the player when this square is activated.
+     * The job role assigned to the player when this square is activated.
      */
     private JobRole playerRole;
+
+    /**
+     * The type of this square, indicating it is a RoleSquare.
+     */
     private final SquareType sType = SquareType.ROLESQUARE;
+
+    /**
+     * The color representation of this square.
+     */
     private final Color squareColor = Color.ORANGE;
 
     /**
-    * Constructs a RoleSquare with the specified job role.
-    *
-    * @param role the job role assigned to this square
-    */
+     * Constructs a RoleSquare with the specified job role.
+     *
+     * @param role The job role assigned to this square.
+     */
     public RoleSquare(JobRole role) {
         super();
         this.playerRole = role;
     }
 
     /**
-     * Activates the effect of the RoleSquare, assigning the randomly selected job role
-     * to one of the players. The specific player is determined by the input parameter.
+     * Activates the effect of the RoleSquare, assigning the job role to the current player.
      *
-     * @param players array of players in game
-     * @param playerRoleAssignment the player to get the role of the square
+     * @return {@code true} if the role was successfully assigned to the player,
+     *         {@code false} otherwise.
      */
+    @Override
     public boolean activateSquareEffect() {
-        // Determine which player to assign the role to
-        //TODO use UI to get player's choice
-        //Player[] players = GameSystem.getTurnOrder();
         super.activateSquareEffect();
-        getPrimaryOccupier().addRole(this.playerRole);
+        getPlayerAt().addRole(this.playerRole);
         return true;
     }
 
+    /**
+     * Returns the type of this square.
+     *
+     * @return The square type, which is {@code SquareType.ROLESQUARE}.
+     */
     public SquareType getSquareType() {
         return this.sType;
     }
 
+    /**
+     * Returns the color associated with this square.
+     *
+     * @return The color of this square, which is {@code Color.ORANGE}.
+     */
     public Color getColor() {
         return this.squareColor;
     }
 }
-
