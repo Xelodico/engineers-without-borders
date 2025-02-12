@@ -39,11 +39,11 @@ public class Popup extends JPanel {
     private JButton noButtonComponent;
 
     public Popup(String title, String desc, String yesButtonText, String noButtonText, ActionListener yesAction, ActionListener noAction) {
-        final int width = 400;
-        final int height = 400;
+        final int width = 500;
+        final int height = 500;
 
         setLayout(null);
-        setBounds(62, 56, width, height);
+        setBounds((650/2 - width/2) + 12, (650/2 - height/2) + 6, width, height);
         setBackground(new java.awt.Color(240, 240, 240));
         setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         setVisible(false);

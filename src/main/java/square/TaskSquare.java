@@ -47,8 +47,9 @@ public class TaskSquare extends Square {
     public boolean activateSquareEffect() {
         super.activateSquareEffect();
         if (getCurrentPlayer().getRoles().contains(task.getRole())) {
-            task.doTask(); // Perform the task's actions
-            return true; // Indicate success
+            // Execute the task
+            // task.doTask();  // Perform the task's actions
+            return true;  // Indicate success
         } else {
             return false; // Indicate failure
         }
