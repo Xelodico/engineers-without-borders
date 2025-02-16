@@ -4,6 +4,7 @@ import java.awt.Image;
 import javax.swing.*;
 
 import GameSystem.GameSystem;
+import square.SquareType;
 
 /**
  * The BoardGameUI class represents the user interface for the board game.
@@ -51,9 +52,12 @@ public class BoardGameUI extends JFrame {
 
         journal = new Journal();
         add(journal);
+
+        shop = new Shop();
+        add(shop);
         
         journalDim = new JPanel();
-        journalDim.setBounds(0, 0, 1075, 705);
+        journalDim.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
         journalDim.setBackground(new java.awt.Color(0, 0, 0, 150));
         journalDim.setVisible(false);
         add(journalDim);
@@ -143,6 +147,12 @@ public class BoardGameUI extends JFrame {
             } else {
                 movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
             }
+
+            if (gameBoard.getSquareAt(GameSystem.getPlayerAt().getCoord()).getSquareType() == SquareType.SHOPSQUARE) {
+                shopButton.setVisible(true);
+            } else {
+                shopButton.setVisible(false);
+            }
         });
     }
 
@@ -151,6 +161,7 @@ public class BoardGameUI extends JFrame {
         playerTurnGraphic = new JLabel();
         helpButton = new JButton();
         journalButton = new JButton();
+        shopButton = new JButton();
         rollDiceButton = new JButton();
         endTurnButton = new JButton();
         movesLeftLabel = new JLabel();
@@ -189,6 +200,20 @@ public class BoardGameUI extends JFrame {
         journalButton.setRolloverEnabled(false);
         journalButton.addActionListener(_ -> {
             journal.setVisible(true);
+            journalDim.setVisible(true);
+            toggleEnableButtons();
+        });
+
+        ImageIcon shopIcon = new ImageIcon(getClass().getResource("/images/shopButton.png"));
+        shopButton.setIcon(new ImageIcon(shopIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH)));
+        shopButton.setBorder(null);
+        shopButton.setContentAreaFilled(false);
+        shopButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        sidePanelContainer.add(shopButton);
+        shopButton.setBounds(236, BOARD_HEIGHT - 55 - 37, 37, 37);
+        shopButton.setRolloverEnabled(false);
+        shopButton.addActionListener(_ -> {
+            shop.setVisible(true);
             journalDim.setVisible(true);
             toggleEnableButtons();
         });
@@ -355,6 +380,7 @@ public class BoardGameUI extends JFrame {
             rollDiceButton.setEnabled(false);
             helpButton.setEnabled(false);
             journalButton.setEnabled(false);
+            shopButton.setEnabled(false);
         } else {
             arrowDown.setEnabled(true);
             arrowUp.setEnabled(true);
@@ -363,6 +389,7 @@ public class BoardGameUI extends JFrame {
             rollDiceButton.setEnabled(true);
             helpButton.setEnabled(true);
             journalButton.setEnabled(true);
+            shopButton.setEnabled(true);
         }
     }
 
@@ -403,4 +430,6 @@ public class BoardGameUI extends JFrame {
     private JButton journalButton;
     private Journal journal;
     private JPanel journalDim;
+    private Shop shop;
+    private JButton shopButton;
 }
