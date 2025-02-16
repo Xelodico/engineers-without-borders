@@ -1,7 +1,9 @@
 package BoardGame;
 
 import javax.swing.*;
+import GameSystem.GameSystem;
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -25,8 +27,8 @@ public class Journal extends JPanel {
      * - A scrollable area containing objectives, each with a list of tasks
      */
     public Journal() {
-        final int width = 700;
-        final int height = 500;
+        final int WIDTH = 700;
+        final int HEIGHT = 500;
 
         try {
             // Load background image
@@ -36,7 +38,7 @@ public class Journal extends JPanel {
         }
 
         setLayout(null);
-        setBounds((BoardGameUI.WINDOW_WIDTH / 2 - width / 2), (650 / 2 - height / 2) + 6, width, height);
+        setBounds((BoardGameUI.WINDOW_WIDTH / 2 - WIDTH / 2), (650 / 2 - HEIGHT / 2) + 6, WIDTH, HEIGHT);
         setBackground(new java.awt.Color(0, 0, 0, 0));
         setVisible(false);
 
@@ -50,24 +52,15 @@ public class Journal extends JPanel {
         // Set scroll bar width
         UIManager.put("ScrollBar.width", 10);
 
-        // Create JScrollPane for the page content
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(24, 43, 617 - 25, 427);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
-        scrollPane.setBorder(null);
-        scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false);
-        scrollPane.getVerticalScrollBar().setBackground(new java.awt.Color(0, 0, 0, 0));
-        scrollPane.getVerticalScrollBar().setBorder(null);
-        renderScrollBar(scrollPane);
+        JScrollPane scrollPane = createScrollPane();
         add(scrollPane);
 
         // Create the page content container
         JPanel page = new JPanel();
         page.setLayout(new BoxLayout(page, BoxLayout.Y_AXIS));
         page.setOpaque(false);
+
+        addCloseButton(page);
 
         // Add objectives with their tasks
         JPanel objective1 = createObjective("Objective 1: ");
@@ -135,6 +128,65 @@ public class Journal extends JPanel {
         taskLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         task.add(taskLabel);
         return task;
+    }
+
+    /**
+     * Creates a JScrollPane with a custom vertical scroll bar.
+     *
+     * @return A JScrollPane.
+     */
+    private JScrollPane createScrollPane() {
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(24, 43, 617 - 25, 427);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
+        scrollPane.setBorder(null);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.getVerticalScrollBar().setBackground(new java.awt.Color(0, 0, 0, 0));
+        scrollPane.getVerticalScrollBar().setBorder(null);
+        renderScrollBar(scrollPane);
+
+        return scrollPane;
+    }
+
+    /**
+     * Adds a close button to the given page.
+     *
+     * @param page The page to add the close button to.
+     */
+    private void addCloseButton(JPanel page) {
+        ImageIcon closeIcon = new ImageIcon(getClass().getResource("/images/closeJournal.png"));
+        ImageIcon closeIconRed = new ImageIcon(getClass().getResource("/images/closeJournalRed.png"));
+
+        JPanel closeButtonPanel = new JPanel(new BorderLayout());
+        closeButtonPanel.setOpaque(false);
+        closeButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+        JButton closeButton = new JButton();
+        closeButton.setIcon(new ImageIcon(closeIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+        closeButton.setBorder(null);
+        closeButton.setContentAreaFilled(false);
+        closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        closeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameSystem.toggleJournal();
+            }
+        });
+        closeButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                closeButton
+                        .setIcon(new ImageIcon(closeIconRed.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+            }
+
+            public void mouseExited(MouseEvent evt) {
+                closeButton.setIcon(new ImageIcon(closeIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+            }
+        });
+
+        closeButtonPanel.add(closeButton, BorderLayout.EAST);
+        page.add(closeButtonPanel);
     }
 
     /**
