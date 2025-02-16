@@ -39,6 +39,7 @@ public class Shop extends JPanel {
         setBounds(0, 0, BoardGameUI.WINDOW_WIDTH, BoardGameUI.WINDOW_HEIGHT);
         setBackground(new java.awt.Color(0, 0, 0, 0));
         setVisible(false);
+        setOpaque(false);
 
         JButton button = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
         button.setBounds(428, 187, 41, 60);

@@ -154,6 +154,14 @@ public abstract class GameSystem {
         gameBoardUI.showPopup(title, desc, yesButton, noButton);
     }
 
+    public static void toggleJournal() {
+        gameBoardUI.toggleJournal();
+    }
+
+    public static void toggleShop() {
+        gameBoardUI.toggleShop();
+    }
+
     public static void main(String[] args) {
         initialise();
     }
