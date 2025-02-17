@@ -20,7 +20,7 @@ public class Board extends JPanel {
 
     /**
      * The distribution ratio of the square types on the board.
-     * The ratio is Pothole : Resource : Normal.
+     * The ratio is Task : Resource : Normal.
      */
     private final static int[] squareTypeRatios = { 2, 2, 6 };
 
@@ -50,13 +50,10 @@ public class Board extends JPanel {
 
     /**
      * Distributes the types of squares on the board based on a given ratio.
-     * The types of squares include Knowledge, Pothole, Resource, and Normal.
+     * The types of squares include Task, Resource, and Normal.
      * Additionally, specific locations can be designated as Spawn points.
      * 
-     * @param totalSquares   The total number of squares on the board.
-     * @param spawnLocations A list of indices where spawn points should be placed.
      * @return A list of strings representing the type of each square on the board.
-     * @throws IllegalArgumentException if a spawn location is out of bounds.
      */
     private List<Square> generateBoardSquares() {
         int totalSquares = boardSideLength * boardSideLength;
@@ -64,15 +61,16 @@ public class Board extends JPanel {
         List<Square> squareArray = new ArrayList<>();
 
         int totalWeight = Arrays.stream(squareTypeRatios).sum();
-        // int numKnowledge = totalSquares / totalWeight * squareTypeRatios[0];
-        int numPothole = totalSquares / totalWeight * squareTypeRatios[0];
+        int numTask = totalSquares / totalWeight * squareTypeRatios[0];
         int numResource = totalSquares / totalWeight * squareTypeRatios[1];
-        int numNormal = totalSquares - (numPothole + numResource);
+        int numNormal = totalSquares - (numTask + numResource);
 
         squareArray.addAll(Collections.nCopies(numNormal, new Square()));
-        // squareArray.addAll(Collections.nCopies(numPothole, new TaskSquare(null)));
-        squareArray.addAll(Collections.nCopies(numPothole, new TaskSquare(new Task())));
         squareArray.addAll(Collections.nCopies(numResource, new RoleSquare(null)));
+
+        for (int i = 0; i < numTask; i++) {
+            squareArray.add(new TaskSquare(new Task()));
+        }
 
         Collections.shuffle(squareArray);
 
