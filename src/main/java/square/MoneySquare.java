@@ -1,6 +1,6 @@
-Package Square;
+package square;
 
-import java.util.random.*;
+import java.util.Random;
 import GameSystem.*;
 
 public class MoneySquare extends Square {

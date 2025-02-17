@@ -44,7 +44,7 @@ public class RoleSquare extends Square {
     @Override
     public boolean activateSquareEffect() {
         super.activateSquareEffect();
-        getPlayerAt().addRole(this.playerRole);
+        GameSystem.getPlayerAt().addRole(this.playerRole);
         return true;
     }
 
