@@ -71,7 +71,7 @@ public class TaskSquare extends Square {
                         break;
                 }
             }
-            keyb.close();
+            // keyb.close();
         } else if (task.getOwnedBy() != getPrimaryOccupier()) {
             // GameSystem.showPopup("Do you want to help complete this task?", task.getDescription(), "Yes", "No");
             System.out.println("Do you want to help complete this task?");
@@ -81,7 +81,7 @@ public class TaskSquare extends Square {
                 // Discount the task.
                 System.out.println("Discounting the task!");
             }
-            keyb.close();
+            // keyb.close();
         } else {
             // GameSystem.showPopup("You already own this task!", "OK");
             System.out.println("You already own this task!");
