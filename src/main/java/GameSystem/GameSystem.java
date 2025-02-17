@@ -1,5 +1,6 @@
 package GameSystem;
 
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import BoardGame.*;
@@ -151,8 +152,12 @@ public abstract class GameSystem {
     public static void endGame() {
     }
 
-    public static void showPopup(String title, String desc, String yesButton, String noButton) {
-        gameBoardUI.showPopup(title, desc, yesButton, noButton);
+    public static void showPopup(String title, String desc, String yesButton, String noButton, ActionListener yesAction, ActionListener noAction) {
+        gameBoardUI.showPopup(title, desc, yesButton, noButton, yesAction, noAction);
+    }
+
+    public static void hidePopup() {
+        gameBoardUI.hidePopup();
     }
 
     public static void main(String[] args) {

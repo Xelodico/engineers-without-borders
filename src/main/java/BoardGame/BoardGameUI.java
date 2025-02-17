@@ -1,9 +1,10 @@
 package BoardGame;
 
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 
 import GameSystem.GameSystem;
-import square.SquareType;
 
 /**
  * The BoardGameUI class represents the user interface for the board game.
@@ -55,12 +56,18 @@ public class BoardGameUI extends JFrame {
         setResizable(false);
     }
 
-    public void showPopup(String title, String desc, String yesButton, String noButton) {
+    public void showPopup(String title, String desc, String yesButton, String noButton, ActionListener yesAction, ActionListener noAction) {
         popup.setTitle(title);
         popup.setDescription(desc);
         popup.setYesButtonText(yesButton);
         popup.setNoButtonText(noButton);
+        popup.setYesButtonAction(yesAction);
+        popup.setNoButtonAction(noAction);
         popup.setVisible(true);
+    }
+
+    public void hidePopup() {
+        popup.setVisible(false);
     }
 
     /**
