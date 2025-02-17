@@ -2,9 +2,12 @@ package square;
 
 import java.util.Random;
 import GameSystem.*;
+import java.awt.Color;
 
 public class MoneySquare extends Square {
     private int money; // Stores the money value for this square.
+
+    private final Color squareColor = Color.YELLOW;
 
     /**
      * Default constructor that assigns a random amount of money between 800 and 1200.
@@ -34,7 +37,16 @@ public class MoneySquare extends Square {
     @Override
     public boolean activateSquareEffect() {
         super.activateSquareEffect(); // Calls the superclass method.
-        getPlayerAt().changeMoney(this.money);
+        GameSystem.getPlayerAt().changeMoney(this.money);
         return true;
+    }
+
+    /**
+     * Returns the color associated with this square.
+     * 
+     * @return The color of this square, which is {@code Color.YELLOW}.
+     */
+    public Color getColor() {
+        return this.squareColor;
     }
 }
