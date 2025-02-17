@@ -38,12 +38,15 @@ public class Popup extends JPanel {
     private JButton yesButtonComponent;
     private JButton noButtonComponent;
 
-    public Popup(String title, String desc, String yesButtonText, String noButtonText, ActionListener yesAction, ActionListener noAction) {
-        final int width = 500;
-        final int height = 500;
+    private boolean yesButtonVisible = true;
+    private boolean noButtonVisible = true;
 
+    private final int WIDTH = 500;
+    private final int HEIGHT = 500;
+
+    public Popup(String title, String desc, String yesButtonText, String noButtonText, ActionListener yesAction, ActionListener noAction) {
         setLayout(null);
-        setBounds((650/2 - width/2) + 12, (650/2 - height/2) + 6, width, height);
+        setBounds((650/2 - WIDTH/2) + 12, (650/2 - HEIGHT/2) + 6, WIDTH, HEIGHT);
         setBackground(new java.awt.Color(240, 240, 240));
         setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         setVisible(false);
@@ -52,7 +55,7 @@ public class Popup extends JPanel {
         popupTitle.setFont(new java.awt.Font("Segoe UI", 1, 24));
         popupTitle.setHorizontalAlignment(SwingConstants.CENTER);
         popupTitle.setText("<html>" + title + "</html>");
-        popupTitle.setBounds(0, 0, width, 70);
+        popupTitle.setBounds(0, 0, WIDTH, 70);
         add(popupTitle);
 
         popupDesc = new JTextArea(desc);
@@ -64,7 +67,7 @@ public class Popup extends JPanel {
         popupDesc.setBorder(null);
         popupDesc.setEnabled(false);
         popupDesc.setDisabledTextColor(Color.BLACK);
-        popupDesc.setBounds(10, 80, width - 20, height - 200);
+        popupDesc.setBounds(10, 80, WIDTH - 20, HEIGHT - 200);
         add(popupDesc);
 
         yesButtonComponent = new JButton(yesButtonText);
@@ -73,7 +76,7 @@ public class Popup extends JPanel {
         yesButtonComponent.setFocusPainted(false);
         yesButtonComponent.setContentAreaFilled(false);
         yesButtonComponent.setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-        yesButtonComponent.setBounds((width / 2) - 110, height - 60, 100, 30);
+        yesButtonComponent.setBounds((WIDTH / 2) - 110, HEIGHT - 60, 100, 30);
         add(yesButtonComponent);
 
         noButtonComponent = new JButton(noButtonText);
@@ -82,7 +85,7 @@ public class Popup extends JPanel {
         noButtonComponent.setFocusPainted(false);
         noButtonComponent.setContentAreaFilled(false);
         noButtonComponent.setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-        noButtonComponent.setBounds((width / 2) + 10, height - 60, 100, 30);
+        noButtonComponent.setBounds((WIDTH / 2) + 10, HEIGHT - 60, 100, 30);
         add(noButtonComponent);
 
         yesButtonComponent.addActionListener(yesAction);
@@ -90,19 +93,62 @@ public class Popup extends JPanel {
     }
 
     public void setTitle(String title) {
-        popupTitle.setText("<html>" + title + "</html>");
+        popupTitle.setText(title);
     }
 
     public void setDescription(String desc) {
         popupDesc.setText(desc);
     }
 
+    public void positionButtons() {
+        if (yesButtonVisible && noButtonVisible) {
+            yesButtonComponent.setBounds((WIDTH / 2) - 110, HEIGHT - 60, 100, 30);
+            noButtonComponent.setBounds((WIDTH / 2) + 10, HEIGHT - 60, 100, 30);
+        } else if (yesButtonVisible) {
+            yesButtonComponent.setBounds((WIDTH / 2) - 50, HEIGHT - 60, 100, 30);
+        } else if (noButtonVisible) {
+            noButtonComponent.setBounds((WIDTH / 2) - 50, HEIGHT - 60, 100, 30);
+        }
+    }
+
     public void setYesButtonText(String text) {
         yesButtonComponent.setText(text);
+        if (text == null || text.length() == 0) {
+            yesButtonComponent.setVisible(false);
+            yesButtonVisible = false;
+        } else {
+            yesButtonComponent.setVisible(true);
+            yesButtonVisible = true;
+        }
+        positionButtons();
     }
 
     public void setNoButtonText(String text) {
         noButtonComponent.setText(text);
+        if (text == null || text.length() == 0) {
+            noButtonComponent.setVisible(false);
+            noButtonVisible = false;
+        } else {
+            noButtonComponent.setVisible(true);
+            noButtonVisible = true;
+        }
+        positionButtons();
+    }
+
+    public void setYesButtonAction(ActionListener action) {
+        ActionListener[] actions = yesButtonComponent.getActionListeners();
+        for (ActionListener a : actions) {
+            yesButtonComponent.removeActionListener(a);
+        }
+        yesButtonComponent.addActionListener(action);
+    }
+
+    public void setNoButtonAction(ActionListener action) {
+        ActionListener[] actions = noButtonComponent.getActionListeners();
+        for (ActionListener a : actions) {
+            noButtonComponent.removeActionListener(a);
+        }
+        noButtonComponent.addActionListener(action);
     }
 
 }
