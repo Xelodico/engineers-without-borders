@@ -13,7 +13,8 @@ import java.net.URL;
 
 /**
  * Represents a shop component in the BoardGame UI.
- * This panel displays a background image with a list of items that the player can purchase.
+ * This panel displays a background image with a list of items that the player
+ * can purchase.
  * Each item has a corresponding cost and description.
  * The shop panel is not visible by default.
  * 
@@ -25,7 +26,8 @@ public class Shop extends JPanel {
 
     /**
      * Default constructor for the Shop object.
-     * Initializes the Shop object with a background image and sets the layout to null.
+     * Initializes the Shop object with a background image and sets the layout to
+     * null.
      * The Shop object is not visible by default.
      */
     public Shop() {
@@ -42,36 +44,56 @@ public class Shop extends JPanel {
         setVisible(false);
         setOpaque(false);
 
-        JButton button = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        button.setBounds(428, 187, 41, 60);
-        addHoverEffect(button);
-        add(button);
-
-        JLabel price = new JLabel("100");
-        price.setFont(new Font("Arial", Font.BOLD, 20));
-        price.setForeground(Color.WHITE);
-        price.setHorizontalAlignment(SwingConstants.CENTER);
-        price.setBounds(396, 288, 100, 39);
-        add(price);
-
-        JButton button2 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        button2.setBounds(617, 187, 41, 60);
-        addHoverEffect(button2);
-        add(button2);
-
-        JButton button3 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        button3.setBounds(428, 351, 41, 60);
-        addHoverEffect(button3);
-        add(button3);
-
-        JButton button4 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        button4.setBounds(617, 351, 41, 60);
-        addHoverEffect(button4);
-        add(button4);
-
+        addShopItemsAndPrices();
         addCloseButton(this);
     }
 
+    /**
+     * Adds the shop items and their corresponding prices to the shop panel.
+     * Each item is represented by a JButton with an image icon.
+     * Each price is represented by a JLabel with a string value.
+     */
+    public void addShopItemsAndPrices() {
+        item1 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
+        item1.setBounds(428, 187, 41, 60);
+        addHoverEffect(item1);
+        add(item1);
+
+        price1 = newPrice("100");
+        price1.setBounds(396, 288, 100, 39);
+        add(price1);
+
+        item2 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
+        item2.setBounds(617, 187, 41, 60);
+        addHoverEffect(item2);
+        add(item2);
+
+        price2 = newPrice("200");
+        price2.setBounds(585, 288, 100, 39);
+        add(price2);
+
+        item3 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
+        item3.setBounds(428, 351, 41, 60);
+        addHoverEffect(item3);
+        add(item3);
+
+        price3 = newPrice("300");
+        price3.setBounds(396, 452, 100, 39);
+        add(price3);
+
+        item4 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
+        item4.setBounds(617, 351, 41, 60);
+        addHoverEffect(item4);
+        add(item4);
+
+        price4 = newPrice("400");
+        price4.setBounds(585, 452, 100, 39);
+        add(price4);
+    }
+
+    /**
+     * @return A new shop item button with the specified image icon.
+     */
     public static JButton newShopItem(ImageIcon icon) {
         JButton button = new JButton();
         button.setBorder(null);
@@ -82,6 +104,22 @@ public class Shop extends JPanel {
         return button;
     }
 
+    /**
+     * @return A new price label with the specified price string.
+     */
+    public static JLabel newPrice(String price) {
+        JLabel priceLabel = new JLabel(price);
+        priceLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        priceLabel.setForeground(Color.WHITE);
+        priceLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        return priceLabel;
+    }
+
+    /**
+     * Adds a hover effect to the specified button.
+     * When the mouse enters the button, the button's icon is scaled up.
+     * When the mouse exits the button, the button's icon is scaled back down.
+     */
     public static void addHoverEffect(JButton button) {
         ImageIcon originalIcon = (ImageIcon) button.getIcon();
         int originalX = button.getX();
@@ -93,10 +131,12 @@ public class Shop extends JPanel {
             @Override
             public void mouseEntered(MouseEvent e) {
                 Image originalImage = originalIcon.getImage();
-                Image scaledImage = originalImage.getScaledInstance(originalImage.getWidth(null) + 10, originalImage.getHeight(null) + 10, Image.SCALE_SMOOTH);
+                Image scaledImage = originalImage.getScaledInstance(originalImage.getWidth(null) + 10,
+                        originalImage.getHeight(null) + 10, Image.SCALE_SMOOTH);
                 button.setBounds(originalX - 5, originalY - 8, originalWidth + 10, originalHeight + 10);
                 button.setIcon(new ImageIcon(scaledImage));
             }
+
             @Override
             public void mouseExited(MouseEvent e) {
                 button.setBounds(originalX, originalY, originalWidth, originalHeight);
@@ -105,6 +145,11 @@ public class Shop extends JPanel {
         });
     }
 
+    /**
+     * Adds a close button to the specified page.
+     * The close button is represented by an image icon.
+     * When the close button is clicked, the shop panel is hidden.
+     */
     private void addCloseButton(JPanel page) {
         URL closeIconUrl = getClass().getResource("/images/closeShop.png");
         URL closeIconRedUrl = getClass().getResource("/images/closeRed.png");
@@ -120,7 +165,7 @@ public class Shop extends JPanel {
         Image scaledCloseIcon = closeIcon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
         Image scaledCloseIconRed = closeIconRed.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
 
-        JButton closeButton = new JButton();
+        closeButton = new JButton();
         closeButton.setIcon(new ImageIcon(scaledCloseIcon));
         closeButton.setBounds(778, 183, 25, 25);
         closeButton.setBorder(null);
@@ -148,7 +193,6 @@ public class Shop extends JPanel {
         page.add(closeButton);
     }
 
-
     /**
      * Paints the background image for the shop panel.
      */
@@ -159,5 +203,15 @@ public class Shop extends JPanel {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
     }
+
+    private JButton item1;
+    private JButton item2;
+    private JButton item3;
+    private JButton item4;
+    private JLabel price1;
+    private JLabel price2;
+    private JLabel price3;
+    private JLabel price4;
+    private JButton closeButton;
 
 }
