@@ -19,9 +19,11 @@ public class Player {
     private int movesLeft;
     private int id;
     private int money;
+    private int moneySpent;
+    private int score;
+    private int movesTravelled;
     private int nextID = 0;
     private ArrayList<JobRole> roles;
-    
 
     /**
      * Default constructor for a blank player object.
@@ -34,6 +36,8 @@ public class Player {
         this.coord = 0;
         this.resources = 0;
         this.money = 0; // we shall decide on start value
+        this.moneySpent = 0;
+        this.score = 0;
         this.movesLeft = 0;
         nextID++;
     }
@@ -53,6 +57,8 @@ public class Player {
         this.coord = coords;
         this.resources = 0;
         this.money = 0; // tbd
+        this.moneySpent = 0;
+        this.score = 0;
         this.movesLeft = 0;
         nextID++;
     }
@@ -72,6 +78,8 @@ public class Player {
         this.coord = coord;
         this.resources = resources;
         this.money = 0;
+        this.moneySpent = 0;
+        this.score = 0;
         this.movesLeft = movesLeft;
         nextID++;
     }
@@ -151,7 +159,7 @@ public class Player {
     }
 
     /**
-     * Retrieves the money value of the player 
+     * Retrieves the money value of the player
      * 
      * @return returns current money amount of the player
      */
@@ -166,7 +174,7 @@ public class Player {
      * @param money The new money value to assign to the player
      */
 
-    public void setMoney(int money){
+    public void setMoney(int money) {
         this.money = money;
     }
 
@@ -176,8 +184,53 @@ public class Player {
      * @param money change in money value
      */
 
-    public void changeMoney(int money){
-            this.money = this.money + money;
+    public void changeMoney(int money) {
+        this.money = this.money + money;
+    }
+
+    /**
+     * Retrieves the total amount of money the player has spent.
+     *
+     * @return The total money spent by the player.
+     */
+    public int getMoneySpent() {
+        return this.moneySpent;
+    }
+
+    /**
+     * Increases the amount of money the player has spent.
+     *
+     * @param money The amount to add to the player's total money spent.
+     */
+    public void increaseMoneySpent(int money) {
+        this.moneySpent += money;
+    }
+
+    /**
+     * Retrieves the player's current score.
+     *
+     * @return The player's score.
+     */
+    public int getScore() {
+        return this.score;
+    }
+
+    /**
+     * Updates the player's score.
+     *
+     * @param score The new score to set for the player.
+     */
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    /**
+     * Retrieves the total number of moves the player has traveled.
+     *
+     * @return The number of moves the player has made.
+     */
+    public int getMovesTravelled() {
+        return this.movesTravelled;
     }
 
     /**
@@ -196,19 +249,20 @@ public class Player {
      * @return True if the role was added successfully, False if there was a problem
      */
     public boolean addRole(JobRole newRole) {
-    	return roles.add(newRole);
+        return roles.add(newRole);
     }
-    
+
     /**
      * Removes a role from the player
      * 
      * @param roleToRemove The role to remove from this player's responsibilities
-     * @return True if the role was removed successfully, False if there was a problem
+     * @return True if the role was removed successfully, False if there was a
+     *         problem
      */
     public boolean removeRole(JobRole roleToRemove) {
-    	return roles.remove(roleToRemove);
+        return roles.remove(roleToRemove);
     }
-    
+
     /**
      * Sets the moves left for the player.
      * 
@@ -249,7 +303,7 @@ public class Player {
     /**
      * Moves the player in the specified direction on the game board.
      * 
-     * @param player The player to move.
+     * @param player    The player to move.
      * @param direction The direction to move the player.
      */
     public void moveAction(Direction direction, int boardSideLength) {
@@ -295,7 +349,9 @@ public class Player {
             if (newCoord != currentCoord) {
                 this.setCoord(newCoord);
                 this.setMovesLeft(this.getMovesLeft() - 1); // Decrease moves after moving
+                this.movesTravelled++;
                 System.out.println(this.getName() + " moved to position " + newCoord);
+                System.out.println("Moves travelled: " + this.movesTravelled);
             }
         } else {
             System.out.println(this.getName() + " has no moves left this turn.");
