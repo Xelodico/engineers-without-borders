@@ -1,12 +1,13 @@
 package GameSystem;
 
-import java.util.ArrayList;
-import java.io.File; // File class for reading files
-import java.util.Scanner; // Scanner for reading files
-import java.io.FileNotFoundException; // Exception for file not found
-import java.util.concurrent.TimeUnit; // TimeUnit for pausing epilogue output
+import java.io.File;
+import java.util.ArrayList; // File class for reading files
 
-import BoardGame.*;
+import BoardGame.Board; // Scanner for reading files
+import BoardGame.BoardGameUI; // Exception for file not found
+import BoardGame.Direction; // TimeUnit for pausing epilogue output
+import BoardGame.Player;
+import BoardGame.Task;
 
 /**
  * 
@@ -281,35 +282,103 @@ public abstract class GameSystem {
         File file = new File(filePath);
         int year = 2025; // Starting year for event projections
 
-        try (Scanner fileReader = new Scanner(file)) {
-            while (fileReader.hasNextLine()) {
-                String data = fileReader.nextLine();
-                if (data.isEmpty())
-                    continue;
-                System.out.println("By " + year + "...\n" + data);
-                year++;
+        // try (Scanner fileReader = new Scanner(file)) {
+        // while (fileReader.hasNextLine()) {
+        // String data = fileReader.nextLine();
+        // if (data.isEmpty())
+        // continue;
+        // System.out.println("By " + year + "...\n" + data);
+        // year++;
 
-                // Introduce a brief pause for readability
-                // This also fulfils the requirement for a pause between events
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException e) {
-                    // Handle thread interruption exception
-                    e.printStackTrace();
-                }
-            }
-        } catch (FileNotFoundException exception) {
-            // Handle the case where the epilogue file is missing
-            System.err.print("File not found.");
-        }
+        // // Introduce a brief pause for readability
+        // // This also fulfils the requirement for a pause between events
+        // try {
+        // TimeUnit.SECONDS.sleep(1);
+        // } catch (InterruptedException e) {
+        // // Handle thread interruption exception
+        // e.printStackTrace();
+        // }
+
+        // fileReader.close();
+        // }
+        // } catch (FileNotFoundException exception) {
+        // // Handle the case where the epilogue file is missing
+        // System.err.print("File not found.");
+        // }
 
         // TODO: Implement final game logic, such as displaying scores and resetting the
         // game state
-        showPopup("Thanks for playing Pavers Valley!", "Start a new game?", "Yes",
-        "No");
 
-        // Highest score, spent most money, travelled the most
+        // TODO: Remove placeholder players
+        Player player1 = new Player("Kal", 0, 100, 4);
+        player1.changeMoney(5000);
+        player1.increaseMoneySpent(1000);
+        player1.setScore(100);
+        Player player2 = new Player("Nathan", 0, 120, 2);
+        player2.changeMoney(1000);
+        player2.increaseMoneySpent(500);
+        player2.setScore(500);
+        turnOrder = new Player[] { player1, player2 };
 
+        // Display player scores
+        System.out.println("Final Scores:");
+
+        // Stores the indices of players who achieved notable milestones:
+        // - Highest Scorer: The player with the most points.
+        // - Lowest Spender: The player who spent the least amount of money.
+        // - Traveller: The player who moved the most across the board.
+        // - Resource Hogger: The player who collected the most resources.
+        // TODO: Consider adding a "Team Player" achievement for the most contributive
+        // player.
+        int highestScorer = 0, lowestSpender = 0, traveller = 0, resourceHogger = 0;
+        int maxScore = 0, minSpent = Integer.MAX_VALUE, maxResources = 0, maxTravelled = 0;
+
+        // Iterate through each player to determine the top achievers
+        for (int i = 0; i < turnOrder.length; i++) {
+            // Determine the player with the highest score
+            if (turnOrder[i].getScore() > maxScore) {
+                highestScorer = i;
+                maxScore = turnOrder[i].getScore();
+            }
+
+            // Determine the player who spent the least money
+            if (turnOrder[i].getMoneySpent() < minSpent) {
+                lowestSpender = i;
+                minSpent = turnOrder[i].getMoneySpent();
+            }
+
+            // Determine the player who accumulated the most resources
+            if (turnOrder[i].getResources() > maxResources) {
+                resourceHogger = i;
+                maxResources = turnOrder[i].getResources();
+            }
+
+            // Determine the player who travelled the most
+            if (turnOrder[i].getMovesTravelled() > maxTravelled) {
+                traveller = i;
+                maxTravelled = turnOrder[i].getMovesTravelled();
+            }
+
+            // Print player stats
+            System.out.println(turnOrder[i].getName() + ":\n" +
+                    "Score: " + turnOrder[i].getScore() + "\n" +
+                    "Resources: " + turnOrder[i].getResources() + "\n" +
+                    "Money: " + turnOrder[i].getMoney() + "\n");
+        }
+
+        // Display Player Achievements
+        System.out.println("Special Achievements!");
+        System.out.println("Highest Scorer: " + getPlayerAt(highestScorer).getName() +
+                " (" + getPlayerAt(highestScorer).getScore() + " points)");
+        System.out.println("The Cheapskate: " + getPlayerAt(lowestSpender).getName() +
+                " (Spent " + getPlayerAt(lowestSpender).getMoneySpent() + " rand)");
+        System.out.println("The Resource Hogger: " + getPlayerAt(resourceHogger).getName() +
+                " (Kept " + getPlayerAt(resourceHogger).getResources() + " bags of cold asphalt)");
+        System.out.println("The Traveller: " + getPlayerAt(traveller).getName() +
+                " (Travelled " + getPlayerAt(traveller).getMovesTravelled() + " squares)");
+
+        // showPopup("Thanks for playing Pavers Valley!", "Start a new game?", "Yes",
+        // "No");
 
         // Terminate the game process
         System.exit(0);
@@ -344,7 +413,7 @@ public abstract class GameSystem {
      */
     public static void main(String[] args) {
         // Initialize the game system and set up necessary components
-        initialise();
+        // initialise();
         endGame();
     }
 }
