@@ -1,5 +1,5 @@
 import BoardGame.BoardGameUI;
-import BoardGame.Shop;
+import Popup.Shop;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

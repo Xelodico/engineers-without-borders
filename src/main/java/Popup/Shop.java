@@ -1,8 +1,9 @@
-package BoardGame;
+package Popup;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import BoardGame.BoardGameUI;
 import GameSystem.GameSystem;
 
 import java.awt.*;

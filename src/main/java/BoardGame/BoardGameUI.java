@@ -7,6 +7,9 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import GameSystem.GameSystem;
+import Popup.Journal;
+import Popup.Popup;
+import Popup.Shop;
 import square.SquareType;
 
 /**

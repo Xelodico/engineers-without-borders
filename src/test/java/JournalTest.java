@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import BoardGame.Journal;
+import Popup.Journal;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
