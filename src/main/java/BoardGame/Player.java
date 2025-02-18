@@ -18,7 +18,7 @@ public class Player {
     private int resources;
     private int movesLeft;
     private int id;
-
+    private int money;
     private int nextID = 0;
     private ArrayList<JobRole> roles;
     
@@ -33,6 +33,7 @@ public class Player {
         this.name = "";
         this.coord = 0;
         this.resources = 0;
+        this.money = 0; // we shall decide on start value
         this.movesLeft = 0;
         nextID++;
     }
@@ -51,6 +52,7 @@ public class Player {
         this.name = name;
         this.coord = coords;
         this.resources = 0;
+        this.money = 0; // tbd
         this.movesLeft = 0;
         nextID++;
     }
@@ -69,6 +71,7 @@ public class Player {
         this.name = name;
         this.coord = coord;
         this.resources = resources;
+        this.money = 0;
         this.movesLeft = movesLeft;
         nextID++;
     }
@@ -145,6 +148,36 @@ public class Player {
             throw new IllegalArgumentException("Resources cannot be negative");
         }
         this.resources = resources;
+    }
+
+    /**
+     * Retrieves the money value of the player 
+     * 
+     * @return returns current money amount of the player
+     */
+
+    public int getMoney() {
+        return this.money;
+    }
+
+    /**
+     * Sets the money value of the player.
+     * 
+     * @param money The new money value to assign to the player
+     */
+
+    public void setMoney(int money){
+        this.money = money;
+    }
+
+    /**
+     * changes existing money value by a certain amount
+     * 
+     * @param money change in money value
+     */
+
+    public void changeMoney(int money){
+            this.money = this.money + money;
     }
 
     /**
