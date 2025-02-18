@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
+
 import javax.imageio.ImageIO;
 
 /**
@@ -157,37 +159,52 @@ public class Journal extends JPanel {
      * @param page The page to add the close button to.
      */
     private void addCloseButton(JPanel page) {
-        ImageIcon closeIcon = new ImageIcon(getClass().getResource("/images/closeJournal.png"));
-        ImageIcon closeIconRed = new ImageIcon(getClass().getResource("/images/closeJournalRed.png"));
-
+        URL closeIconUrl = getClass().getResource("/images/closeJournal.png");
+        URL closeIconRedUrl = getClass().getResource("/images/closeRed.png");
+    
+        if (closeIconUrl == null || closeIconRedUrl == null) {
+            System.err.println("Error: Close button image(s) not found for Journal!");
+            return;
+        }
+    
+        ImageIcon closeIcon = new ImageIcon(
+            new ImageIcon(closeIconUrl).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)
+        );
+        ImageIcon closeIconRed = new ImageIcon(
+            new ImageIcon(closeIconRedUrl).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)
+        );
+    
         JPanel closeButtonPanel = new JPanel(new BorderLayout());
         closeButtonPanel.setOpaque(false);
         closeButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+    
         JButton closeButton = new JButton();
-        closeButton.setIcon(new ImageIcon(closeIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+        closeButton.setIcon(closeIcon);
         closeButton.setBorder(null);
         closeButton.setContentAreaFilled(false);
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    
         closeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GameSystem.toggleJournal();
             }
         });
+    
         closeButton.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {
-                closeButton
-                        .setIcon(new ImageIcon(closeIconRed.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+                closeButton.setIcon(closeIconRed);
             }
-
+    
             public void mouseExited(MouseEvent evt) {
-                closeButton.setIcon(new ImageIcon(closeIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+                closeButton.setIcon(closeIcon);
             }
         });
-
+    
         closeButtonPanel.add(closeButton, BorderLayout.EAST);
         page.add(closeButtonPanel);
     }
+    
 
     /**
      * Renders a custom vertical scroll bar with translucent black thumb and no

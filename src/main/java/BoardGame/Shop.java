@@ -3,12 +3,13 @@ package BoardGame;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import java.awt.event.MouseEvent;
+import GameSystem.GameSystem;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * Represents a shop component in the BoardGame UI.
@@ -67,6 +68,8 @@ public class Shop extends JPanel {
         button4.setBounds(617, 351, 41, 60);
         addHoverEffect(button4);
         add(button4);
+
+        addCloseButton(this);
     }
 
     public static JButton newShopItem(ImageIcon icon) {
@@ -101,6 +104,50 @@ public class Shop extends JPanel {
             }
         });
     }
+
+    private void addCloseButton(JPanel page) {
+        URL closeIconUrl = getClass().getResource("/images/closeShop.png");
+        URL closeIconRedUrl = getClass().getResource("/images/closeRed.png");
+
+        if (closeIconUrl == null || closeIconRedUrl == null) {
+            System.err.println("Error: Close button image(s) not found for Shop!");
+            return;
+        }
+
+        ImageIcon closeIcon = new ImageIcon(closeIconUrl);
+        ImageIcon closeIconRed = new ImageIcon(closeIconRedUrl);
+
+        Image scaledCloseIcon = closeIcon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+        Image scaledCloseIconRed = closeIconRed.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+
+        JButton closeButton = new JButton();
+        closeButton.setIcon(new ImageIcon(scaledCloseIcon));
+        closeButton.setBounds(778, 183, 25, 25);
+        closeButton.setBorder(null);
+        closeButton.setOpaque(false);
+        closeButton.setContentAreaFilled(false);
+        closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        closeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameSystem.toggleShop();
+            }
+        });
+
+        closeButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                closeButton.setIcon(new ImageIcon(scaledCloseIconRed));
+            }
+
+            public void mouseExited(MouseEvent evt) {
+                closeButton.setIcon(new ImageIcon(scaledCloseIcon));
+            }
+        });
+
+        page.add(closeButton);
+    }
+
 
     /**
      * Paints the background image for the shop panel.
