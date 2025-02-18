@@ -154,12 +154,11 @@ public class BoardGameUI extends JFrame {
                 } else {
                     movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
                 }
-            }
-
-            if (gameBoard.getSquareAt(GameSystem.getPlayerAt().getCoord()).getSquareType() == SquareType.SHOPSQUARE) {
-                shopButton.setVisible(true);
-            } else {
-                shopButton.setVisible(false);
+                if (gameBoard.getSquareAt(GameSystem.getPlayerAt().getCoord()).getSquareType() == SquareType.SHOPSQUARE) {
+                    shopButton.setVisible(true);
+                } else {
+                    shopButton.setVisible(false);
+                }
             }
         });
     }
