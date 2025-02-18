@@ -144,13 +144,16 @@ public class BoardGameUI extends JFrame {
     }
 
     private void setupArrowButtonAction(JButton button, Direction direction) {
-        button.addActionListener(_ -> {
-            GameSystem.movePlayer(direction);
-            if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
-                movesLeftLabel.setVisible(false);
-                endTurnButton.setVisible(true);
-            } else {
-                movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameSystem.movePlayer(direction);
+                if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
+                    movesLeftLabel.setVisible(false);
+                    endTurnButton.setVisible(true);
+                } else {
+                    movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+                }
             }
 
             if (gameBoard.getSquareAt(GameSystem.getPlayerAt().getCoord()).getSquareType() == SquareType.SHOPSQUARE) {
@@ -230,11 +233,14 @@ public class BoardGameUI extends JFrame {
         rollDiceButton.setBounds(170, BOARD_HEIGHT - 47, 192, 47);
         rollDiceButton.setRolloverEnabled(false);
 
-        rollDiceButton.addActionListener(_ -> {
-            GameSystem.getPlayerAt().rollDie();
-            rollDiceButton.setVisible(false);
-            movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
-            movesLeftLabel.setVisible(true);
+        rollDiceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameSystem.getPlayerAt().rollDie();
+                rollDiceButton.setVisible(false);
+                movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+                movesLeftLabel.setVisible(true);
+            }
         });
 
         movesLeftLabel.setIcon(new ImageIcon(getClass().getResource("/images/buttonBackground.png")));
@@ -256,13 +262,16 @@ public class BoardGameUI extends JFrame {
         endTurnButton.setRolloverEnabled(false);
         sidePanelContainer.add(endTurnButton);
 
-        endTurnButton.addActionListener(_ -> {
-            GameSystem.nextTurn();
-            playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
-            roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
-            movesLeftLabel.setVisible(false);
-            endTurnButton.setVisible(false);
-            rollDiceButton.setVisible(true);
+        endTurnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameSystem.nextTurn();
+                playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
+                roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
+                movesLeftLabel.setVisible(false);
+                endTurnButton.setVisible(false);
+                rollDiceButton.setVisible(true);
+            }
         });
     }
 
