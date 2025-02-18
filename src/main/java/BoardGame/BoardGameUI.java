@@ -29,8 +29,8 @@ public class BoardGameUI extends JFrame {
     String player3Name;
     String player4Name;
 
-    protected static final int WINDOW_WIDTH = 1075;
-    protected static final int WINDOW_HEIGHT = 705;
+    public static final int WINDOW_WIDTH = 1075;
+    public static final int WINDOW_HEIGHT = 705;
     private static final int BOARD_WIDTH = 650;
     private static final int BOARD_HEIGHT = BOARD_WIDTH;
 
