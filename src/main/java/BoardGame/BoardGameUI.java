@@ -60,11 +60,11 @@ public class BoardGameUI extends JFrame {
 
         shop = new Shop();
 
-        journalDim = new JPanel();
-        journalDim.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-        journalDim.setBackground(new java.awt.Color(0, 0, 0, 150));
-        journalDim.setVisible(false);
-        add(journalDim);
+        dimBackground = new JPanel();
+        dimBackground.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        dimBackground.setBackground(new java.awt.Color(0, 0, 0, 150));
+        dimBackground.setVisible(false);
+        add(dimBackground);
 
         JLayeredPane layeredPane = getLayeredPane();
         layeredPane.add(journal, JLayeredPane.POPUP_LAYER);
@@ -411,13 +411,13 @@ public class BoardGameUI extends JFrame {
 
     public void toggleJournal() {
         journal.setVisible(!journal.isVisible());
-        journalDim.setVisible(!journalDim.isVisible());
+        dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
     }
 
     public void toggleShop() {
         shop.setVisible(!shop.isVisible());
-        journalDim.setVisible(!journalDim.isVisible());
+        dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
     }
 
@@ -457,7 +457,7 @@ public class BoardGameUI extends JFrame {
     private Popup popup;
     private JButton journalButton;
     private Journal journal;
-    private JPanel journalDim;
+    private JPanel dimBackground;
     private Shop shop;
     private JButton shopButton;
 }
