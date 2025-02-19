@@ -1,4 +1,4 @@
-package BoardGame;
+package Popup;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;

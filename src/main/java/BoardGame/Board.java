@@ -105,6 +105,9 @@ public class Board extends JPanel {
         }
     }
 
+    /**
+     * Refreshes the board to reflect the current state of the game.
+     */
     public void refresh() {
         players = GameSystem.getTurnOrder();
         this.removeAll();
@@ -152,6 +155,66 @@ public class Board extends JPanel {
         refresh();
     }
 
+    /**
+     * Generates a given number of squares of a given type on the board.
+     * 
+     * @param amount     The number of squares to generate.
+     * @param squareType The type of square to generate.
+     * @throws IllegalArgumentException if the amount of squares exceeds the number of
+     *                                  squares on the board or if the amount is
+     *                                  negative.
+     */
+    public void generateNewSquares(int amount, SquareType squareType) {
+        if (amount > squareArray.size()) {
+            throw new IllegalArgumentException("Amount of potholes cannot exceed the number of squares on the board.");
+        }
+
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount of potholes cannot be negative.");
+        }
+
+        long normalSquareCount = squareArray.stream()
+                .filter(square -> square.getSquareType() == SquareType.SQUARE)
+                .count();
+
+        if (amount > normalSquareCount) {
+            throw new IllegalArgumentException("Not enough normal squares to generate " + amount + " pothole(s).");
+        }
+
+        for (int i = 0; i < amount; i++) {
+            boolean valid = false;
+            while (!valid) {
+                int randomIndex = (int) (Math.random() * squareArray.size());
+                System.out.println(randomIndex);
+                if (squareArray.get(randomIndex).getSquareType() == SquareType.SQUARE) {
+                    switch (squareType) {
+                        case SHOPSQUARE:
+                            squareArray.set(randomIndex, new ShopSquare());
+                            break;
+                        case TASKSQUARE:
+                            squareArray.set(randomIndex, new TaskSquare(null));
+                            break;
+                        case ROLESQUARE:
+                            squareArray.set(randomIndex, new RoleSquare(null));
+                            break;
+                        case SQUARE:
+                            squareArray.set(randomIndex, new Square());
+                            break;
+                        default:
+                            break;
+                    }
+                    valid = true;
+                }
+            }
+        }
+        refresh();
+    }
+
+    /**
+     * Renders the players on the board.
+     * 
+     * @param players The list of players to render on the board.
+     */
     public void renderPlayers(Player[] players) {
         this.players = players;
         for (int i = 0; i < squarePanels.size(); i++) {

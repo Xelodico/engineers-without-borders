@@ -268,6 +268,14 @@ public abstract class GameSystem {
         gameBoardUI.showPopup(title, desc, yesButton, noButton);
     }
 
+    public static void toggleJournal() {
+        gameBoardUI.toggleJournal();
+    }
+
+    public static void toggleShop() {
+        gameBoardUI.toggleShop();
+    }
+
     /**
      * Temporarily generates Objectives, Tasks, and Subtasks.
      * This method is a placeholder until file reading from the Data Access Layer is
