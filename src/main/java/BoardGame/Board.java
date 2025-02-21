@@ -85,8 +85,11 @@ public class Board extends JPanel {
      * @param squareArray A list of strings representing the type of each square on
      *                    the board.
      */
-    private void renderBoard(List<Square> squareArray) {
+    public void renderBoard(List<Square> squareArray) {
         int totalSquares = boardSideLength * boardSideLength;
+        if (squarePanels != null) {
+            squarePanels.clear();
+        }
         squarePanels = new ArrayList<JPanel>();
 
         for (int i = 0; i < totalSquares; i++) {
@@ -95,10 +98,10 @@ public class Board extends JPanel {
             panel.setBackground(squareArray.get(i).getColor());
 
             squarePanels.add(panel);
-            if (players != null) {
-                renderPlayers(players);
-            }
             this.add(panel);
+        }
+        if (players != null) {
+            renderPlayers(players);
         }
     }
 
@@ -183,7 +186,6 @@ public class Board extends JPanel {
             boolean valid = false;
             while (!valid) {
                 int randomIndex = (int) (Math.random() * squareArray.size());
-                System.out.println(randomIndex);
                 if (squareArray.get(randomIndex).getSquareType() == SquareType.SQUARE) {
                     switch (squareType) {
                         case SHOPSQUARE:
@@ -191,6 +193,9 @@ public class Board extends JPanel {
                             break;
                         case TASKSQUARE:
                             squareArray.set(randomIndex, new TaskSquare(null));
+                            break;
+                        case MONEYSQUARE:
+                            squareArray.set(randomIndex, new MoneySquare());
                             break;
                         case SQUARE:
                             squareArray.set(randomIndex, new Square());
@@ -202,6 +207,7 @@ public class Board extends JPanel {
                 }
             }
         }
+
         refresh();
     }
 

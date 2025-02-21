@@ -9,6 +9,8 @@ public class MoneySquare extends Square {
 
     private final Color squareColor = Color.YELLOW;
 
+    private final SquareType sType = SquareType.MONEYSQUARE;
+
     /**
      * Default constructor that assigns a random amount of money between 800 and 1200.
      */
@@ -48,5 +50,14 @@ public class MoneySquare extends Square {
      */
     public Color getColor() {
         return this.squareColor;
+    }
+
+    /**
+     * Returns the type of this square.
+     * 
+     * @return The type of this square, which is {@code SquareType.MONEYSQUARE}.
+     */
+    public SquareType getSquareType() {
+        return this.sType;
     }
 }
