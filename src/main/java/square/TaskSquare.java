@@ -47,6 +47,9 @@ public class TaskSquare extends Square {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Take task logic
+                task.setOwnedBy(getPrimaryOccupier());
+                System.out.println("Task claimed!");
+                GameSystem.hidePopup();
             }
         };
 
@@ -54,6 +57,31 @@ public class TaskSquare extends Square {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Reject task logic
+                System.out.println("Show the task to other players");
+                GameSystem.hidePopup();
+            }
+        };
+
+        ActionListener beginHelping = new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                // task.getOwnedBy().findTask(task).currentSubTask().setDiscounted(true);
+                System.out.println("Discounting the task!");
+                GameSystem.hidePopup();
+            }
+        };
+
+        ActionListener ignoreHelping = new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GameSystem.hidePopup();
+            }
+        };
+
+        ActionListener okSingleButton = new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GameSystem.hidePopup();
             }
         };
 
@@ -89,7 +117,7 @@ public class TaskSquare extends Square {
             // }
             // keyb.close();
         } else if (task.getOwnedBy() != getPrimaryOccupier()) {
-            GameSystem.showPopup("Do you want to help complete this task?", task.getDescription(), "Yes", "No", null, null);
+            GameSystem.showPopup("Do you want to help complete this task?", task.getDescription(), "Yes", "No", beginHelping, ignoreHelping);
             // System.out.println("Do you want to help complete this task?");
             // Scanner keyb = new Scanner(System.in);
             // String input = keyb.nextLine();
@@ -99,7 +127,7 @@ public class TaskSquare extends Square {
             // }
             // // keyb.close();
         } else {
-            GameSystem.showPopup("You already own this task!", null, "Ok", null, null, null);
+            GameSystem.showPopup("You already own this task!", null, "Ok", null, okSingleButton, null);
             // System.out.println("You already own this task!");
         }
         return true;

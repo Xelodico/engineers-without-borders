@@ -205,6 +205,15 @@ public class Player {
         this.tasks.remove(task);
     }
 
+    public Task findTask(Task task) {
+        for (Task t : tasks) {
+            if (t.equals(task)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
     /**
      * Rolls a die to determine movement or other game mechanics.
      * A random number between 1 and 6 is generated, and the number of moves left
