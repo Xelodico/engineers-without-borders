@@ -1,8 +1,10 @@
 package GameSystem;
 
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import BoardGame.*;
+import square.*;
 
 /**
  * 
@@ -33,11 +35,8 @@ public abstract class GameSystem {
     // Keeps track of the current turn within a round
     private static int turnNumber;
 
-    // List of objectives available in the game
-    // private static ArrayList<Objective> objectives;
-
-    // List of tasks and subtasks to be completed within the game, linked to
-    // objectives
+    // private static ArrayList<JobRole> roles;
+    private static ArrayList<Objective> objectives;
     private static ArrayList<Task> tasks;
     private static String[] subtasks;
 
@@ -53,8 +52,9 @@ public abstract class GameSystem {
             turnNumber = 0; // Reset turn number
             roundNumber = 0; // Reset round count
 
-            // objectives = new ArrayList<Objective>(); // Initialize the list of job roles
-            tasks = new ArrayList<Task>(); // Initialize the list of tasks
+            // roles = new ArrayList<JobRole>();
+            objectives = new ArrayList<Objective>();
+            tasks = new ArrayList<Task>();
 
             // Setting up a default player array with at least one player to avoid errors
             turnOrder = new Player[] { new Player() };
@@ -160,13 +160,11 @@ public abstract class GameSystem {
         return tasks;
     }
 
-    /**
-     * Retrieves the list of objectives available in the game.
-     * 
-     * @return An ArrayList of Objective objects.
-     */
-    // public static ArrayList<Objective> getObjectives() {
-    //     return objectives;
+    public static ArrayList<Objective> getObjectives() {
+        return objectives;
+    }
+    // public static ArrayList<JobRole> getRoles() {
+    // return roles;
     // }
 
     /**
@@ -179,30 +177,18 @@ public abstract class GameSystem {
     public static void movePlayer(Direction direction) {
         // Retrieve the player whose turn it is
         Player currentPlayer = getPlayerAt();
-
-        // Ensure the player has remaining moves before proceeding
         if (currentPlayer.getMovesLeft() > 0) {
             // Execute the move action within the board boundaries
             currentPlayer.moveAction(direction, gameBoard.boardSideLength);
         }
 
-        // Update the game board to reflect the new player positions
+        // Update players on board and activate the tile they fell on
         gameBoard.renderPlayers(turnOrder);
 
-        // Handle interactions when a player lands on a new square
-        // Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
-
-        // Check if another player is already occupying the square
-        // if (sqrAtPosition.getPrimaryOccupier() != currentPlayer) {
-        // // Apply special effects for multiple players on the same square
-        // sqrAtPosition.alreadyOccupiedEffect(currentPlayer);
-        // } else {
-        // // Activate the square’s default effect
-        // sqrAtPosition.activateSquareEffect();
-        // }
-
-        // TODO: Implement logic to verify if the task on the square relates to the
-        // player's objective.
+        // Get the square the player has landed on, and activate it's effect (later
+        // added using a button).
+        Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
+        sqrAtPosition.activateSquareEffect();
     }
 
     /**
@@ -226,17 +212,18 @@ public abstract class GameSystem {
      * can progress.
      * 
      * @return true if all objectives have been completed; false otherwise.
-    //  */
+     *         //
+     */
     // private static boolean checkWinCondition() {
-    //     for (Objective objective : objectives) {
-    //         // If any task within the objectives is incomplete, return false
-    //         if (!objective.isCompleted()) {
-    //             return false;
-    //         }
-    //     }
+    // for (Objective objective : objectives) {
+    // // If any task within the objectives is incomplete, return false
+    // if (!objective.isCompleted()) {
+    // return false;
+    // }
+    // }
 
-    //     // If all objectives are completed, return true
-    //     return true;
+    // // If all objectives are completed, return true
+    // return true;
     // }
 
     /**
@@ -244,28 +231,31 @@ public abstract class GameSystem {
      * (Currently, no implementation provided.)
      */
     // public static void endGame() {
-    //     boolean win = checkWinCondition();
+    // boolean win = checkWinCondition();
 
-    //     if (win) {
+    private static boolean checkWinCondition() {
+        for (Task task : tasks) {
+            // If the task isn't completed return false
+            if (!task.isCompleted())
+                return false;
+        }
+        return true;
+    }
 
-    //     } else {
+    private static void nextStage() {
 
-    //     }
-    //     // TODO: Implement end game logic such as displaying final scores and resetting
-    //     // the game state
-    // }
+    }
 
-    /**
-     * Displays a popup message to the player with customizable buttons.
-     *
-     * @param title     The title of the popup window.
-     * @param desc      The description or message to display in the popup.
-     * @param yesButton The text for the "Yes" button.
-     * @param noButton  The text for the "No" button.
-     */
-    public static void showPopup(String title, String desc, String yesButton, String noButton) {
-        // Delegate to the UI to display a popup window with the provided details
-        gameBoardUI.showPopup(title, desc, yesButton, noButton);
+    public static void endGame() {
+    }
+
+    public static void showPopup(String title, String desc, String yesButton, String noButton, ActionListener yesAction,
+            ActionListener noAction) {
+        gameBoardUI.showPopup(title, desc, yesButton, noButton, yesAction, noAction);
+    }
+
+    public static void hidePopup() {
+        gameBoardUI.hidePopup();
     }
 
     public static void toggleJournal() {

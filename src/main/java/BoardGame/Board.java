@@ -20,7 +20,7 @@ public class Board extends JPanel {
 
     /**
      * The distribution ratio of the square types on the board.
-     * The ratio is Pothole : Resource : Normal.
+     * The ratio is Task : Resource : Normal.
      */
     private final static int[] squareTypeRatios = { 2, 2, 6 };
 
@@ -50,13 +50,10 @@ public class Board extends JPanel {
 
     /**
      * Distributes the types of squares on the board based on a given ratio.
-     * The types of squares include Knowledge, Pothole, Resource, and Normal.
+     * The types of squares include Task, Resource, and Normal.
      * Additionally, specific locations can be designated as Spawn points.
      * 
-     * @param totalSquares   The total number of squares on the board.
-     * @param spawnLocations A list of indices where spawn points should be placed.
      * @return A list of strings representing the type of each square on the board.
-     * @throws IllegalArgumentException if a spawn location is out of bounds.
      */
     private List<Square> generateBoardSquares() {
         int totalSquares = boardSideLength * boardSideLength;
@@ -64,14 +61,14 @@ public class Board extends JPanel {
         List<Square> squareArray = new ArrayList<>();
 
         int totalWeight = Arrays.stream(squareTypeRatios).sum();
-        // int numKnowledge = totalSquares / totalWeight * squareTypeRatios[0];
-        int numPothole = totalSquares / totalWeight * squareTypeRatios[0];
-        int numResource = totalSquares / totalWeight * squareTypeRatios[1];
-        int numNormal = totalSquares - (numPothole + numResource);
+        int numTask = totalSquares / totalWeight * squareTypeRatios[0];
+        int numNormal = totalSquares - numTask;
 
         squareArray.addAll(Collections.nCopies(numNormal, new Square()));
-        squareArray.addAll(Collections.nCopies(numPothole, new TaskSquare(null)));
-        squareArray.addAll(Collections.nCopies(numResource, new RoleSquare(null)));
+
+        for (int i = 0; i < numTask; i++) {
+            squareArray.add(new TaskSquare(new Task()));
+        }
 
         Collections.shuffle(squareArray);
 
@@ -160,7 +157,8 @@ public class Board extends JPanel {
      * 
      * @param amount     The number of squares to generate.
      * @param squareType The type of square to generate.
-     * @throws IllegalArgumentException if the amount of squares exceeds the number of
+     * @throws IllegalArgumentException if the amount of squares exceeds the number
+     *                                  of
      *                                  squares on the board or if the amount is
      *                                  negative.
      */
@@ -227,35 +225,35 @@ public class Board extends JPanel {
 
             ImageIcon imageIcon = null;
             switch ((int) playersOnSquare) {
-            case 1:
-                imageIcon = new ImageIcon("src/main/resources/images/players/playerIcon.png");
-                break;
-            case 2:
-                imageIcon = new ImageIcon("src/main/resources/images/players/twoPlayerIcon.png");
-                break;
-            case 3:
-                imageIcon = new ImageIcon("src/main/resources/images/players/threePlayerIcon.png");
-                break;
-            case 4:
-                imageIcon = new ImageIcon("src/main/resources/images/players/fourPlayerIcon.png");
-                break;
-            default:
-                break;
+                case 1:
+                    imageIcon = new ImageIcon("src/main/resources/images/players/playerIcon.png");
+                    break;
+                case 2:
+                    imageIcon = new ImageIcon("src/main/resources/images/players/twoPlayerIcon.png");
+                    break;
+                case 3:
+                    imageIcon = new ImageIcon("src/main/resources/images/players/threePlayerIcon.png");
+                    break;
+                case 4:
+                    imageIcon = new ImageIcon("src/main/resources/images/players/fourPlayerIcon.png");
+                    break;
+                default:
+                    break;
             }
 
             if (imageIcon != null) {
-            ImageIcon resizedImage = new ImageIcon(
-                imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-            JLabel playerIcon = new JLabel(resizedImage);
-            panel.add(playerIcon, BorderLayout.CENTER);
+                ImageIcon resizedImage = new ImageIcon(
+                        imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+                JLabel playerIcon = new JLabel(resizedImage);
+                panel.add(playerIcon, BorderLayout.CENTER);
             }
 
             revalidate();
             repaint();
-        }   
+        }
     }
 
-        public static void main(String[] args) {
+    public static void main(String[] args) {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(650, 650);
