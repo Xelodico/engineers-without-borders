@@ -310,6 +310,5 @@ public abstract class GameSystem {
     public static void main(String[] args) {
         // Initialize the game system and set up necessary components
         initialise();
-        gameBoard.generateNewSquares(2, SquareType.MONEYSQUARE);
     }
 }
