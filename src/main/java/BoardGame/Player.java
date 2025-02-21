@@ -127,6 +127,57 @@ public class Player {
     }
 
     /**
+     * Gets the resources of the player.
+     * 
+     * @return The current resources of the player
+     */
+    public int getResources() {
+        return this.resources;
+    }
+
+    /**
+     * Sets the resources of the player.
+     * 
+     * @param resources The new resource value to assign to the player
+     */
+    public void setResources(int resources) {
+        if (resources < 0) {
+            throw new IllegalArgumentException("Resources cannot be negative");
+        }
+        this.resources = resources;
+    }
+
+    /**
+     * Retrieves the money value of the player 
+     * 
+     * @return returns current money amount of the player
+     */
+
+    public int getMoney() {
+        return this.money;
+    }
+
+    /**
+     * Sets the money value of the player.
+     * 
+     * @param money The new money value to assign to the player
+     */
+
+    public void setMoney(int money){
+        this.money = money;
+    }
+
+    /**
+     * changes existing money value by a certain amount
+     * 
+     * @param money change in money value
+     */
+
+    public void changeMoney(int money){
+            this.money = this.money + money;
+    }
+
+    /**
      * Gets the moves left for the player.
      * 
      * @return The number of available moves left for the player

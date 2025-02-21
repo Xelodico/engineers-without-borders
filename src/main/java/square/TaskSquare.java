@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.util.Scanner;
 
+import java.awt.Color;
 import BoardGame.*;
 import GameSystem.*;
 
@@ -14,7 +15,15 @@ public class TaskSquare extends Square {
      * The task associated with this square, which players can attempt to complete.
      */
     private Task task;
+
+    /**
+     * The type of this square, indicating it is a TaskSquare.
+     */
     private final SquareType sType = SquareType.TASKSQUARE;
+
+    /**
+     * The color representation of this square.
+     */
     private final Color squareColor = Color.RED;
 
     /**
@@ -142,10 +151,20 @@ public class TaskSquare extends Square {
         this.task = task;
     }
 
+    /**
+     * Returns the type of this square.
+     *
+     * @return The square type, which is {@code SquareType.TASKSQUARE}.
+     */
     public SquareType getSquareType() {
         return this.sType;
     }
 
+    /**
+     * Returns the color associated with this square.
+     *
+     * @return The color of this square, which is {@code Color.RED}.
+     */
     public Color getColor() {
         return this.squareColor;
     }

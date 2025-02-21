@@ -1,10 +1,16 @@
 package BoardGame;
 
+import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
 import GameSystem.GameSystem;
+import Popup.Journal;
+import Popup.Popup;
+import Popup.Shop;
+import square.SquareType;
 
 /**
  * The BoardGameUI class represents the user interface for the board game.
@@ -27,8 +33,8 @@ public class BoardGameUI extends JFrame {
     String player3Name;
     String player4Name;
 
-    protected static final int WINDOW_WIDTH = 1075;
-    protected static final int WINDOW_HEIGHT = 705;
+    public static final int WINDOW_WIDTH = 1075;
+    public static final int WINDOW_HEIGHT = 705;
     private static final int BOARD_WIDTH = 650;
     private static final int BOARD_HEIGHT = BOARD_WIDTH;
 
@@ -42,7 +48,6 @@ public class BoardGameUI extends JFrame {
     public BoardGameUI(Board gameBoard) {
         this.players = GameSystem.getTurnOrder();
         this.gameBoard = gameBoard;
-
         
         startScreen = new StartScreen();
         add(startScreen);
@@ -50,6 +55,20 @@ public class BoardGameUI extends JFrame {
         
         popup = new Popup("", "", "", "", null, null);
         add(popup);
+
+        journal = new Journal();
+
+        shop = new Shop();
+
+        dimBackground = new JPanel();
+        dimBackground.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        dimBackground.setBackground(new java.awt.Color(0, 0, 0, 150));
+        dimBackground.setVisible(false);
+        add(dimBackground);
+
+        JLayeredPane layeredPane = getLayeredPane();
+        layeredPane.add(journal, JLayeredPane.POPUP_LAYER);
+        layeredPane.add(shop, JLayeredPane.POPUP_LAYER);
         
         initComponents();
         setVisible(true);
@@ -109,6 +128,7 @@ public class BoardGameUI extends JFrame {
             arrowButtons[i].setContentAreaFilled(false);
             arrowButtons[i].setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
             arrowButtons[i].setFocusPainted(false);
+            arrowButtons[i].setRolloverEnabled(false);
 
             if (i == 0) { // Arrow Down
                 arrowButtons[i].setBounds(45, 46, 46, 46);
@@ -133,13 +153,21 @@ public class BoardGameUI extends JFrame {
     }
 
     private void setupArrowButtonAction(JButton button, Direction direction) {
-        button.addActionListener(_ -> {
-            GameSystem.movePlayer(direction);
-            if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
-                movesLeftLabel.setVisible(false);
-                endTurnButton.setVisible(true);
-            } else {
-                movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameSystem.movePlayer(direction);
+                if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
+                    movesLeftLabel.setVisible(false);
+                    endTurnButton.setVisible(true);
+                } else {
+                    movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+                }
+                if (gameBoard.getSquareAt(GameSystem.getPlayerAt().getCoord()).getSquareType() == SquareType.SHOPSQUARE) {
+                    shopButton.setVisible(true);
+                } else {
+                    shopButton.setVisible(false);
+                }
             }
         });
     }
@@ -148,6 +176,8 @@ public class BoardGameUI extends JFrame {
         roundNumberGraphic = new JLabel();
         playerTurnGraphic = new JLabel();
         helpButton = new JButton();
+        journalButton = new JButton();
+        shopButton = new JButton();
         rollDiceButton = new JButton();
         endTurnButton = new JButton();
         movesLeftLabel = new JLabel();
@@ -167,12 +197,40 @@ public class BoardGameUI extends JFrame {
         sidePanelContainer.add(playerTurnGraphic);
         playerTurnGraphic.setBounds(0, 0, 241, 57);
 
-        helpButton.setIcon(new ImageIcon(getClass().getResource("/images/Help.png"))); // NOI18N
+        ImageIcon helpIcon = new ImageIcon(getClass().getResource("/images/help.png"));
+        helpButton.setIcon(new ImageIcon(helpIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH))); // NOI18N
         helpButton.setBorder(null);
         helpButton.setContentAreaFilled(false);
         helpButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         sidePanelContainer.add(helpButton);
+        helpButton.setRolloverEnabled(false);
         helpButton.setBounds(330, BOARD_HEIGHT - 55 - 37, 37, 37);
+
+        ImageIcon journalIcon = new ImageIcon(getClass().getResource("/images/journalButton.png"));
+        journalButton.setIcon(new ImageIcon(journalIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH)));
+        journalButton.setBorder(null);
+        journalButton.setContentAreaFilled(false);
+        journalButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        sidePanelContainer.add(journalButton);
+        journalButton.setBounds(283, BOARD_HEIGHT - 55 - 37, 37, 37);
+        journalButton.addActionListener(new ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleJournal();
+            }
+        });
+
+        ImageIcon shopIcon = new ImageIcon(getClass().getResource("/images/shopButton.png"));
+        shopButton.setIcon(new ImageIcon(shopIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH)));
+        shopButton.setBorder(null);
+        shopButton.setContentAreaFilled(false);
+        shopButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        sidePanelContainer.add(shopButton);
+        shopButton.setBounds(236, BOARD_HEIGHT - 55 - 37, 37, 37);
+        shopButton.addActionListener(new ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleShop();
+            }
+        });
 
         rollDiceButton.setIcon(new ImageIcon(getClass().getResource("/images/RollDiceButton.png"))); // NOI18N
         rollDiceButton.setBorder(null);
@@ -181,12 +239,16 @@ public class BoardGameUI extends JFrame {
         rollDiceButton.setFocusPainted(false);
         sidePanelContainer.add(rollDiceButton);
         rollDiceButton.setBounds(170, BOARD_HEIGHT - 47, 192, 47);
+        rollDiceButton.setRolloverEnabled(false);
 
-        rollDiceButton.addActionListener(_ -> {
-            GameSystem.getPlayerAt().rollDie();
-            rollDiceButton.setVisible(false);
-            movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
-            movesLeftLabel.setVisible(true);
+        rollDiceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameSystem.getPlayerAt().rollDie();
+                rollDiceButton.setVisible(false);
+                movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+                movesLeftLabel.setVisible(true);
+            }
         });
 
         movesLeftLabel.setIcon(new ImageIcon(getClass().getResource("/images/buttonBackground.png")));
@@ -205,15 +267,19 @@ public class BoardGameUI extends JFrame {
         endTurnButton.setContentAreaFilled(false);
         endTurnButton.setBorder(null);
         endTurnButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        endTurnButton.setRolloverEnabled(false);
         sidePanelContainer.add(endTurnButton);
 
-        endTurnButton.addActionListener(_ -> {
-            GameSystem.nextTurn();
-            playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
-            roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
-            movesLeftLabel.setVisible(false);
-            endTurnButton.setVisible(false);
-            rollDiceButton.setVisible(true);
+        endTurnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameSystem.nextTurn();
+                playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
+                roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
+                movesLeftLabel.setVisible(false);
+                endTurnButton.setVisible(false);
+                rollDiceButton.setVisible(true);
+            }
         });
     }
 
@@ -325,6 +391,42 @@ public class BoardGameUI extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    private void toggleEnableButtons() {
+        if (helpButton.isEnabled()) {
+            arrowDown.setEnabled(false);
+            arrowUp.setEnabled(false);
+            arrowLeft.setEnabled(false);
+            arrowRight.setEnabled(false);
+            rollDiceButton.setEnabled(false);
+            endTurnButton.setEnabled(false);
+            helpButton.setEnabled(false);
+            journalButton.setEnabled(false);
+            shopButton.setEnabled(false);
+        } else {
+            arrowDown.setEnabled(true);
+            arrowUp.setEnabled(true);
+            arrowLeft.setEnabled(true);
+            arrowRight.setEnabled(true);
+            rollDiceButton.setEnabled(true);
+            endTurnButton.setEnabled(true);
+            helpButton.setEnabled(true);
+            journalButton.setEnabled(true);
+            shopButton.setEnabled(true);
+        }
+    }
+
+    public void toggleJournal() {
+        journal.setVisible(!journal.isVisible());
+        dimBackground.setVisible(!dimBackground.isVisible());
+        toggleEnableButtons();
+    }
+
+    public void toggleShop() {
+        shop.setVisible(!shop.isVisible());
+        dimBackground.setVisible(!dimBackground.isVisible());
+        toggleEnableButtons();
+    }
+
     private JLabel movesLeftLabel;
     private JButton endTurnButton;
     private JPanel Player1Resources;
@@ -359,4 +461,9 @@ public class BoardGameUI extends JFrame {
     private JLabel roundNumberGraphic;
     private JPanel sidePanelContainer;
     private Popup popup;
+    private JButton journalButton;
+    private Journal journal;
+    private JPanel dimBackground;
+    private Shop shop;
+    private JButton shopButton;
 }
