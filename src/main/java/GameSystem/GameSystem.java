@@ -1,7 +1,13 @@
 package GameSystem;
 
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import BoardGame.*;
 import square.*;
@@ -36,7 +42,7 @@ public abstract class GameSystem {
     private static int turnNumber;
 
     // private static ArrayList<JobRole> roles;
-    private static ArrayList<Objective> objectives;
+    public static ArrayList<Objective> objectives;
     private static ArrayList<Task> tasks;
     private static String[] subtasks;
 
@@ -58,6 +64,7 @@ public abstract class GameSystem {
 
             // Setting up a default player array with at least one player to avoid errors
             turnOrder = new Player[] { new Player() };
+            createData();
 
             // Create a new board and its associated GUI
             gameBoard = new Board();
@@ -272,7 +279,27 @@ public abstract class GameSystem {
      * implemented.
      */
     private static void createData() {
-        // TODO: Implement actual data creation logic via file reading
+        String file = "src/main/resources/tasks.json";
+        try {
+            String contents = new String((Files.readAllBytes(Paths.get(file))));
+            JSONArray o = new JSONArray(contents);
+            o.forEach((objective) -> {
+                JSONObject obj = (JSONObject) objective;
+                Objective o1 = new Objective(obj.getString("objective"));
+                objectives.add(o1);
+
+                obj.getJSONArray("tasks").forEach((t) -> {
+                    JSONObject tObj = (JSONObject) t;
+                    Task task = new Task();
+                    task.setTitle(tObj.getString("task"));
+                    tasks.add(task);
+                    o1.addTask(task);
+                });
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -283,5 +310,6 @@ public abstract class GameSystem {
     public static void main(String[] args) {
         // Initialize the game system and set up necessary components
         initialise();
+        gameBoard.generateNewSquares(2, SquareType.MONEYSQUARE);
     }
 }

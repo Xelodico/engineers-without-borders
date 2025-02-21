@@ -3,12 +3,15 @@ package Popup;
 import javax.swing.*;
 
 import BoardGame.BoardGameUI;
+import BoardGame.Objective;
+import BoardGame.Task;
 import GameSystem.GameSystem;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -51,6 +54,7 @@ public class Journal extends JPanel {
         title.setFont(new Font("Arial", Font.BOLD, 20));
         title.setHorizontalAlignment(SwingConstants.LEFT);
         title.setBounds(24, 13, 617, 30);
+        
         add(title);
 
         // Set scroll bar width
@@ -67,16 +71,16 @@ public class Journal extends JPanel {
         addCloseButton(page);
 
         // Add objectives with their tasks
-        JPanel objective1 = createObjective("Objective 1: ");
+        JPanel objective1 = createObjective(0);
         page.add(objective1);
 
-        JPanel objective2 = createObjective("Objective 2: ");
+        JPanel objective2 = createObjective(1);
         page.add(objective2);
 
-        JPanel objective3 = createObjective("Objective 3: ");
+        JPanel objective3 = createObjective(2);
         page.add(objective3);
 
-        JPanel objective4 = createObjective("Objective 4: ");
+        JPanel objective4 = createObjective(3);
         page.add(objective4);
 
         // Add the page (which contains the objectives) to the scroll pane
@@ -90,12 +94,16 @@ public class Journal extends JPanel {
      * @param text The text for the objective title.
      * @return A JPanel containing the objective and its tasks.
      */
-    private JPanel createObjective(String text) {
+    private JPanel createObjective(int objectiveIndex) {
+
+        Objective objectiveObj = GameSystem.objectives.get(objectiveIndex);
+        ArrayList<Task> tasksObj = objectiveObj.getTasks();
+
         JPanel objective = new JPanel();
         objective.setLayout(new BorderLayout());
         objective.setBackground(new java.awt.Color(0, 0, 0, 0));
         objective.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding around the objective
-        JLabel objectiveLabel = new JLabel(text);
+        JLabel objectiveLabel = new JLabel(objectiveObj.getTitle());
         objectiveLabel.setFont(new Font("Arial", Font.PLAIN, 20));
         objectiveLabel.setHorizontalAlignment(SwingConstants.LEFT);
         objective.add(objectiveLabel, BorderLayout.NORTH);
@@ -104,13 +112,14 @@ public class Journal extends JPanel {
         JPanel taskPanel = new JPanel();
         taskPanel.setLayout(new BoxLayout(taskPanel, BoxLayout.Y_AXIS));
         taskPanel.setBackground(new java.awt.Color(0, 0, 0, 0));
+        taskPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
         // Add tasks with gaps between them
-        taskPanel.add(createTask("Task 1: Find the key to unlock the door."));
+        taskPanel.add(createTask(tasksObj.get(0).getTitle()));
         taskPanel.add(Box.createVerticalStrut(10)); // Vertical space between tasks
-        taskPanel.add(createTask("Task 2: Find the key to unlock the door."));
+        taskPanel.add(createTask(tasksObj.get(1).getTitle()));
         taskPanel.add(Box.createVerticalStrut(10)); // Vertical space between tasks
-        taskPanel.add(createTask("Task 3: Find the key to unlock the door."));
+        taskPanel.add(createTask(tasksObj.get(2).getTitle()));
 
         objective.add(taskPanel, BorderLayout.CENTER);
 
@@ -202,7 +211,7 @@ public class Journal extends JPanel {
                 closeButton.setIcon(closeIcon);
             }
         });
-    
+
         closeButtonPanel.add(closeButton, BorderLayout.EAST);
         page.add(closeButtonPanel);
     }

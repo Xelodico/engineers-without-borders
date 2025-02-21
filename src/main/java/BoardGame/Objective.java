@@ -29,6 +29,13 @@ public class Objective {
         this.uiColour = uiColour;
     }
 
+    public Objective(String title) {
+        this.title = title;
+        this.responsiblePlayer = null;
+        this.tasks = new ArrayList<>();
+        this.uiColour = Color.BLACK;
+    }
+
     /**
      * Checks if all tasks in the objective are completed.
      *
@@ -110,6 +117,10 @@ public class Objective {
      */
     public void setTasks(ArrayList<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public void addTask(Task task) {
+        tasks.add(task);
     }
 
     /**
