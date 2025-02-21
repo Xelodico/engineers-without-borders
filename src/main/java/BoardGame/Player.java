@@ -22,7 +22,7 @@ public class Player {
     private int resource4;
     private int movesLeft;
     private ArrayList<Task> tasks;
-    
+
     /**
      * Constructor for a player object with a name, coordinates, resources,
      * and available moves.
@@ -127,54 +127,13 @@ public class Player {
     }
 
     /**
-     * Gets the resources of the player.
-     * 
-     * @return The current resources of the player
-     */
-    public int getResources() {
-        return this.resources;
-    }
-
-    /**
-     * Sets the resources of the player.
-     * 
-     * @param resources The new resource value to assign to the player
-     */
-    public void setResources(int resources) {
-        if (resources < 0) {
-            throw new IllegalArgumentException("Resources cannot be negative");
-        }
-        this.resources = resources;
-    }
-
-    /**
-     * Retrieves the money value of the player 
-     * 
-     * @return returns current money amount of the player
-     */
-
-    public int getMoney() {
-        return this.money;
-    }
-
-    /**
-     * Sets the money value of the player.
-     * 
-     * @param money The new money value to assign to the player
-     */
-
-    public void setMoney(int money){
-        this.money = money;
-    }
-
-    /**
      * changes existing money value by a certain amount
      * 
      * @param money change in money value
      */
 
-    public void changeMoney(int money){
-            this.money = this.money + money;
+    public void changeMoney(int money) {
+        this.money = this.money + money;
     }
 
     /**
@@ -185,7 +144,7 @@ public class Player {
     public int getMovesLeft() {
         return this.movesLeft;
     }
-    
+
     /**
      * Sets the moves left for the player.
      * 
@@ -283,7 +242,7 @@ public class Player {
     /**
      * Moves the player in the specified direction on the game board.
      * 
-     * @param player The player to move.
+     * @param player    The player to move.
      * @param direction The direction to move the player.
      */
     public void moveAction(Direction direction, int boardSideLength) {

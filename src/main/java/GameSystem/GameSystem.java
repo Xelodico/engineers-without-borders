@@ -164,7 +164,7 @@ public abstract class GameSystem {
         return objectives;
     }
     // public static ArrayList<JobRole> getRoles() {
-    //     return roles;
+    // return roles;
     // }
 
     /**
@@ -177,19 +177,16 @@ public abstract class GameSystem {
     public static void movePlayer(Direction direction) {
         // Retrieve the player whose turn it is
         Player currentPlayer = getPlayerAt();
-        Square previousSquare = gameBoard.getSquareAt(currentPlayer.getCoord());
         if (currentPlayer.getMovesLeft() > 0) {
             // Execute the move action within the board boundaries
             currentPlayer.moveAction(direction, gameBoard.boardSideLength);
         }
 
-        // Once the Player has moved off the square, remove them as primary occupier of the square.
-        previousSquare.setPrimaryOccupier(null);
-
         // Update players on board and activate the tile they fell on
         gameBoard.renderPlayers(turnOrder);
 
-        // Get the square the player has landed on, and activate it's effect (later added using a button).
+        // Get the square the player has landed on, and activate it's effect (later
+        // added using a button).
         Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
         sqrAtPosition.activateSquareEffect();
     }
@@ -215,17 +212,18 @@ public abstract class GameSystem {
      * can progress.
      * 
      * @return true if all objectives have been completed; false otherwise.
-    //  */
+     *         //
+     */
     // private static boolean checkWinCondition() {
-    //     for (Objective objective : objectives) {
-    //         // If any task within the objectives is incomplete, return false
-    //         if (!objective.isCompleted()) {
-    //             return false;
-    //         }
-    //     }
+    // for (Objective objective : objectives) {
+    // // If any task within the objectives is incomplete, return false
+    // if (!objective.isCompleted()) {
+    // return false;
+    // }
+    // }
 
-    //     // If all objectives are completed, return true
-    //     return true;
+    // // If all objectives are completed, return true
+    // return true;
     // }
 
     /**
@@ -233,7 +231,7 @@ public abstract class GameSystem {
      * (Currently, no implementation provided.)
      */
     // public static void endGame() {
-    //     boolean win = checkWinCondition();
+    // boolean win = checkWinCondition();
 
     private static boolean checkWinCondition() {
         for (Task task : tasks) {
@@ -251,7 +249,8 @@ public abstract class GameSystem {
     public static void endGame() {
     }
 
-    public static void showPopup(String title, String desc, String yesButton, String noButton, ActionListener yesAction, ActionListener noAction) {
+    public static void showPopup(String title, String desc, String yesButton, String noButton, ActionListener yesAction,
+            ActionListener noAction) {
         gameBoardUI.showPopup(title, desc, yesButton, noButton, yesAction, noAction);
     }
 
