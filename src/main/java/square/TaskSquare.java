@@ -66,6 +66,7 @@ public class TaskSquare extends Square {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // task.getOwnedBy().findTask(task).currentSubTask().setDiscounted(true);
+                // task.currentSubTask().setDiscounted(true);
                 System.out.println("Discounting the task!");
                 GameSystem.hidePopup();
             }
