@@ -192,9 +192,6 @@ public class Board extends JPanel {
                         case TASKSQUARE:
                             squareArray.set(randomIndex, new TaskSquare(null));
                             break;
-                        case MONEYSQUARE:
-                            squareArray.set(randomIndex, new MoneySquare());
-                            break;
                         case SQUARE:
                             squareArray.set(randomIndex, new Square());
                             break;

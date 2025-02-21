@@ -2,9 +2,6 @@ package square;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
-import java.util.Scanner;
-
-import java.awt.Color;
 import BoardGame.*;
 import GameSystem.*;
 
@@ -73,8 +70,7 @@ public class TaskSquare extends Square {
         ActionListener beginHelping = new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // task.getOwnedBy().findTask(task).currentSubTask().setDiscounted(true);
-                // task.currentSubTask().setDiscounted(true);
+                // Discounting task logic
                 System.out.println("Discounting the task!");
                 GameSystem.hidePopup();
             }
@@ -97,48 +93,11 @@ public class TaskSquare extends Square {
         super.activateSquareEffect();
         if (task.getOwnedBy() == null) {
             GameSystem.showPopup("Do you want to get this task?", "", "Yes", "No", takeTask, rejectTask);
-            // System.out.println("Do you want to get this task?");
-            // Scanner keyb = new Scanner(System.in);
-            // String input = keyb.nextLine();
-            // if("y".equals(input)) {
-            // task.setOwnedBy(getPrimaryOccupier());
-            // System.out.println("Task claimed!");
-            // } else {
-            // System.out.println("Who wants this task?");
-            // input = keyb.nextLine();
-            // switch (input) {
-            // case "1":
-            // GameSystem.getPlayerAt(0).addTask(task);
-            // break;
-            // case "2":
-            // GameSystem.getPlayerAt(1).addTask(task);
-            // break;
-            // case "3":
-            // GameSystem.getPlayerAt(2).addTask(task);
-            // break;
-            // case "4":
-            // GameSystem.getPlayerAt(3).addTask(task);
-            // break;
-            // default:
-            // System.out.println("Nobody claimed the task, -15 satisfaction points");
-            // break;
-            // }
-            // }
-            // keyb.close();
         } else if (task.getOwnedBy() != GameSystem.getPlayerAt()) {
             GameSystem.showPopup("Do you want to help complete this task?", task.getDescription(), "Yes", "No",
                     beginHelping, ignoreHelping);
-            // System.out.println("Do you want to help complete this task?");
-            // Scanner keyb = new Scanner(System.in);
-            // String input = keyb.nextLine();
-            // if("y".equals(input)) {
-            // // Discount the task.
-            // System.out.println("Discounting the task!");
-            // }
-            // // keyb.close();
         } else {
             GameSystem.showPopup("You already own this task!", null, "Ok", null, okSingleButton, null);
-            // System.out.println("You already own this task!");
         }
         return true;
     }
