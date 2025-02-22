@@ -142,7 +142,7 @@ public class Board extends JPanel {
      * Sets the square at a given index on the board.
      * 
      * @param index      The index of the square to set.
-     * @param squareType The type of square to set at the given index.
+     * @param square The square to set at the given index.
      */
     public void setSquareAt(int index, Square square) {
         if (index < 0 || index >= squareArray.size()) {
