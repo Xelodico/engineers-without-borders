@@ -42,7 +42,7 @@ public abstract class GameSystem {
     private static int turnNumber;
 
     // private static ArrayList<JobRole> roles;
-    public static ArrayList<Objective> objectives;
+    private static ArrayList<Objective> objectives;
     private static ArrayList<Task> tasks;
     private static String[] subtasks;
 
@@ -170,9 +170,6 @@ public abstract class GameSystem {
     public static ArrayList<Objective> getObjectives() {
         return objectives;
     }
-    // public static ArrayList<JobRole> getRoles() {
-    // return roles;
-    // }
 
     /**
      * Moves the current player in the specified direction on the game board.

@@ -96,7 +96,7 @@ public class Journal extends JPanel {
      */
     private JPanel createObjective(int objectiveIndex) {
 
-        Objective objectiveObj = GameSystem.objectives.get(objectiveIndex);
+        Objective objectiveObj = GameSystem.getObjectives().get(objectiveIndex);
         ArrayList<Task> tasksObj = objectiveObj.getTasks();
 
         JPanel objective = new JPanel();
