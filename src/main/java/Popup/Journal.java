@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import BoardGame.BoardGameUI;
 import BoardGame.Objective;
+import BoardGame.SubTask;
 import BoardGame.Task;
 import GameSystem.GameSystem;
 import java.awt.*;
@@ -117,12 +118,19 @@ public class Journal extends JPanel {
 
         tasksObj.forEach(task -> {
             JPanel taskRow = new JPanel();
-            taskRow.setLayout(new BoxLayout(taskRow, BoxLayout.X_AXIS));
+            taskRow.setLayout(new BoxLayout(taskRow, BoxLayout.Y_AXIS));
             taskRow.setBackground(new java.awt.Color(0, 0, 0, 0));
             taskRow.setAlignmentX(Component.LEFT_ALIGNMENT);
             taskRow.add(createTask(task));
             taskPanel.add(taskRow);
-            taskPanel.add(Box.createVerticalStrut(30)); // Space between tasks
+
+            SubTask[] subTasks = task.getSteps();
+            for (SubTask subTask : subTasks) {
+                taskPanel.add(createSubTask(subTask));
+                taskPanel.add(Box.createVerticalStrut(10));
+            }
+
+            taskPanel.add(Box.createVerticalStrut(5)); // Space between tasks
         });
 
         objective.add(taskPanel, BorderLayout.CENTER);
@@ -138,8 +146,8 @@ public class Journal extends JPanel {
      */
     private JPanel createTask(Task t) {
         JPanel task = new JPanel();
-        task.setLayout(new BoxLayout(task, BoxLayout.X_AXIS)); // BoxLayout for vertical stacking
-        task.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0)); // Indent subtasks (left margin)
+        task.setLayout(new BoxLayout(task, BoxLayout.X_AXIS));
+        task.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0)); // Indent tasks (left margin)
         task.setBackground(new java.awt.Color(0, 0, 0, 0));
 
         JLabel taskLabel = new JLabel(t.getTitle());
@@ -160,6 +168,27 @@ public class Journal extends JPanel {
         task.add(transferButton);
 
         task.add(Box.createHorizontalStrut(100));
+
+        return task;
+    }
+
+    private JPanel createSubTask(SubTask t) {
+        JPanel task = new JPanel();
+        task.setLayout(new BoxLayout(task, BoxLayout.X_AXIS)); // BoxLayout for vertical stacking
+        task.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 0)); // Indent subtasks (left margin)
+        task.setBackground(new java.awt.Color(0, 0, 0, 0));
+        task.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel ownedByLabel = new JLabel();
+
+        JTextArea taskLabel = new JTextArea(t.getTitle());
+        taskLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        taskLabel.setMaximumSize(new Dimension(350, 100));
+        taskLabel.setLineWrap(true);
+        taskLabel.setWrapStyleWord(true);
+        taskLabel.setEditable(false);
+        taskLabel.setOpaque(false);
+        task.add(taskLabel);
 
         return task;
     }
