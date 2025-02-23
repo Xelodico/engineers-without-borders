@@ -10,6 +10,7 @@ import GameSystem.GameSystem;
 import Popup.Journal;
 import Popup.Popup;
 import Popup.Shop;
+import Popup.TransferPopup;
 import square.SquareType;
 
 /**
@@ -28,10 +29,6 @@ import square.SquareType;
 public class BoardGameUI extends JFrame {
 
     Player[] players;
-    String player1Name;
-    String player2Name;
-    String player3Name;
-    String player4Name;
 
     public static final int WINDOW_WIDTH = 1075;
     public static final int WINDOW_HEIGHT = 705;
@@ -39,6 +36,8 @@ public class BoardGameUI extends JFrame {
     private static final int BOARD_HEIGHT = BOARD_WIDTH;
 
     public StartScreen startScreen;
+
+    public TransferPopup transferPopup;
 
     /**
      * Creates a new BoardGameUI instance with the specified list of players.
@@ -60,6 +59,8 @@ public class BoardGameUI extends JFrame {
 
         shop = new Shop();
 
+        transferPopup = new TransferPopup("Transfer Task", null, null, null, null, null, null, null, null, null);
+
         dimBackground = new JPanel();
         dimBackground.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
         dimBackground.setBackground(new java.awt.Color(0, 0, 0, 150));
@@ -67,9 +68,10 @@ public class BoardGameUI extends JFrame {
         add(dimBackground);
 
         JLayeredPane layeredPane = getLayeredPane();
+        layeredPane.add(transferPopup, JLayeredPane.POPUP_LAYER);
         layeredPane.add(journal, JLayeredPane.POPUP_LAYER);
         layeredPane.add(shop, JLayeredPane.POPUP_LAYER);
-        
+
         initComponents();
         setVisible(true);
         setResizable(false);
@@ -425,6 +427,11 @@ public class BoardGameUI extends JFrame {
         shop.setVisible(!shop.isVisible());
         dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
+    }
+
+    public void toggleTransfer() {
+        transferPopup.setVisible(!transferPopup.isVisible());
+        journal.closeButton.setEnabled(!transferPopup.isVisible());
     }
 
     private JLabel movesLeftLabel;

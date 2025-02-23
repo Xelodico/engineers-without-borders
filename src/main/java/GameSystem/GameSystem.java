@@ -270,6 +270,10 @@ public abstract class GameSystem {
         gameBoardUI.toggleShop();
     }
 
+    public static void toggleTransfer() {
+        gameBoardUI.toggleTransfer();
+    }
+
     /**
      * Temporarily generates Objectives, Tasks, and Subtasks.
      * This method is a placeholder until file reading from the Data Access Layer is
