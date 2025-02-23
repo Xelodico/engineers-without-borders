@@ -1,5 +1,8 @@
 package Popup;
 
+import BoardGame.BoardGameUI;
+import GameSystem.GameSystem;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -8,6 +11,14 @@ import java.awt.event.ActionListener;
  * @author Nathan Watkins
  */
 public class TransferPopup extends JPanel {
+
+    private final JLabel popupTitle;
+    private final JTextArea popupDesc;
+    private final JButton button1;
+    private final JButton button2;
+    private final JButton button3;
+    private final JButton button4;
+    private final JButton cancelButton;
 
     /**
      * Constructs a TransferPopup panel with a specified title, description,
@@ -28,19 +39,19 @@ public class TransferPopup extends JPanel {
         setLayout(null);
         int HEIGHT = 500;
         int WIDTH = 500;
-        setBounds((650/2 - WIDTH /2) + 12, (650/2 - HEIGHT /2) + 6, WIDTH, HEIGHT);
+        setBounds(BoardGameUI.WINDOW_WIDTH / 2 - WIDTH/2, BoardGameUI.WINDOW_HEIGHT/2 - HEIGHT/2, WIDTH, HEIGHT);
         setBackground(new java.awt.Color(240, 240, 240));
         setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         setVisible(false);
 
-        JLabel popupTitle = new JLabel(title);
+        popupTitle = new JLabel(title);
         popupTitle.setFont(new java.awt.Font("Segue UI", Font.BOLD, 24));
         popupTitle.setHorizontalAlignment(SwingConstants.CENTER);
         popupTitle.setText("<html>" + title + "</html>");
         popupTitle.setBounds(0, 0, WIDTH, 70);
         add(popupTitle);
 
-        JTextArea popupDesc = new JTextArea(desc);
+        popupDesc = new JTextArea(desc);
         popupDesc.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 18));
         popupDesc.setLineWrap(true);
         popupDesc.setWrapStyleWord(true);
@@ -52,24 +63,25 @@ public class TransferPopup extends JPanel {
         popupDesc.setBounds(10, 80, WIDTH - 20, HEIGHT - 200);
         add(popupDesc);
 
-        JButton button1 = createButton(button1Text);
+        button1 = createButton(button1Text);
         button1.setBounds((WIDTH / 2) - 215, HEIGHT - 100, 100, 30);
         add(button1);
 
-        JButton button2 = createButton(button2Text);
+        button2 = createButton(button2Text);
         button2.setBounds((WIDTH / 2) - 105, HEIGHT - 100, 100, 30);
         add(button2);
 
-        JButton button3 = createButton(button3Text);
+        button3 = createButton(button3Text);
         button3.setBounds((WIDTH / 2) + 5, HEIGHT - 100, 100, 30);
         add(button3);
 
-        JButton button4 = createButton(button4Text);
+        button4 = createButton(button4Text);
         button4.setBounds((WIDTH / 2) + 115, HEIGHT - 100, 100, 30);
         add(button4);
 
-        JButton cancelButton = createButton("Cancel");
+        cancelButton = createButton("Cancel");
         cancelButton.setBounds((WIDTH / 2) - 50, HEIGHT - 51, 100, 30);
+        cancelButton.addActionListener(e -> GameSystem.toggleTransfer());
         add(cancelButton);
     }
 
@@ -92,4 +104,131 @@ public class TransferPopup extends JPanel {
         return button;
     }
 
+    /**
+     * Sets the title of the popup by updating the text of the popupTitle field.
+     *
+     * @param text The text to be set as the title of the popup.
+     */
+    public void setTitle(String text) {
+        popupTitle.setText(text);
+    }
+
+    /**
+     * Updates the description text displayed in the popup.
+     *
+     * @param text The text to be set as the description of the popup.
+     */
+    public void setDescription(String text) {
+        popupDesc.setText(text);
+    }
+
+    /**
+     * Updates the text of the first button in the popup.
+     *
+     * @param text The text to be displayed on the first button.
+     */
+    public void setButton1Text(String text) {
+        button1.setText(text);
+    }
+
+    /**
+     * Updates the text of the second button in the popup.
+     *
+     * @param text The text to be displayed on the second button.
+     */
+    public void setButton2Text(String text) {
+        button2.setText(text);
+    }
+
+    /**
+     * Updates the text of the third button in the popup.
+     *
+     * @param text The text to be displayed on the third button.
+     */
+    public void setButton3Text(String text) {
+        button3.setText(text);
+    }
+
+    /**
+     * Updates the text of the fourth button in the popup.
+     *
+     * @param text The text to be displayed on the fourth button.
+     */
+    public void setButton4Text(String text) {
+        button4.setText(text);
+    }
+
+    /**
+     * Sets the action listener for the first button in the popup.
+     * Any previously assigned action listeners are removed before
+     * adding the new action listener.
+     *
+     * @param action The ActionListener to be assigned to button1.
+     */
+    public void setButton1Action(ActionListener action) {
+        ActionListener[] actions = button1.getActionListeners();
+        for (ActionListener a : actions) {
+            button1.removeActionListener(a);
+        }
+        button1.addActionListener(action);
+    }
+
+    /**
+     * Sets the action listener for the second button in the popup.
+     * Any previously assigned action listeners are removed before
+     * adding the new action listener.
+     *
+     * @param action The ActionListener to be assigned to button2.
+     */
+    public void setButton2Action(ActionListener action) {
+        ActionListener[] actions = button2.getActionListeners();
+        for (ActionListener a : actions) {
+            button2.removeActionListener(a);
+        }
+        button2.addActionListener(action);
+    }
+
+    /**
+     * Sets the action listener for the third button in the popup.
+     * Any previously assigned action listeners are removed before
+     * adding the new action listener.
+     *
+     * @param action The ActionListener to be assigned to button3.
+     */
+    public void setButton3Action(ActionListener action) {
+        ActionListener[] actions = button3.getActionListeners();
+        for (ActionListener a : actions) {
+            button3.removeActionListener(a);
+        }
+        button3.addActionListener(action);
+    }
+
+    /**
+     * Sets the action listener for the fourth button in the popup.
+     * Any previously assigned action listeners are removed before
+     * adding the new action listener.
+     *
+     * @param action The ActionListener to be assigned to button4.
+     */
+    public void setButton4Action(ActionListener action) {
+        ActionListener[] actions = button4.getActionListeners();
+        for (ActionListener a : actions) {
+            button4.removeActionListener(a);
+        }
+        button4.addActionListener(action);
+    }
+
+    /**
+     * Sets the action listener for the cancel button. Any previously assigned
+     * action listeners are removed before adding the new action listener.
+     *
+     * @param action The ActionListener to be assigned to the cancel button.
+     */
+    public void setCancelButtonAction(ActionListener action) {
+        ActionListener[] actions = cancelButton.getActionListeners();
+        for (ActionListener a : actions) {
+            cancelButton.removeActionListener(a);
+        }
+        cancelButton.addActionListener(action);
+    }
 }
