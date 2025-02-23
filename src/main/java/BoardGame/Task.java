@@ -107,6 +107,15 @@ public class Task {
 		this.steps = steps;
 	}
 
+	public void addStep(SubTask step) {
+		SubTask[] newSteps = new SubTask[steps.length + 1];
+		for(int i = 0; i < steps.length; i++) {
+			newSteps[i] = steps[i];
+		}
+		newSteps[steps.length] = step;
+		steps = newSteps;
+	}
+
 	public int getCurrentStep() {
 		return currentStep;
 	}

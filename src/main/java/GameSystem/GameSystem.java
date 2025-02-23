@@ -44,7 +44,7 @@ public abstract class GameSystem {
     // private static ArrayList<JobRole> roles;
     private static ArrayList<Objective> objectives;
     private static ArrayList<Task> tasks;
-    private static String[] subtasks;
+    private static SubTask[] subtasks;
 
     // Boolean flag to determine whether the game is active or not
     private static boolean gameActive = false;
@@ -290,12 +290,21 @@ public abstract class GameSystem {
                     Task task = new Task();
                     task.setTitle(tObj.getString("task"));
                     tasks.add(task);
+
+                    JSONArray subtasksArr = tObj.getJSONArray("subtasks");
+                    for (int i = 0; i < subtasksArr.length(); i++) {
+                        SubTask subtask = new SubTask();
+                        subtask.setTitle(subtasksArr.getString(i));
+                        task.addStep(subtask);
+                    }
+
                     o1.addTask(task);
                 });
             });
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | NullPointerException e) {
+            System.err.println("Error reading file: " + file);
+            System.exit(1);
         }
     }
 
