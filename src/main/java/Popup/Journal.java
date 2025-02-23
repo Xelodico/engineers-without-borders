@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import javax.imageio.ImageIO;
+import javax.swing.border.Border;
 
 /**
  * Represents a journal component in the BoardGame UI.
@@ -94,6 +95,12 @@ public class Journal extends JPanel {
         scrollPane.setViewportView(page);
     }
 
+    /**
+     * Refreshes the current layout and content of the journal panel.
+     * This method clears any existing components on the page, re-adds the close button,
+     * and dynamically populates the page with updated objectives and their associated tasks.
+     * Additionally, it resets the vertical scroll position of the scroll pane to the top.
+     */
     public void refresh() {
         page.removeAll(); // Remove all existing components
         addCloseButton(page); // Re-add the close button
@@ -137,13 +144,21 @@ public class Journal extends JPanel {
         JPanel taskPanel = new JPanel();
         taskPanel.setLayout(new BoxLayout(taskPanel, BoxLayout.Y_AXIS));
         taskPanel.setBackground(new java.awt.Color(0, 0, 0, 0));
-        taskPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+        taskPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
         tasksObj.forEach(task -> {
             JPanel taskRow = new JPanel();
             taskRow.setLayout(new BoxLayout(taskRow, BoxLayout.Y_AXIS));
             taskRow.setBackground(new java.awt.Color(0, 0, 0, 0));
             taskRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            if (task.getOwnedBy() != null) {
+                JLabel ownedByLabel = new JLabel("Owned by " + task.getOwnedBy().getName());
+                ownedByLabel.setFont(new Font("Arial", Font.ITALIC | Font.BOLD, 16));
+                ownedByLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+                taskPanel.add(ownedByLabel);
+            }
+
             taskRow.add(createTask(task));
             taskPanel.add(taskRow);
 
@@ -176,7 +191,7 @@ public class Journal extends JPanel {
         task.setBackground(new java.awt.Color(0, 0, 0, 0));
 
         JLabel taskLabel = new JLabel(t.getTitle());
-        taskLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        taskLabel.setFont(new Font("Arial", Font.PLAIN, 20));
         task.add(taskLabel);
 
         task.add(Box.createHorizontalGlue());

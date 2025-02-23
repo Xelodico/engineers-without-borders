@@ -99,7 +99,6 @@ public class BoardGameUI extends JFrame {
         this.players = GameSystem.getTurnOrder();
         gameBoard.refresh();
         transferPopup.renderPlayerNames(this.players);
-        journal.refresh();
         remove(sidePanelContainer);
         initComponents();
         revalidate();
@@ -420,6 +419,9 @@ public class BoardGameUI extends JFrame {
     }
 
     public void toggleJournal() {
+        if (!journal.isVisible()) {
+            journal.refresh();
+        }
         journal.setVisible(!journal.isVisible());
         dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
