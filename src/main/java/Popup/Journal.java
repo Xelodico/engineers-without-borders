@@ -30,6 +30,8 @@ public class Journal extends JPanel {
     // The background image for the journal
     private BufferedImage backgroundImage;
 
+    public JButton closeButton;
+
     /**
      * Constructs a new Journal panel with the following layout:
      * - A title at the top
@@ -166,8 +168,34 @@ public class Journal extends JPanel {
         transferButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         transferButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
         task.add(transferButton);
+        task.add(Box.createHorizontalStrut(10));
 
-        task.add(Box.createHorizontalStrut(100));
+        transferButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameSystem.toggleTransfer();
+            }
+        });
+
+        ImageIcon completeIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/completeTaskButton.png")));
+        completeIcon.setImage(completeIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        JButton completeButton = new JButton(completeIcon);
+
+        completeButton.setBorder(null);
+        completeButton.setFocusPainted(false);
+        completeButton.setContentAreaFilled(false);
+        completeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        completeButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        task.add(completeButton);
+
+        completeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Complete button clicked!");
+            }
+        });
+
+        task.add(Box.createHorizontalStrut(50));
 
         return task;
     }
@@ -178,8 +206,6 @@ public class Journal extends JPanel {
         task.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 0)); // Indent subtasks (left margin)
         task.setBackground(new java.awt.Color(0, 0, 0, 0));
         task.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel ownedByLabel = new JLabel();
 
         JTextArea taskLabel = new JTextArea(t.getTitle());
         taskLabel.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -239,7 +265,7 @@ public class Journal extends JPanel {
         closeButtonPanel.setOpaque(false);
         closeButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
     
-        JButton closeButton = new JButton();
+        closeButton = new JButton();
         closeButton.setIcon(closeIcon);
         closeButton.setBorder(null);
         closeButton.setContentAreaFilled(false);
