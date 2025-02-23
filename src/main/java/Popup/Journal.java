@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
@@ -39,9 +40,10 @@ public class Journal extends JPanel {
 
         try {
             // Load background image
-            backgroundImage = ImageIO.read(getClass().getResource("/images/journalBackground.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
+            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/images/journalBackground.png")));
+        } catch (NullPointerException | IOException e) {
+            System.err.println("Error: Journal background image not found!");
+            System.exit(1);
         }
 
         setLayout(null);
@@ -88,11 +90,10 @@ public class Journal extends JPanel {
     }
 
     /**
-     * Creates a JPanel representing an objective with a given title and a list of
-     * tasks.
+     * Creates a JPanel representing an objective with a given index
      *
-     * @param text The text for the objective title.
-     * @return A JPanel containing the objective and its tasks.
+     * @param objectiveIndex The index of the objective to be created
+     * @return The created objective as a JPanel
      */
     private JPanel createObjective(int objectiveIndex) {
 
@@ -114,12 +115,15 @@ public class Journal extends JPanel {
         taskPanel.setBackground(new java.awt.Color(0, 0, 0, 0));
         taskPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-        // Add tasks with gaps between them
-        taskPanel.add(createTask(tasksObj.get(0).getTitle()));
-        taskPanel.add(Box.createVerticalStrut(10)); // Vertical space between tasks
-        taskPanel.add(createTask(tasksObj.get(1).getTitle()));
-        taskPanel.add(Box.createVerticalStrut(10)); // Vertical space between tasks
-        taskPanel.add(createTask(tasksObj.get(2).getTitle()));
+        tasksObj.forEach(task -> {
+            JPanel taskRow = new JPanel();
+            taskRow.setLayout(new BoxLayout(taskRow, BoxLayout.X_AXIS));
+            taskRow.setBackground(new java.awt.Color(0, 0, 0, 0));
+            taskRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+            taskRow.add(createTask(task));
+            taskPanel.add(taskRow);
+            taskPanel.add(Box.createVerticalStrut(30)); // Space between tasks
+        });
 
         objective.add(taskPanel, BorderLayout.CENTER);
 
@@ -129,17 +133,34 @@ public class Journal extends JPanel {
     /**
      * Creates a JPanel representing a task with the given description.
      *
-     * @param text The description of the task.
-     * @return A JPanel containing the task label.
+     * @param t The task to create.
+     * @return A JPanel containing the task label and buttons.
      */
-    private JPanel createTask(String text) {
+    private JPanel createTask(Task t) {
         JPanel task = new JPanel();
-        task.setLayout(new BoxLayout(task, BoxLayout.Y_AXIS)); // BoxLayout for vertical stacking
+        task.setLayout(new BoxLayout(task, BoxLayout.X_AXIS)); // BoxLayout for vertical stacking
         task.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0)); // Indent subtasks (left margin)
         task.setBackground(new java.awt.Color(0, 0, 0, 0));
-        JLabel taskLabel = new JLabel(text);
+
+        JLabel taskLabel = new JLabel(t.getTitle());
         taskLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         task.add(taskLabel);
+
+        task.add(Box.createHorizontalGlue());
+
+        ImageIcon transferIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/transferButton.png")));
+        transferIcon.setImage(transferIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        JButton transferButton = new JButton(transferIcon);
+
+        transferButton.setBorder(null);
+        transferButton.setFocusPainted(false);
+        transferButton.setContentAreaFilled(false);
+        transferButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        transferButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        task.add(transferButton);
+
+        task.add(Box.createHorizontalStrut(100));
+
         return task;
     }
 
