@@ -29,6 +29,8 @@ public class Journal extends JPanel {
 
     // The background image for the journal
     private BufferedImage backgroundImage;
+    private final JPanel page;
+    private final JScrollPane scrollPane;
 
     public JButton closeButton;
 
@@ -65,11 +67,11 @@ public class Journal extends JPanel {
         // Set scroll bar width
         UIManager.put("ScrollBar.width", 10);
 
-        JScrollPane scrollPane = createScrollPane();
+        scrollPane = createScrollPane();
         add(scrollPane);
 
         // Create the page content container
-        JPanel page = new JPanel();
+        page = new JPanel();
         page.setLayout(new BoxLayout(page, BoxLayout.Y_AXIS));
         page.setOpaque(false);
 
@@ -92,11 +94,30 @@ public class Journal extends JPanel {
         scrollPane.setViewportView(page);
     }
 
+    public void refresh() {
+        page.removeAll(); // Remove all existing components
+        addCloseButton(page); // Re-add the close button
+
+        // Re-add the objectives
+        page.add(createObjective(0));
+        page.add(createObjective(1));
+        page.add(createObjective(2));
+        page.add(createObjective(3));
+
+        SwingUtilities.invokeLater(() -> {
+            scrollPane.getVerticalScrollBar().setValue(0);
+        });
+    }
+
     /**
-     * Creates a JPanel representing an objective with a given index
+     * Creates a JPanel representation of an objective, which includes the objective's title
+     * and a list of associated tasks and sub-tasks. Tasks and sub-tasks are displayed in a
+     * vertically stacked layout within the panel. Each component of the panel is styled and
+     * aligned to blend seamlessly into the overall UI.
      *
-     * @param objectiveIndex The index of the objective to be created
-     * @return The created objective as a JPanel
+     * @param objectiveIndex The index of the objective in the list of objectives maintained
+     *                       by the game system.
+     * @return A JPanel representing the objective, including its title, tasks, and sub-tasks.
      */
     private JPanel createObjective(int objectiveIndex) {
 
@@ -141,10 +162,12 @@ public class Journal extends JPanel {
     }
 
     /**
-     * Creates a JPanel representing a task with the given description.
+     * Creates a JPanel representation of a task. This panel contains the task's title
+     * and buttons for transferring and completing the task. The appearance and layout
+     * of the panel are styled for seamless integration into the UI.
      *
-     * @param t The task to create.
-     * @return A JPanel containing the task label and buttons.
+     * @param t The Task object containing the details of the task to be created.
+     * @return A JPanel representing the task, complete with its title and action buttons.
      */
     private JPanel createTask(Task t) {
         JPanel task = new JPanel();
@@ -158,24 +181,26 @@ public class Journal extends JPanel {
 
         task.add(Box.createHorizontalGlue());
 
-        ImageIcon transferIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/transferButton.png")));
-        transferIcon.setImage(transferIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        JButton transferButton = new JButton(transferIcon);
+        if (GameSystem.getTurnOrder().length > 1) {
+            ImageIcon transferIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/transferButton.png")));
+            transferIcon.setImage(transferIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+            JButton transferButton = new JButton(transferIcon);
 
-        transferButton.setBorder(null);
-        transferButton.setFocusPainted(false);
-        transferButton.setContentAreaFilled(false);
-        transferButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        transferButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        task.add(transferButton);
-        task.add(Box.createHorizontalStrut(10));
+            transferButton.setBorder(null);
+            transferButton.setFocusPainted(false);
+            transferButton.setContentAreaFilled(false);
+            transferButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            transferButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+            task.add(transferButton);
+            task.add(Box.createHorizontalStrut(10));
 
-        transferButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.toggleTransfer();
-            }
-        });
+            transferButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    GameSystem.toggleTransfer();
+                }
+            });
+        }
 
         ImageIcon completeIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/completeTaskButton.png")));
         completeIcon.setImage(completeIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
@@ -200,6 +225,14 @@ public class Journal extends JPanel {
         return task;
     }
 
+    /**
+     * Creates a JPanel representing a sub-task with the given details.
+     * The panel contains a formatted label displaying the sub-task's title,
+     * and it is styled with specific layout, alignment, and background properties.
+     *
+     * @param t The SubTask object containing the details of the sub-task.
+     * @return A JPanel representing the sub-task.
+     */
     private JPanel createSubTask(SubTask t) {
         JPanel task = new JPanel();
         task.setLayout(new BoxLayout(task, BoxLayout.X_AXIS)); // BoxLayout for vertical stacking

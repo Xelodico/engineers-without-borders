@@ -75,6 +75,7 @@ public class BoardGameUI extends JFrame {
         initComponents();
         setVisible(true);
         setResizable(false);
+        setLocationRelativeTo(null);
     }
 
     public void showPopup(String title, String desc, String yesButton, String noButton, ActionListener yesAction, ActionListener noAction) {
@@ -97,6 +98,8 @@ public class BoardGameUI extends JFrame {
     public void refresh() {
         this.players = GameSystem.getTurnOrder();
         gameBoard.refresh();
+        transferPopup.renderPlayerNames(this.players);
+        journal.refresh();
         remove(sidePanelContainer);
         initComponents();
         revalidate();
@@ -390,7 +393,6 @@ public class BoardGameUI extends JFrame {
                                 .addGap(10, 10, 10)));
 
         setSize(new java.awt.Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
-        setLocationRelativeTo(null);
     }
 
     private void toggleEnableButtons() {

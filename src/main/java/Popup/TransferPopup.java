@@ -1,6 +1,7 @@
 package Popup;
 
 import BoardGame.BoardGameUI;
+import BoardGame.Player;
 import GameSystem.GameSystem;
 
 import javax.swing.*;
@@ -102,6 +103,24 @@ public class TransferPopup extends JPanel {
         button.setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
 
         return button;
+    }
+
+    public void renderPlayerNames(Player[] players) {
+        JButton[] buttons = {button1, button2, button3, button4};
+        for (JButton b : buttons) {
+            b.setVisible(false);
+        }
+
+        for (int i = 0; i < players.length; i++) {
+            buttons[i].setVisible(true);
+            buttons[i].setText(players[i].getName());
+
+            int offset = (getWidth() / 2) - (buttons[i].getWidth() * players.length / 2) + i * (buttons[i].getWidth() + 5);
+            if (players.length > 1) {
+                offset -= 5;
+            }
+            buttons[i].setLocation(offset, getHeight() - 60 - buttons[i].getHeight());
+        }
     }
 
     /**
