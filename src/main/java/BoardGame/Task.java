@@ -10,111 +10,148 @@ public class Task {
 	
 	// ATTRIBUTES //
 	private String title;
-	private JobRole belongsTo;
+	private Objective belongsTo;
+	private Player ownedBy;
 	private String description;
-	private boolean completed;
-	private int availableStage;
+	private SubTask[] steps;
+	private int currentStep;
+	private int completionScore;
+	private int resourceCost1;
+	private int resourceCost2;
+	private int resourceCost3;
+	private int resourceCost4;
 	
 	// METHODS //
-	/**
-	 * @param title - The title of this Task
-	 * @param belongsTo - The JobRole this Task is a subtask of
-	 * @param description - The description to be shown to the player when this task is shown on screen
-	 * @param availableStage - The stage this task is available on
-	 * 
-	 * A constructor that takes in values for every attribute excluding 'completed'. This value is defaulted to False.
-	 */
-	public Task(String title, JobRole belongsTo, String description, int availableStage) {
+	public Task(String title, Objective belongsTo, String description, SubTask[] steps, int completionScore, int resourceCost1, int resourceCost2, int resourceCost3, int resourceCost4) {
 		this.title = title;
 		this.belongsTo = belongsTo;
+		this.ownedBy = null;
 		this.description = description;
-		this.completed = false;
-		this.availableStage = availableStage;
+		this.steps = steps;
+		this.currentStep = 0;
+		this.completionScore = completionScore;
+		this.resourceCost1 = resourceCost1;
+		this.resourceCost2 = resourceCost2;
+		this.resourceCost3 = resourceCost3;
+		this.resourceCost4 = resourceCost4;
 	}
-	
-	/**
-	 * A default constructor that takes in no parameters and essentially creates an 'empty' Task object.
-	 */
+
 	public Task() {
 		this.title = "";
 		this.belongsTo = null;
+		this.ownedBy = null;
 		this.description = "";
-		this.completed = false;
-		this.availableStage = 0;
+		this.steps = new SubTask[0];
+		this.currentStep = 0;
+		this.completionScore = 0;
+		this.resourceCost1 = 0;
+		this.resourceCost2 = 0;
+		this.resourceCost3 = 0;
+		this.resourceCost4 = 0;
 	}
 
-	// GETTERS //
-	/**
-	 * @return the title of this Task
-	 */
+	public SubTask currentSubTask() {
+		return steps[currentStep];
+	}
+
+	public boolean completeStep() {
+		if (currentStep < steps.length) {
+			currentStep++;
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isCompleted() {
+		return currentStep == steps.length;
+	}
+
+	// GETTERS & SETTERS //
 	public String getTitle() {
 		return title;
 	}
 
-	/**
-	 * @return the JobRole this task belongs to
-	 */
-	public JobRole getRole() {
-		return belongsTo;
-	}
-
-	/**
-	 * @return the description of this task to show the player
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * @return True if the task has been completed (completed == True), False if not
-	 */
-	public boolean isCompleted() {
-		return completed;
-	}
-
-	/**
-	 * @return the stage of the game this task is available on
-	 */
-	public int getAvailableStage() {
-		return availableStage;
-	}
-
-	
-	// SETTERS //
-	/**
-	 * @param title - The new title of this task
-	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
-	/**
-	 * @param belongsTo - The new JobRole this task is a subtask of
-	 */
-	public void setRole(JobRole belongsTo) {
+	public Objective getBelongsTo() {
+		return belongsTo;
+	}
+
+	public void setBelongsTo(Objective belongsTo) {
 		this.belongsTo = belongsTo;
 	}
 
-	/**
-	 * @param description - The new description of this task
-	 */
+	public Player getOwnedBy() {
+		return ownedBy;
+	}
+
+	public void setOwnedBy(Player ownedBy) {
+		this.ownedBy = ownedBy;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	/**
-	 * @param completed - The new state of completion for this task
-	 */
-	public void setCompleted(boolean completed) {
-		this.completed = completed;
+	public SubTask[] getSteps() {
+		return steps;
 	}
 
-	/**
-	 * @param availableStage - The new stage this task is available on
-	 */
-	public void setAvailableStage(int availableStage) {
-		this.availableStage = availableStage;
+	public void setSteps(SubTask[] steps) {
+		this.steps = steps;
 	}
-	
-	
+
+	public int getCurrentStep() {
+		return currentStep;
+	}
+
+	public void setCurrentStep(int currentStep) {
+		this.currentStep = currentStep;
+	}
+
+	public int getCompletionScore() {
+		return completionScore;
+	}
+
+	public void setCompletionScore(int completionScore) {
+		this.completionScore = completionScore;
+	}
+
+	public int getResourceCost1() {
+		return resourceCost1;
+	}
+
+	public void setResourceCost1(int resourceCost1) {
+		this.resourceCost1 = resourceCost1;
+	}
+
+	public int getResourceCost2() {
+		return resourceCost2;
+	}
+
+	public void setResourceCost2(int resourceCost2) {
+		this.resourceCost2 = resourceCost2;
+	}
+
+	public int getResourceCost3() {
+		return resourceCost3;
+	}
+
+	public void setResourceCost3(int resourceCost3) {
+		this.resourceCost3 = resourceCost3;
+	}
+
+	public int getResourceCost4() {
+		return resourceCost4;
+	}
+
+	public void setResourceCost4(int resourceCost4) {
+		this.resourceCost4 = resourceCost4;
+	}
 }

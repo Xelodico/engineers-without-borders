@@ -1,13 +1,17 @@
 package GameSystem;
 
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.io.File;
 import java.util.ArrayList; // File class for reading files
 
-import BoardGame.Board; // Scanner for reading files
-import BoardGame.BoardGameUI; // Exception for file not found
-import BoardGame.Direction; // TimeUnit for pausing epilogue output
-import BoardGame.Player;
-import BoardGame.Task;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import BoardGame.*;
+import square.*;
 
 /**
  * 
@@ -38,13 +42,8 @@ public abstract class GameSystem {
     // Keeps track of the current turn within a round
     private static int turnNumber;
 
-    // List of objectives available in the game
-    // private static ArrayList<Objective> objectives;
-
-    // List of tasks and subtasks to be completed within the game, linked to
-    // objectives
+    private static ArrayList<Objective> objectives;
     private static ArrayList<Task> tasks;
-    private static String[] subtasks;
 
     // Boolean flag to determine whether the game is active or not
     private static boolean gameActive = false;
@@ -58,11 +57,13 @@ public abstract class GameSystem {
             turnNumber = 0; // Reset turn number
             roundNumber = 0; // Reset round count
 
-            // objectives = new ArrayList<Objective>(); // Initialize the list of job roles
-            tasks = new ArrayList<Task>(); // Initialize the list of tasks
+            // roles = new ArrayList<JobRole>();
+            objectives = new ArrayList<Objective>();
+            tasks = new ArrayList<Task>();
 
             // Setting up a default player array with at least one player to avoid errors
             turnOrder = new Player[] { new Player() };
+            createData();
 
             // Create a new board and its associated GUI
             gameBoard = new Board();
@@ -170,9 +171,9 @@ public abstract class GameSystem {
      * 
      * @return An ArrayList of Objective objects.
      */
-    // public static ArrayList<Objective> getObjectives() {
-    // return objectives;
-    // }
+    public static ArrayList<Objective> getObjectives() {
+        return objectives;
+    }
 
     /**
      * Moves the current player in the specified direction on the game board.
@@ -184,30 +185,18 @@ public abstract class GameSystem {
     public static void movePlayer(Direction direction) {
         // Retrieve the player whose turn it is
         Player currentPlayer = getPlayerAt();
-
-        // Ensure the player has remaining moves before proceeding
         if (currentPlayer.getMovesLeft() > 0) {
             // Execute the move action within the board boundaries
             currentPlayer.moveAction(direction, gameBoard.boardSideLength);
         }
 
-        // Update the game board to reflect the new player positions
+        // Update players on board and activate the tile they fell on
         gameBoard.renderPlayers(turnOrder);
 
-        // Handle interactions when a player lands on a new square
-        // Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
-
-        // Check if another player is already occupying the square
-        // if (sqrAtPosition.getPrimaryOccupier() != currentPlayer) {
-        // // Apply special effects for multiple players on the same square
-        // sqrAtPosition.alreadyOccupiedEffect(currentPlayer);
-        // } else {
-        // // Activate the square’s default effect
-        // sqrAtPosition.activateSquareEffect();
-        // }
-
-        // TODO: Implement logic to verify if the task on the square relates to the
-        // player's objective.
+        // Get the square the player has landed on, and activate it's effect (later
+        // added using a button).
+        Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
+        sqrAtPosition.activateSquareEffect();
     }
 
     /**
@@ -334,6 +323,7 @@ public abstract class GameSystem {
         int maxScore = 0, minSpent = Integer.MAX_VALUE, maxResources = 0, maxTravelled = 0;
 
         // Iterate through each player to determine the top achievers
+        // TODO: Update to reflect changes to resources in Player class
         for (int i = 0; i < turnOrder.length; i++) {
             // Determine the player with the highest score
             if (turnOrder[i].getScore() > maxScore) {
@@ -348,10 +338,10 @@ public abstract class GameSystem {
             }
 
             // Determine the player who accumulated the most resources
-            if (turnOrder[i].getResources() > maxResources) {
-                resourceHogger = i;
-                maxResources = turnOrder[i].getResources();
-            }
+            // if (turnOrder[i].getResources() > maxResources) {
+            //     resourceHogger = i;
+            //     maxResources = turnOrder[i].getResources();
+            // }
 
             // Determine the player who travelled the most
             if (turnOrder[i].getMovesTravelled() > maxTravelled) {
@@ -362,7 +352,7 @@ public abstract class GameSystem {
             // Print player stats
             System.out.println(turnOrder[i].getName() + ":\n" +
                     "Score: " + turnOrder[i].getScore() + "\n" +
-                    "Resources: " + turnOrder[i].getResources() + "\n" +
+                    // "Resources: " + turnOrder[i].getResources() + "\n" +
                     "Money: " + turnOrder[i].getMoney() + "\n");
         }
 
@@ -392,9 +382,21 @@ public abstract class GameSystem {
      * @param yesButton The text for the "Yes" button.
      * @param noButton  The text for the "No" button.
      */
-    public static void showPopup(String title, String desc, String yesButton, String noButton) {
-        // Delegate to the UI to display a popup window with the provided details
-        gameBoardUI.showPopup(title, desc, yesButton, noButton);
+    public static void showPopup(String title, String desc, String yesButton, String noButton, ActionListener yesAction,
+            ActionListener noAction) {
+        gameBoardUI.showPopup(title, desc, yesButton, noButton, yesAction, noAction);
+    }
+
+    public static void hidePopup() {
+        gameBoardUI.hidePopup();
+    }
+
+    public static void toggleJournal() {
+        gameBoardUI.toggleJournal();
+    }
+
+    public static void toggleShop() {
+        gameBoardUI.toggleShop();
     }
 
     /**
@@ -403,7 +405,27 @@ public abstract class GameSystem {
      * implemented.
      */
     private static void createData() {
-        // TODO: Implement actual data creation logic via file reading
+        String file = "src/main/resources/tasks.json";
+        try {
+            String contents = new String((Files.readAllBytes(Paths.get(file))));
+            JSONArray o = new JSONArray(contents);
+            o.forEach((objective) -> {
+                JSONObject obj = (JSONObject) objective;
+                Objective o1 = new Objective(obj.getString("objective"));
+                objectives.add(o1);
+
+                obj.getJSONArray("tasks").forEach((t) -> {
+                    JSONObject tObj = (JSONObject) t;
+                    Task task = new Task();
+                    task.setTitle(tObj.getString("task"));
+                    tasks.add(task);
+                    o1.addTask(task);
+                });
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -413,7 +435,7 @@ public abstract class GameSystem {
      */
     public static void main(String[] args) {
         // Initialize the game system and set up necessary components
-        // initialise();
-        endGame();
+        initialise();
+        // endGame();
     }
 }

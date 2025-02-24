@@ -1,0 +1,118 @@
+[
+  {
+    "objective": "Secure Grant (Influence)",
+    "tasks": [
+      {
+        "task": "Research Funding Opportunities",
+        "subtasks": [
+          "Identify local and international grants for road repairs",
+          "Contact government agencies for potential funding sources",
+          "Compile a list of private sponsors and NGOs interested in infrastructure"
+        ]
+      },
+      {
+        "task": "Organize a Fundraiser",
+        "subtasks": [
+          "Reserve a venue for the event",
+          "Find volunteers to act as staff",
+          "Send invites to sponsors"
+        ]
+      },
+      {
+        "task": "Present and Negotiate with Sponsors",
+        "subtasks": [
+          "Schedule meetings with government officials and sponsors",
+          "Address concerns and questions from potential funders",
+          "Adjust and finalize the proposal based on feedback"
+        ]
+      }
+    ]
+  },
+  {
+    "objective": "Repair Potholes (Cold Asphalt)",
+    "tasks": [
+      {
+        "task": "Survey Potholes",
+        "subtasks": [
+          "Ask residents for the location of commonly known potholes",
+          "Make located potholes more visible on the roads with cones",
+          "Inform trained volunteers of pothole locations so they can fix them"
+        ]
+      },
+      {
+        "task": "Prepare to Repair",
+        "subtasks": [
+          "Source cost-effective and durable repair materials",
+          "Coordinate with suppliers for timely delivery",
+          "Measure pothole volume and repair cost"
+        ]
+      },
+      {
+        "task": "Conduct Repairs",
+        "subtasks": [
+          "Assign volunteers to specific pothole locations",
+          "Ensure proper safety measures are followed during repairs",
+          "Inspect repaired potholes for quality assurance"
+        ]
+      }
+    ]
+  },
+  {
+    "objective": "Train Volunteers (Teaching Material)",
+    "tasks": [
+      {
+        "task": "Recruit Volunteers",
+        "subtasks": [
+          "Advertise the initiative through local community centres and social media",
+          "Conduct an orientation session to explain the goals and process",
+          "Gather personal details and availability of volunteers"
+        ]
+      },
+      {
+        "task": "Provide Training",
+        "subtasks": [
+          "Educate volunteers on safety procedures for road repairs",
+          "Demonstrate effective pothole repair techniques",
+          "Conduct hands-on practice sessions before fieldwork"
+        ]
+      },
+      {
+        "task": "Assign Roles and Responsibilities",
+        "subtasks": [
+          "Group volunteers based on skills and availability",
+          "Appoint team leads for organizing repair efforts",
+          "Provide emergency contacts and troubleshooting guidelines"
+        ]
+      }
+    ]
+  },
+  {
+    "objective": "Secure Longevity (Volunteers)",
+    "tasks": [
+      {
+        "task": "Establish Community Engagement",
+        "subtasks": [
+          "Set up a reporting system for residents to notify about new potholes",
+          "Organize community meetings to discuss long-term road maintenance",
+          "Encourage local businesses to sponsor ongoing efforts"
+        ]
+      },
+      {
+        "task": "Implement Maintenance Schedule",
+        "subtasks": [
+          "Create a routine inspection plan for monitoring road conditions",
+          "Assign teams to conduct periodic pothole repairs",
+          "Maintain a record of repaired and newly formed potholes"
+        ]
+      },
+      {
+        "task": "Advocate for Policy Changes",
+        "subtasks": [
+          "Work with local officials to push for better road maintenance policies",
+          "Gather data and testimonials to support policy recommendations",
+          "Promote public awareness about the importance of infrastructure funding"
+        ]
+      }
+    ]
+  }
+]

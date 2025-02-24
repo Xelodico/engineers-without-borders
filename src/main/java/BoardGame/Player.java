@@ -15,31 +15,44 @@ import java.util.Random;
 public class Player {
     private String name;
     private int coord;
-    private int resources;
-    private int movesLeft;
-    private int id;
     private int money;
+    private int resource1;
+    private int resource2;
+    private int resource3;
+    private int resource4;
+    private int movesLeft;
     private int moneySpent;
     private int score;
     private int movesTravelled;
-    private int nextID = 0;
-    private ArrayList<JobRole> roles;
+    private ArrayList<Task> tasks;
 
     /**
      * Default constructor for a blank player object.
      * Initializes a player with default values for name, coordinates,
      * resources, and moves left. The player's ID is set using a unique counter.
+     * private ArrayList<Task> tasks;
+     * 
+     * /**
+     * Constructor for a player object with a name, coordinates, resources,
+     * and available moves.
+     * 
+     * @param name      The name of the player
+     * @param coord     The initial coordinates of the player on the board
+     * @param resources The initial resources the player has
+     * @param movesLeft The number of moves available to the player
      */
-    public Player() {
-        this.id = nextID;
-        this.name = "";
-        this.coord = 0;
-        this.resources = 0;
-        this.money = 0; // we shall decide on start value
+    public Player(String name, int coord, int resources, int movesLeft) {
+        this.name = name;
+        this.coord = coord;
+        this.money = 0;
+        this.resource1 = 0;
+        this.resource2 = 0;
+        this.resource3 = 0;
+        this.resource4 = 0;
         this.moneySpent = 0;
         this.score = 0;
-        this.movesLeft = 0;
-        nextID++;
+        this.movesLeft = movesLeft;
+        this.tasks = new ArrayList<Task>();
     }
 
     /**
@@ -52,45 +65,36 @@ public class Player {
      * @param coords The initial coordinates of the player on the board
      */
     public Player(String name, int coords) {
-        this.id = nextID;
         this.name = name;
         this.coord = coords;
-        this.resources = 0;
-        this.money = 0; // tbd
+        this.money = 0;
+        this.resource1 = 0;
+        this.resource2 = 0;
+        this.resource3 = 0;
+        this.resource4 = 0;
         this.moneySpent = 0;
         this.score = 0;
         this.movesLeft = 0;
-        nextID++;
+        this.tasks = new ArrayList<Task>();
     }
 
     /**
-     * Constructor for a player object with a name, coordinates, resources,
-     * and available moves.
-     * 
-     * @param name      The name of the player
-     * @param coord     The initial coordinates of the player on the board
-     * @param resources The initial resources the player has
-     * @param movesLeft The number of moves available to the player
+     * Default constructor for a blank player object.
+     * Initializes a player with default values for name, coordinates,
+     * resources, and moves left. The player's ID is set using a unique counter.
      */
-    public Player(String name, int coord, int resources, int movesLeft) {
-        this.id = nextID;
-        this.name = name;
-        this.coord = coord;
-        this.resources = resources;
+    public Player() {
+        this.name = "";
+        this.coord = 0;
         this.money = 0;
+        this.resource1 = 0;
+        this.resource2 = 0;
+        this.resource3 = 0;
+        this.resource4 = 0;
         this.moneySpent = 0;
         this.score = 0;
-        this.movesLeft = movesLeft;
-        nextID++;
-    }
-
-    /**
-     * Gets the ID of the player.
-     * 
-     * @return The unique ID of the player
-     */
-    public int getID() {
-        return this.id;
+        this.movesLeft = 0;
+        this.tasks = new ArrayList<Task>();
     }
 
     /**
@@ -135,27 +139,6 @@ public class Player {
             throw new IllegalArgumentException("Coordinate cannot be greater than 143");
         }
         this.coord = coord;
-    }
-
-    /**
-     * Gets the resources of the player.
-     * 
-     * @return The current resources of the player
-     */
-    public int getResources() {
-        return this.resources;
-    }
-
-    /**
-     * Sets the resources of the player.
-     * 
-     * @param resources The new resource value to assign to the player
-     */
-    public void setResources(int resources) {
-        if (resources < 0) {
-            throw new IllegalArgumentException("Resources cannot be negative");
-        }
-        this.resources = resources;
     }
 
     /**
@@ -243,27 +226,6 @@ public class Player {
     }
 
     /**
-     * Adds a new role to the player
-     * 
-     * @param newRole The new role to add to this player's responsibilities
-     * @return True if the role was added successfully, False if there was a problem
-     */
-    public boolean addRole(JobRole newRole) {
-        return roles.add(newRole);
-    }
-
-    /**
-     * Removes a role from the player
-     * 
-     * @param roleToRemove The role to remove from this player's responsibilities
-     * @return True if the role was removed successfully, False if there was a
-     *         problem
-     */
-    public boolean removeRole(JobRole roleToRemove) {
-        return roles.remove(roleToRemove);
-    }
-
-    /**
      * Sets the moves left for the player.
      * 
      * @param movesLeft The new number of moves left to assign to the player
@@ -277,12 +239,61 @@ public class Player {
         this.movesLeft = movesLeft;
     }
 
-    public ArrayList<JobRole> getRoles() {
-        return this.roles;
+    public int getResource1() {
+        return resource1;
     }
 
-    public void setRoles(ArrayList<JobRole> roles) {
-        this.roles = roles;
+    public void setResource1(int resource1) {
+        this.resource1 = resource1;
+    }
+
+    public int getResource2() {
+        return resource2;
+    }
+
+    public void setResource2(int resource2) {
+        this.resource2 = resource2;
+    }
+
+    public int getResource3() {
+        return resource3;
+    }
+
+    public void setResource3(int resource3) {
+        this.resource3 = resource3;
+    }
+
+    public int getResource4() {
+        return resource4;
+    }
+
+    public void setResource4(int resource4) {
+        this.resource4 = resource4;
+    }
+
+    public ArrayList<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(ArrayList<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public void addTask(Task task) {
+        this.tasks.add(task);
+    }
+
+    public void removeTask(Task task) {
+        this.tasks.remove(task);
+    }
+
+    public Task findTask(Task task) {
+        for (Task t : tasks) {
+            if (t.equals(task)) {
+                return t;
+            }
+        }
+        return null;
     }
 
     /**

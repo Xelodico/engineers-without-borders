@@ -5,7 +5,7 @@ import BoardGame.*;
 
 public class PlayerTest {
 
-    private Player player = new Player();
+    private final Player player = new Player();
 
     @Test
     void testSetMovesLeft() {
@@ -31,23 +31,12 @@ public class PlayerTest {
 
     @Test
     void testSetCoordInvalidMax() {
-        assertThrows(IllegalArgumentException.class, () -> player.setCoord(101), "Player should not be at an invalid position");
+        assertThrows(IllegalArgumentException.class, () -> player.setCoord(145), "Player should not be at an invalid position");
     }
 
     @Test
     void testSetCoordInvalidMin() {
         assertThrows(IllegalArgumentException.class, () -> player.setCoord(-1), "Player should not be at an invalid position");
-    }
-
-    @Test
-    void testSetResources() {
-        player.setResources(1);
-        assertEquals(1, player.getResources(), "Player should have 1 resource");
-    }
-
-    @Test
-    void testSetResourcesNegative() {
-        assertThrows(IllegalArgumentException.class, () -> player.setResources(-1), "Player should not have negative resources");
     }
 
     @Test
@@ -77,11 +66,5 @@ public class PlayerTest {
     void testGetCoord() {
         player.setCoord(1);
         assertEquals(1, player.getCoord(), "Player should be at position 1");
-    }
-
-    @Test
-    void testGetResources() {
-        player.setResources(1);
-        assertEquals(1, player.getResources(), "Player should have 1 resource");
     }
 }
