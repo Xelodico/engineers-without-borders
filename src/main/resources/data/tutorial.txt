@@ -24,7 +24,7 @@ You can move freely on the board by clicking the arrow buttons. When no moves ar
 There are special squares on the board, these are:
 - Money (Yellow): Receive South African Rand in a specific amount.
 - Shop (Green): Where items are purchased.
-- Task (Red): An opportunity to claim a task and complete it, or help another player fulfil the task.
+- Task (Different depending on the objective): An opportunity to claim a task and complete it, or help another player fulfil the task.
 
 Objectives, tasks and subtasks
 There are 4 Objectives, each with their own tasks and subtasks:
