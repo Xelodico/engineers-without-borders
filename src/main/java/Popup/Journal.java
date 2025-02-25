@@ -212,7 +212,7 @@ public class Journal extends JPanel {
             transferButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    GameSystem.toggleTransfer();
+                    GameSystem.toggleTransfer(t);
                 }
             });
         }

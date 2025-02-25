@@ -270,8 +270,8 @@ public abstract class GameSystem {
         gameBoardUI.toggleShop();
     }
 
-    public static void toggleTransfer() {
-        gameBoardUI.toggleTransfer();
+    public static void toggleTransfer(Task task) {
+        gameBoardUI.toggleTransfer(task);
     }
 
     /**

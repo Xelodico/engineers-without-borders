@@ -64,7 +64,7 @@ public class BoardGameUI extends JFrame {
 
         endGame = new EndGame();
 
-        transferPopup = new TransferPopup("Transfer Task", null, null, null, null, null, null, null, null, null);
+        transferPopup = new TransferPopup("Transfer Task", "Description");
 
         dimBackground = new JPanel();
         dimBackground.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -104,7 +104,6 @@ public class BoardGameUI extends JFrame {
     public void refresh() {
         this.players = GameSystem.getTurnOrder();
         gameBoard.refresh();
-        transferPopup.renderPlayerNames(this.players);
         remove(sidePanelContainer);
         initComponents();
         revalidate();
@@ -439,9 +438,13 @@ public class BoardGameUI extends JFrame {
         toggleEnableButtons();
     }
 
-    public void toggleTransfer() {
+    public void toggleTransfer(Task task) {
         transferPopup.setVisible(!transferPopup.isVisible());
         journal.closeButton.setEnabled(!transferPopup.isVisible());
+        if (task != null) {
+            transferPopup.setTask(task);
+        }
+        transferPopup.renderButtons(this.players);
     }
 
     public void toggleEndGame() {
