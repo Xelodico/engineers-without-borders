@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList; // File class for reading files
+import java.util.Scanner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -339,8 +341,8 @@ public abstract class GameSystem {
 
             // Determine the player who accumulated the most resources
             // if (turnOrder[i].getResources() > maxResources) {
-            //     resourceHogger = i;
-            //     maxResources = turnOrder[i].getResources();
+            // resourceHogger = i;
+            // maxResources = turnOrder[i].getResources();
             // }
 
             // Determine the player who travelled the most
@@ -362,8 +364,10 @@ public abstract class GameSystem {
                 " (" + getPlayerAt(highestScorer).getScore() + " points)");
         System.out.println("The Cheapskate: " + getPlayerAt(lowestSpender).getName() +
                 " (Spent " + getPlayerAt(lowestSpender).getMoneySpent() + " rand)");
-        System.out.println("The Resource Hogger: " + getPlayerAt(resourceHogger).getName() +
-                " (Kept " + getPlayerAt(resourceHogger).getResources() + " bags of cold asphalt)");
+        // System.out.println("The Resource Hogger: " +
+        // getPlayerAt(resourceHogger).getName() +
+        // " (Kept " + getPlayerAt(resourceHogger).getResources() + " bags of cold
+        // asphalt)");
         System.out.println("The Traveller: " + getPlayerAt(traveller).getName() +
                 " (Travelled " + getPlayerAt(traveller).getMovesTravelled() + " squares)");
 
@@ -397,6 +401,10 @@ public abstract class GameSystem {
 
     public static void toggleShop() {
         gameBoardUI.toggleShop();
+    }
+
+    public static void playTutorial() {
+        gameBoardUI.toggleTutorial();
     }
 
     /**
@@ -436,6 +444,5 @@ public abstract class GameSystem {
     public static void main(String[] args) {
         // Initialize the game system and set up necessary components
         initialise();
-        // endGame();
     }
 }
