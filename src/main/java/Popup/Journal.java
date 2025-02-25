@@ -355,8 +355,7 @@ public class Journal extends JPanel {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                // Translucent thumb
-                g2.setColor(new Color(173, 133, 76, 150));
+                g2.setColor(new Color(173, 133, 76));
                 g2.fillRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width, thumbBounds.height, 10, 10);
                 g2.dispose();
             }

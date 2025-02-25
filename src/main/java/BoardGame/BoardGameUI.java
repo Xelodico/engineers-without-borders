@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import GameSystem.GameSystem;
+import Popup.EndGame;
 import Popup.Journal;
 import Popup.Popup;
 import Popup.Shop;
@@ -39,6 +40,8 @@ public class BoardGameUI extends JFrame {
 
     public TransferPopup transferPopup;
 
+    public EndGame endGame;
+
     /**
      * Creates a new BoardGameUI instance with the specified list of players.
      * 
@@ -59,6 +62,8 @@ public class BoardGameUI extends JFrame {
 
         shop = new Shop();
 
+        endGame = new EndGame();
+
         transferPopup = new TransferPopup("Transfer Task", null, null, null, null, null, null, null, null, null);
 
         dimBackground = new JPanel();
@@ -71,6 +76,7 @@ public class BoardGameUI extends JFrame {
         layeredPane.add(transferPopup, JLayeredPane.POPUP_LAYER);
         layeredPane.add(journal, JLayeredPane.POPUP_LAYER);
         layeredPane.add(shop, JLayeredPane.POPUP_LAYER);
+        layeredPane.add(endGame, JLayeredPane.POPUP_LAYER);
 
         initComponents();
         setVisible(true);
