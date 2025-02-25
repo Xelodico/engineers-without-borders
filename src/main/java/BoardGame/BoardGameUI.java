@@ -444,6 +444,12 @@ public class BoardGameUI extends JFrame {
         journal.closeButton.setEnabled(!transferPopup.isVisible());
     }
 
+    public void toggleEndGame() {
+        endGame.setVisible(!endGame.isVisible());
+        dimBackground.setVisible(!dimBackground.isVisible());
+        toggleEnableButtons();
+    }
+
     private JLabel movesLeftLabel;
     private JButton endTurnButton;
     private JPanel Player1Resources;

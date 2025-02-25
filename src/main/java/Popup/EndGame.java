@@ -1,15 +1,20 @@
 package Popup;
 
 import BoardGame.BoardGameUI;
+import BoardGame.Player;
+import GameSystem.GameSystem;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * The EndGame class represents a JPanel that displays the end game screen
@@ -21,21 +26,29 @@ public class EndGame extends JPanel {
 
     private final JTextPane textArea;
     private final JScrollPane scrollPane;
+    private final JPanel statsContainer;
+    private final CardLayout cardLayout;
+    private final JPanel cardPanel;
+    private final GridBagConstraints gridBagConstraints;
     private Timer timer;
     private boolean userScrolling = false;
+    private BufferedImage backgroundImage;
 
     /**
      * Constructs an EndGame panel with default settings.
      */
     public EndGame() {
-        int WIDTH = 500;
+        int WIDTH = 800;
         int HEIGHT = 500;
         setBounds(BoardGameUI.WINDOW_WIDTH / 2 - WIDTH / 2, BoardGameUI.WINDOW_HEIGHT / 2 - HEIGHT / 2, WIDTH, HEIGHT);
-        setVisible(true);
+        setVisible(false);
         setLayout(new BorderLayout());
         setBackground(Color.BLACK);
         setBackground(new Color(240, 240, 240));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        cardLayout = new CardLayout();
+        cardPanel = new JPanel(cardLayout);
 
         textArea = new JTextPane();
         textArea.setEditable(false);
@@ -53,6 +66,20 @@ public class EndGame extends JPanel {
         scrollPane.setBackground(new Color(240, 240, 240));
         scrollPane.setBorder(null);
         add(scrollPane, BorderLayout.CENTER);
+
+        GridBagLayout gridBagLayout = new GridBagLayout();
+        gridBagConstraints = new GridBagConstraints();
+
+        statsContainer = new JPanel();
+        statsContainer.setLayout(gridBagLayout);
+        statsContainer.setBackground(new Color(240, 240, 240, 0));
+        setOpaque(false);
+        statsContainer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        add(statsContainer, BorderLayout.CENTER);
+
+        cardPanel.add(statsContainer, "stats");
+        cardPanel.add(scrollPane, "epilogue");
+        add(cardPanel, BorderLayout.CENTER);
     }
 
     /**
@@ -126,10 +153,9 @@ public class EndGame extends JPanel {
      * Displays the good ending epilogue and starts scrolling after a delay.
      */
     public void showGoodEnding() {
+        cardLayout.show(cardPanel, "epilogue");
         textArea.setText(getEpilogueText(Ending.GOOD));
-        SwingUtilities.invokeLater(() -> {
-            scrollPane.getVerticalScrollBar().setValue(0);
-        });
+        SwingUtilities.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(0));
         setVisible(true);
 
         new Timer(4000, e -> {
@@ -142,6 +168,7 @@ public class EndGame extends JPanel {
      * Displays the bad ending epilogue and starts scrolling after a delay.
      */
     public void showBadEnding() {
+        cardLayout.show(cardPanel, "epilogue");
         textArea.setText(getEpilogueText(Ending.BAD));
         SwingUtilities.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(0));
         setVisible(true);
@@ -150,6 +177,114 @@ public class EndGame extends JPanel {
             startScrolling();
             ((Timer) e.getSource()).stop();
         }).start();
+    }
+
+    /**
+     * Creates a player card with the player's information.
+     *
+     * @param player The player whose information is to be displayed.
+     * @return A JPanel containing the player's information.
+     */
+    private JPanel createPlayerCard(Player player) {
+        JPanel playerCard = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (backgroundImage != null) {
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
+        playerCard.setLayout(new BoxLayout(playerCard, BoxLayout.Y_AXIS));
+        playerCard.setOpaque(false);
+        playerCard.setPreferredSize(new Dimension(235, 480));
+
+        playerCard.add(Box.createVerticalStrut(10));
+
+        JLabel playerName = new JLabel(player.getName());
+        playerName.setFont(new Font("Segue UI", Font.BOLD, 18));
+        playerName.setAlignmentX(Component.CENTER_ALIGNMENT);
+        playerCard.add(playerName);
+
+        playerCard.add(Box.createVerticalStrut(21));
+
+        JLabel playerTitle = new JLabel("[Title]");
+        playerTitle.setFont(new Font("Segue UI", Font.PLAIN, 16));
+        playerTitle.setForeground(Color.WHITE);
+        playerTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        playerCard.add(playerTitle);
+
+        playerCard.add(Box.createVerticalStrut(20));
+
+        JPanel totalScore = createStat("Score: ", String.valueOf(player.getScore()));
+        playerCard.add(totalScore);
+
+        JPanel movesTaken = createStat("Moves Taken: ", String.valueOf(player.getMovesLeft()));
+        playerCard.add(movesTaken);
+
+        JPanel moneySpent = createStat("Money Spent: ", String.valueOf(player.getMoney()));
+        playerCard.add(moneySpent);
+
+        playerCard.add(Box.createVerticalStrut(200));
+
+        gridBagConstraints.gridx = statsContainer.getComponentCount();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = 0;
+        gridBagConstraints.weighty = 0;
+        gridBagConstraints.fill = GridBagConstraints.NONE;
+
+        gridBagConstraints.insets = new Insets(0, 10, 0, 10);
+
+
+        return playerCard;
+    }
+
+    /**
+     * Creates a stat panel with a name and value.
+     *
+     * @param name  The name of the stat.
+     * @param value The value of the stat.
+     * @return A JPanel containing the stat information.
+     */
+    private JPanel createStat(String name, String value) {
+        JPanel stat = new JPanel();
+        stat.setLayout(new BoxLayout(stat, BoxLayout.X_AXIS));
+        stat.setBorder(BorderFactory.createEmptyBorder(0, 20, 10, 20));
+        stat.setAlignmentX(Component.CENTER_ALIGNMENT);
+        stat.setOpaque(false);
+
+        JLabel statName = new JLabel(name);
+        statName.setFont(new Font("Segue UI", Font.PLAIN, 16));
+        stat.add(statName);
+        stat.add(Box.createHorizontalGlue());
+        JLabel statValue = new JLabel(value);
+        statValue.setFont(new Font("Segue UI", Font.PLAIN, 16));
+        stat.add(statValue);
+
+        return stat;
+    }
+
+    /**
+     * Displays the statistics of all players at the end of the game.
+     */
+    public void showStats() {
+
+        try {
+            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/images/statsPanel.png")));
+        } catch (NullPointerException | IOException e) {
+            System.err.println("Error: Stats Panel background image not found!");
+            System.exit(1);
+        }
+
+        Player[] players = GameSystem.getTurnOrder();
+
+        for (Player player : players) {
+            JPanel playerCard = createPlayerCard(player);
+            statsContainer.add(playerCard, gridBagConstraints);
+        }
+
+        setBounds(0, 0, BoardGameUI.WINDOW_WIDTH, BoardGameUI.WINDOW_HEIGHT);
+        cardLayout.show(cardPanel, "stats");
     }
 
     /**
