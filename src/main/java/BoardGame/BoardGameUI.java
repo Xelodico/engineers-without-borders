@@ -10,6 +10,7 @@ import GameSystem.GameSystem;
 import Popup.Journal;
 import Popup.Popup;
 import Popup.Shop;
+import Popup.Tutorial;
 import square.SquareType;
 
 /**
@@ -48,11 +49,11 @@ public class BoardGameUI extends JFrame {
     public BoardGameUI(Board gameBoard) {
         this.players = GameSystem.getTurnOrder();
         this.gameBoard = gameBoard;
-        
+
         startScreen = new StartScreen();
         add(startScreen);
         startScreen.setVisible(true);
-        
+
         popup = new Popup("", "", "", "", null, null);
         add(popup);
 
@@ -69,13 +70,14 @@ public class BoardGameUI extends JFrame {
         JLayeredPane layeredPane = getLayeredPane();
         layeredPane.add(journal, JLayeredPane.POPUP_LAYER);
         layeredPane.add(shop, JLayeredPane.POPUP_LAYER);
-        
+
         initComponents();
         setVisible(true);
         setResizable(false);
     }
 
-    public void showPopup(String title, String desc, String yesButton, String noButton, ActionListener yesAction, ActionListener noAction) {
+    public void showPopup(String title, String desc, String yesButton, String noButton, ActionListener yesAction,
+            ActionListener noAction) {
         popup.setTitle(title);
         popup.setDescription(desc);
         popup.setYesButtonText(yesButton);
@@ -109,7 +111,7 @@ public class BoardGameUI extends JFrame {
         startScreen.setVisible(false);
         remove(startScreen);
     }
-    
+
     private void setupArrowButtons() {
         arrowsContainer = new JPanel();
         arrowDown = new JButton();
@@ -163,7 +165,8 @@ public class BoardGameUI extends JFrame {
                 } else {
                     movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
                 }
-                if (gameBoard.getSquareAt(GameSystem.getPlayerAt().getCoord()).getSquareType() == SquareType.SHOPSQUARE) {
+                if (gameBoard.getSquareAt(GameSystem.getPlayerAt().getCoord())
+                        .getSquareType() == SquareType.SHOPSQUARE) {
                     shopButton.setVisible(true);
                 } else {
                     shopButton.setVisible(false);
@@ -205,6 +208,11 @@ public class BoardGameUI extends JFrame {
         sidePanelContainer.add(helpButton);
         helpButton.setRolloverEnabled(false);
         helpButton.setBounds(330, BOARD_HEIGHT - 55 - 37, 37, 37);
+        helpButton.addActionListener(new ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleTutorial();
+            }
+        });
 
         ImageIcon journalIcon = new ImageIcon(getClass().getResource("/images/journalButton.png"));
         journalButton.setIcon(new ImageIcon(journalIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH)));
@@ -427,6 +435,12 @@ public class BoardGameUI extends JFrame {
         toggleEnableButtons();
     }
 
+    public void toggleTutorial() {
+        // tutorial.setVisible(!tutorial.isVisible());
+        // dimBackground.setVisible(!dimBackground.isVisible());
+        toggleEnableButtons();
+    }
+
     private JLabel movesLeftLabel;
     private JButton endTurnButton;
     private JPanel Player1Resources;
@@ -466,4 +480,5 @@ public class BoardGameUI extends JFrame {
     private JPanel dimBackground;
     private Shop shop;
     private JButton shopButton;
+    private Tutorial tutorial;
 }
