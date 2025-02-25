@@ -1,32 +1,35 @@
 package Popup;
 
+import BoardGame.BoardGameUI;
+
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-
-import BoardGame.BoardGameUI;
-
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
+/**
+ * The EndGame class represents a JPanel that displays the end game screen
+ * with a scrolling text area showing the game's epilogue.
+ *
+ * @author Nathan Watkins
+ */
 public class EndGame extends JPanel {
 
-    private final int WIDTH = 500;
-    private final int HEIGHT = 500;
-
-    private JTextPane textArea;
-    private JScrollPane scrollPane;
+    private final JTextPane textArea;
+    private final JScrollPane scrollPane;
     private Timer timer;
-    private final int scrollSpeed = 45; // lower is faster
     private boolean userScrolling = false;
 
+    /**
+     * Constructs an EndGame panel with default settings.
+     */
     public EndGame() {
+        int WIDTH = 500;
+        int HEIGHT = 500;
         setBounds(BoardGameUI.WINDOW_WIDTH / 2 - WIDTH / 2, BoardGameUI.WINDOW_HEIGHT / 2 - HEIGHT / 2, WIDTH, HEIGHT);
         setVisible(true);
         setLayout(new BorderLayout());
@@ -52,15 +55,19 @@ public class EndGame extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
+    /**
+     * Starts the automatic scrolling of the text area.
+     */
     private void startScrolling() {
         JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
 
         verticalBar.addAdjustmentListener(e -> {
             if (timer.isRunning() && !userScrolling) {
                 timer.stop();
-            } 
+            }
         });
-        
+
+        int scrollSpeed = 40; // lower is faster
         timer = new Timer(scrollSpeed, e -> {
             userScrolling = true;
             int current = verticalBar.getValue();
@@ -76,16 +83,22 @@ public class EndGame extends JPanel {
         timer.start();
     }
 
-    private static String getEpilogueText(Ending ending) {
+    /**
+     * Reads the epilogue text from a file based on the ending type.
+     *
+     * @param ending The type of ending (GOOD or BAD).
+     * @return The epilogue text as a String.
+     */
+    private String getEpilogueText(Ending ending) {
 
-        String filePath = "";
+        String filePath;
         if (ending == Ending.GOOD) {
             filePath = "src/main/resources/data/goodEndingEvents.txt";
         } else {
             filePath = "src/main/resources/data/badEndingEvents.txt";
         }
 
-        String string = "";
+        StringBuilder string = new StringBuilder();
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
@@ -94,20 +107,24 @@ public class EndGame extends JPanel {
                 if (lines[i].equals("")) {
                     break;
                 }
-                string += 2025 + i + "\n";
-                string += lines[i].toString();
-                string += "\n\n";
+                string.append(2025 + i).append("\n");
+                string.append(lines[i].toString());
+                string.append("\n\n");
             }
-            string += lines[lines.length - 1].toString();
-            
+            string.append(lines[lines.length - 1].toString());
+
             reader.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading file: " + filePath + " - " + e.getMessage());
+            return "Error reading file: " + filePath;
         }
 
-        return string;
+        return string.toString();
     }
 
+    /**
+     * Displays the good ending epilogue and starts scrolling after a delay.
+     */
     public void showGoodEnding() {
         textArea.setText(getEpilogueText(Ending.GOOD));
         SwingUtilities.invokeLater(() -> {
@@ -121,11 +138,12 @@ public class EndGame extends JPanel {
         }).start();
     }
 
+    /**
+     * Displays the bad ending epilogue and starts scrolling after a delay.
+     */
     public void showBadEnding() {
         textArea.setText(getEpilogueText(Ending.BAD));
-        SwingUtilities.invokeLater(() -> {
-            scrollPane.getVerticalScrollBar().setValue(0);
-        });
+        SwingUtilities.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(0));
         setVisible(true);
 
         new Timer(4000, e -> {
@@ -134,6 +152,9 @@ public class EndGame extends JPanel {
         }).start();
     }
 
+    /**
+     * Enum representing the possible endings of the game.
+     */
     private enum Ending {
         GOOD, BAD
     }
