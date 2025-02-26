@@ -24,12 +24,12 @@ import java.util.Objects;
  */
 public class EndGame extends JPanel {
 
-    private final JTextPane textArea;
-    private final JScrollPane scrollPane;
-    private final JPanel statsContainer;
+    private JTextPane textArea;
+    private JScrollPane scrollPane;
+    private JPanel statsContainer;
     private final CardLayout cardLayout;
     private final JPanel cardPanel;
-    private final GridBagConstraints gridBagConstraints;
+    private GridBagConstraints gridBagConstraints;
     private Timer timer;
     private boolean userScrolling = false;
     private BufferedImage backgroundImage;
@@ -49,13 +49,31 @@ public class EndGame extends JPanel {
 
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
+        cardPanel.setOpaque(false);
+
+        createEpilogueContainer();
+        createStatsContainer();
+
+        add(cardPanel, BorderLayout.CENTER);
+
+        cardLayout.show(cardPanel, "epilogue");
+    }
+
+    /**
+     * Creates the epilogue container for displaying the game's ending.
+     */
+    private void createEpilogueContainer() {
+        JPanel epilogueContainer = new JPanel();
+        epilogueContainer.setLayout(new BoxLayout(epilogueContainer, BoxLayout.Y_AXIS));
+        add(epilogueContainer);
 
         textArea = new JTextPane();
         textArea.setEditable(false);
         textArea.setText("Game in progress...");
         textArea.setFont(new Font("Segue UI", Font.PLAIN, 18));
         textArea.setBackground(new Color(240, 240, 240));
-
+        textArea.setCaretColor(new Color(0, 0, 0, 0));
+        textArea.setHighlighter(null);
         StyledDocument doc = textArea.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
@@ -65,7 +83,30 @@ public class EndGame extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         scrollPane.setBackground(new Color(240, 240, 240));
         scrollPane.setBorder(null);
-        add(scrollPane, BorderLayout.CENTER);
+        epilogueContainer.add(scrollPane, BorderLayout.CENTER);
+
+        JButton continueButton = new JButton("Continue");
+        continueButton.setFont(new Font("Segue UI", Font.PLAIN, 18));
+        continueButton.setPreferredSize(new Dimension(200, 50));
+        continueButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        continueButton.addActionListener(e -> showStats());
+
+        epilogueContainer.add(continueButton);
+        epilogueContainer.add(Box.createVerticalStrut(20));
+
+        cardPanel.add(epilogueContainer, "epilogue");
+    }
+
+    /**
+     * Creates the statistics container for displaying player stats.
+     */
+    private void createStatsContainer() {
+
+        JPanel container = new JPanel();
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        container.setBackground(new Color(0, 0, 0));
+        container.setOpaque(false);
+        add(container);
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagConstraints = new GridBagConstraints();
@@ -75,11 +116,30 @@ public class EndGame extends JPanel {
         statsContainer.setBackground(new Color(240, 240, 240, 0));
         setOpaque(false);
         statsContainer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        add(statsContainer, BorderLayout.CENTER);
 
-        cardPanel.add(statsContainer, "stats");
-        cardPanel.add(scrollPane, "epilogue");
-        add(cardPanel, BorderLayout.CENTER);
+        JPanel buttonContainer = new JPanel();
+        buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
+        buttonContainer.setOpaque(false);
+
+        JButton continueButton = new JButton("Play Again");
+        continueButton.setFont(new Font("Segue UI", Font.PLAIN, 18));
+        continueButton.setPreferredSize(new Dimension(200, 50));
+        continueButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        buttonContainer.add(continueButton);
+
+        buttonContainer.add(Box.createHorizontalStrut(20));
+
+        JButton exitButton = new JButton("Quit Game");
+        exitButton.setFont(new Font("Segue UI", Font.PLAIN, 18));
+        exitButton.setPreferredSize(new Dimension(200, 50));
+        exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        exitButton.addActionListener(e -> System.exit(0));
+        buttonContainer.add(exitButton);
+
+        container.add(statsContainer);
+        container.add(buttonContainer);
+
+        cardPanel.add(container, "stats");
     }
 
     /**
@@ -216,8 +276,8 @@ public class EndGame extends JPanel {
 
         playerCard.add(Box.createVerticalStrut(20));
 
-        JPanel totalScore = createStat("Score: ", String.valueOf(player.getScore()));
-        playerCard.add(totalScore);
+//        JPanel totalScore = createStat("Score: ", String.valueOf(player.getScore()));
+//        playerCard.add(totalScore);
 
         JPanel movesTaken = createStat("Moves Taken: ", String.valueOf(player.getMovesLeft()));
         playerCard.add(movesTaken);
@@ -283,14 +343,14 @@ public class EndGame extends JPanel {
             statsContainer.add(playerCard, gridBagConstraints);
         }
 
-        setBounds(0, 0, BoardGameUI.WINDOW_WIDTH, BoardGameUI.WINDOW_HEIGHT);
+        setBounds(0, 0, BoardGameUI.WINDOW_WIDTH, (int) (BoardGameUI.WINDOW_HEIGHT * 0.95));
         cardLayout.show(cardPanel, "stats");
     }
 
     /**
      * Enum representing the possible endings of the game.
      */
-    private enum Ending {
+    public static enum Ending {
         GOOD, BAD
     }
 

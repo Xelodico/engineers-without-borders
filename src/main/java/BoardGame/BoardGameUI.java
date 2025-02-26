@@ -447,10 +447,17 @@ public class BoardGameUI extends JFrame {
         transferPopup.renderButtons(this.players);
     }
 
-    public void toggleEndGame() {
+    public void toggleEndGame(EndGame.Ending endingType) {
         endGame.setVisible(!endGame.isVisible());
         dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
+        if (endingType == null) {
+            System.err.println("Ending type is null");
+        } else if (endingType == EndGame.Ending.GOOD) {
+            endGame.showGoodEnding();
+        } else if (endingType == EndGame.Ending.BAD) {
+            endGame.showBadEnding();
+        }
     }
 
     private JLabel movesLeftLabel;
