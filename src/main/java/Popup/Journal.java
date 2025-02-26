@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import javax.imageio.ImageIO;
-import javax.swing.border.Border;
 
 /**
  * Represents a journal component in the BoardGame UI.
