@@ -1,5 +1,7 @@
 package Popup;
 
+import BoardGame.BoardGameUI;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -50,7 +52,7 @@ public class Popup extends JPanel {
      */
     public Popup(String title, String desc, String yesButtonText, String noButtonText, ActionListener yesAction, ActionListener noAction) {
         setLayout(null);
-        setBounds((650/2 - WIDTH/2) + 12, (650/2 - HEIGHT/2) + 6, WIDTH, HEIGHT);
+        setBounds(BoardGameUI.WINDOW_WIDTH /2 - WIDTH/2, BoardGameUI.WINDOW_HEIGHT/2 - HEIGHT/2, WIDTH, HEIGHT);
         setBackground(new java.awt.Color(240, 240, 240));
         setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         setVisible(false);
