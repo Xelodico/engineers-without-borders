@@ -1,19 +1,22 @@
 package GameSystem;
 
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList; // File class for reading files
-import java.util.Scanner;
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import BoardGame.*;
-import square.*;
+import BoardGame.Board;
+import BoardGame.BoardGameUI;
+import BoardGame.Direction;
+import BoardGame.Objective;
+import BoardGame.Player;
+import BoardGame.Task;
+import square.Square;
 
 /**
  * 
@@ -59,7 +62,6 @@ public abstract class GameSystem {
             turnNumber = 0; // Reset turn number
             roundNumber = 0; // Reset round count
 
-            // roles = new ArrayList<JobRole>();
             objectives = new ArrayList<Objective>();
             tasks = new ArrayList<Task>();
 
@@ -177,6 +179,10 @@ public abstract class GameSystem {
         return objectives;
     }
 
+    public static Board getBoard() {
+        return gameBoard;
+    }
+
     /**
      * Moves the current player in the specified direction on the game board.
      * It updates the player's position, checks for movement restrictions, and
@@ -245,140 +251,6 @@ public abstract class GameSystem {
     // }
 
     /**
-     * Ends the game and handles any necessary cleanup or victory conditions.
-     * This method determines whether the player has won or lost, displays an
-     * epilogue based on the outcome, and prompts the player to start a new game.
-     */
-    public static void endGame() {
-        // TODO: Replace placeholder value with checkWinCondition() when ready
-        boolean win = false;
-
-        // Declare message and file path for epilogue event storage
-        String winMessage;
-        String filePath;
-
-        // Determine the appropriate ending based on game outcome
-        if (win) {
-            winMessage = "Congratulations! You have completed all objectives!";
-            System.out.println(winMessage);
-            filePath = "src\\main\\resources\\data\\goodEndingEvents.txt";
-        } else {
-            winMessage = "You have failed to complete all objectives.";
-            System.out.println(winMessage);
-            filePath = "src\\main\\resources\\data\\badEndingEvents.txt";
-        }
-
-        // Display epilogue to the player
-        System.out.println("\nThe path ahead...");
-        File file = new File(filePath);
-        int year = 2025; // Starting year for event projections
-
-        // try (Scanner fileReader = new Scanner(file)) {
-        // while (fileReader.hasNextLine()) {
-        // String data = fileReader.nextLine();
-        // if (data.isEmpty())
-        // continue;
-        // System.out.println("By " + year + "...\n" + data);
-        // year++;
-
-        // // Introduce a brief pause for readability
-        // // This also fulfils the requirement for a pause between events
-        // try {
-        // TimeUnit.SECONDS.sleep(1);
-        // } catch (InterruptedException e) {
-        // // Handle thread interruption exception
-        // e.printStackTrace();
-        // }
-
-        // fileReader.close();
-        // }
-        // } catch (FileNotFoundException exception) {
-        // // Handle the case where the epilogue file is missing
-        // System.err.print("File not found.");
-        // }
-
-        // TODO: Implement final game logic, such as displaying scores and resetting the
-        // game state
-
-        // TODO: Remove placeholder players
-        Player player1 = new Player("Kal", 0, 100, 4);
-        player1.changeMoney(5000);
-        player1.increaseMoneySpent(1000);
-        player1.setScore(100);
-        Player player2 = new Player("Nathan", 0, 120, 2);
-        player2.changeMoney(1000);
-        player2.increaseMoneySpent(500);
-        player2.setScore(500);
-        turnOrder = new Player[] { player1, player2 };
-
-        // Display player scores
-        System.out.println("Final Scores:");
-
-        // Stores the indices of players who achieved notable milestones:
-        // - Highest Scorer: The player with the most points.
-        // - Lowest Spender: The player who spent the least amount of money.
-        // - Traveller: The player who moved the most across the board.
-        // - Resource Hogger: The player who collected the most resources.
-        // TODO: Consider adding a "Team Player" achievement for the most contributive
-        // player.
-        int highestScorer = 0, lowestSpender = 0, traveller = 0, resourceHogger = 0;
-        int maxScore = 0, minSpent = Integer.MAX_VALUE, maxResources = 0, maxTravelled = 0;
-
-        // Iterate through each player to determine the top achievers
-        // TODO: Update to reflect changes to resources in Player class
-        for (int i = 0; i < turnOrder.length; i++) {
-            // Determine the player with the highest score
-            if (turnOrder[i].getScore() > maxScore) {
-                highestScorer = i;
-                maxScore = turnOrder[i].getScore();
-            }
-
-            // Determine the player who spent the least money
-            if (turnOrder[i].getMoneySpent() < minSpent) {
-                lowestSpender = i;
-                minSpent = turnOrder[i].getMoneySpent();
-            }
-
-            // Determine the player who accumulated the most resources
-            // if (turnOrder[i].getResources() > maxResources) {
-            // resourceHogger = i;
-            // maxResources = turnOrder[i].getResources();
-            // }
-
-            // Determine the player who travelled the most
-            if (turnOrder[i].getMovesTravelled() > maxTravelled) {
-                traveller = i;
-                maxTravelled = turnOrder[i].getMovesTravelled();
-            }
-
-            // Print player stats
-            System.out.println(turnOrder[i].getName() + ":\n" +
-                    "Score: " + turnOrder[i].getScore() + "\n" +
-                    // "Resources: " + turnOrder[i].getResources() + "\n" +
-                    "Money: " + turnOrder[i].getMoney() + "\n");
-        }
-
-        // Display Player Achievements
-        System.out.println("Special Achievements!");
-        System.out.println("Highest Scorer: " + getPlayerAt(highestScorer).getName() +
-                " (" + getPlayerAt(highestScorer).getScore() + " points)");
-        System.out.println("The Cheapskate: " + getPlayerAt(lowestSpender).getName() +
-                " (Spent " + getPlayerAt(lowestSpender).getMoneySpent() + " rand)");
-        // System.out.println("The Resource Hogger: " +
-        // getPlayerAt(resourceHogger).getName() +
-        // " (Kept " + getPlayerAt(resourceHogger).getResources() + " bags of cold
-        // asphalt)");
-        System.out.println("The Traveller: " + getPlayerAt(traveller).getName() +
-                " (Travelled " + getPlayerAt(traveller).getMovesTravelled() + " squares)");
-
-        // showPopup("Thanks for playing Pavers Valley!", "Start a new game?", "Yes",
-        // "No");
-
-        // Terminate the game process
-        System.exit(0);
-    }
-
-    /**
      * Displays a popup message to the player with customizable buttons.
      *
      * @param title     The title of the popup window.
@@ -391,18 +263,35 @@ public abstract class GameSystem {
         gameBoardUI.showPopup(title, desc, yesButton, noButton, yesAction, noAction);
     }
 
+    /**
+     * Hides the currently displayed popup window in the game UI.
+     * This method ensures that any active popups are closed when they
+     * are no longer needed, improving the user experience.
+     */
     public static void hidePopup() {
         gameBoardUI.hidePopup();
     }
 
+    /**
+     * Toggles the visibility of the in-game journal.
+     * The journal contains information about the players' objectives.
+     */
     public static void toggleJournal() {
         gameBoardUI.toggleJournal();
     }
 
+    /**
+     * Toggles the in-game shop interface.
+     * This allows players to access in-game purchases.
+     */
     public static void toggleShop() {
         gameBoardUI.toggleShop();
     }
 
+    /**
+     * Starts or toggles the tutorial mode for the game.
+     * This guides new players through key mechanics and gameplay features.
+     */
     public static void playTutorial() {
         gameBoardUI.toggleTutorial();
     }
@@ -434,6 +323,29 @@ public abstract class GameSystem {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Resets the game state for testing purposes.
+     * This method clears all game data and resets key attributes,
+     * ensuring a fresh start for unit tests or debugging sessions.
+     * 
+     * NOTE: This is a temporary method intended for development use only.
+     * It should not be included in the final production version of the game.
+     */
+    public static void resetForTests() {
+        gameActive = false; // Mark the game as inactive
+        turnNumber = 0; // Reset turn tracking
+        roundNumber = 0; // Reset round tracking
+
+        // Reset lists and objects related to game objectives and tasks
+        objectives = new ArrayList<>();
+        tasks = new ArrayList<>();
+
+        // Clear turn order and UI components
+        turnOrder = null;
+        gameBoard = null;
+        gameBoardUI = null;
     }
 
     /**
