@@ -1,5 +1,6 @@
 package GameSystem;
 
+import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -193,6 +194,20 @@ public abstract class GameSystem {
         // added using a button).
         Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
         sqrAtPosition.activateSquareEffect();
+        
+        
+        SubTask st1 = new SubTask("SubTask1", 10, 5, ResourceType.ASPHALT);
+        SubTask st2 = new SubTask("SubTask2", 10, 5, ResourceType.ASPHALT);
+        SubTask st3 = new SubTask("SubTask3", 10, 5, ResourceType.ASPHALT);
+        SubTask[] stArray = {st1, st2, st3};
+        Task newTask = new Task("Task1", null, "Describe", stArray, 10, 1, ResourceType.ASPHALT);
+        ArrayList<Task> list = new ArrayList<Task>();
+        list.add(newTask);
+        Objective ob = new Objective("Objective1", turnOrder[0], list, Color.RED);
+        newTask.setBelongsTo(ob);
+        newTask.setCurrentStepNumber(2);
+        
+
     }
 
     /**
@@ -211,6 +226,28 @@ public abstract class GameSystem {
         }
     }
 
+    public static void progressTask(Task selectedTask) {
+    	// Get current player
+    	Player currentPlayer = getPlayerAt();
+    	
+    	// Check that the next step is able to be completed and task is not completed already
+    	ResourceType resourceType = selectedTask.getResourceType();
+    	SubTask currentStep = selectedTask.getCurrentStep();
+    	boolean resourceCheck = currentPlayer.getResource(resourceType) >= currentStep.getResourceCost();
+    	
+    	if (!selectedTask.isCompleted() && resourceCheck) {
+    		// Subtract from current player's resources and update their score
+    		int newResourceAmount = currentPlayer.getResource(resourceType) - currentStep.getResourceCost();
+    		currentPlayer.setResource(newResourceAmount, resourceType);
+    		currentPlayer.changeScoreBy(currentStep.getCompletionScore());
+    	
+    		// Progress the task onto the next subtask
+    		selectedTask.completeStep();
+    	} 
+    	
+    	
+    }
+    
     /**
      * Evaluates whether all objectives have been completed, determining if the game
      * can progress.
