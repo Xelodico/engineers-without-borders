@@ -213,6 +213,12 @@ public abstract class GameSystem {
         }
     }
 
+    /**
+     * Completes one step of the inputed Task object and awards the current player points before moving to
+     * the next step
+     * 
+     * @param selectedTask - The task to progress
+     */
     public static void progressTask(Task selectedTask) {
     	// Get current player
     	Player currentPlayer = getPlayerAt();

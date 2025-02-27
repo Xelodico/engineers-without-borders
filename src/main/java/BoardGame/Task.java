@@ -51,7 +51,6 @@ public class Task {
 
 	public boolean completeStep() {
 		if (currentStepNumber < steps.length) {
-			currentSubTask().setCompleted(true);
 			currentStepNumber++;
 			return true;
 		}
