@@ -83,6 +83,7 @@ public abstract class GameSystem {
         roundNumber++; // Increment the round counter
         gameBoardUI.startGame(); // Start the game through the UI
         gameBoardUI.refresh(); // Refresh the UI to reflect updated game state
+        toggleTutorial();
     }
 
     /**
