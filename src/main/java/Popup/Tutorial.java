@@ -1,64 +1,64 @@
 package Popup;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
-import javax.swing.JPanel;
+import BoardGame.BoardGameUI;
+
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class Tutorial extends JPanel {
+
     public Tutorial() {
+        final int WIDTH = 500;
+        final int HEIGHT = 500;
+
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBounds(BoardGameUI.WINDOW_WIDTH / 2 - WIDTH / 2, BoardGameUI.WINDOW_HEIGHT / 2 - HEIGHT / 2, WIDTH, HEIGHT);
+        setBackground(new java.awt.Color(240, 240, 240));
+        setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        setVisible(false);
+
+        JTextPane textPane = new JTextPane();
+        textPane.setEditable(false);
+        textPane.setFont(new java.awt.Font("Arial", Font.PLAIN, 18));
+
+        StyledDocument doc = textPane.getStyledDocument();
+        SimpleAttributeSet boldAttr = new SimpleAttributeSet();
+        StyleConstants.setBold(boldAttr, true);
+
+        loadTutorialText(doc, boldAttr);
+
+        JScrollPane scrollPane = new JScrollPane(textPane);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        add(scrollPane);
     }
 
-    /**
-     * Temporary method for reading tutorial data from a text file.
-     * This method will be integrated into the GUI by a teammate.
-     *
-     * Reads the contents of "tutorial.txt" line by line and prints them to the
-     * console.
-     * Titles (lines starting with '#') are formatted with a newline for emphasis.
-     *
-     * TODO: Replace console output with GUI text display.
-     */
-    private void readData() {
-        // Define the path to the tutorial data file
+    private void loadTutorialText(StyledDocument doc, SimpleAttributeSet boldAttr) {
         String filePath = "src/main/resources/data/tutorial.txt";
-        File tutorialFile = new File(filePath);
-        Scanner fileReader;
 
-        try {
-            // Initialize the Scanner to read the file
-            fileReader = new Scanner(tutorialFile);
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
 
-            // Read the file line by line
-            while (fileReader.hasNext()) {
-                String line = fileReader.nextLine();
-
-                // Skip empty lines to maintain readability
-                if (line.isEmpty()) {
-                    continue;
-                }
-
-                // Check if the line represents a title (lines starting with '#')
-                boolean isTitle = line.startsWith("#");
-
-                if (isTitle) {
-                    // Remove '#' and print with a newline for separation
-                    System.out.println("\n" + line.substring(1));
+                if (line.startsWith("#")) {
+                    doc.insertString(doc.getLength(), line.substring(1) + "\n", boldAttr);
                 } else {
-                    // Print regular content lines
-                    System.out.println(line);
+                    doc.insertString(doc.getLength(), line + "\n", null);
                 }
+
             }
-
-            // Close the Scanner to release resources
-            fileReader.close();
-
-        } catch (FileNotFoundException e) {
-            // Handle the case where the tutorial file is missing
-            System.err.println("Tutorial file not found.");
-            e.printStackTrace();
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + filePath + " - " + e.getMessage());
+        } catch (BadLocationException e) {
+            throw new RuntimeException(e);
         }
     }
-
 }
