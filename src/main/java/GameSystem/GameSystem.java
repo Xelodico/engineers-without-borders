@@ -42,7 +42,6 @@ public abstract class GameSystem {
     // Keeps track of the current turn within a round
     private static int turnNumber;
 
-    // private static ArrayList<JobRole> roles;
     private static ArrayList<Objective> objectives;
     private static ArrayList<Task> tasks;
     private static SubTask[] subtasks;
