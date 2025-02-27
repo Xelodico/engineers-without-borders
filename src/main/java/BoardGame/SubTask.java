@@ -3,6 +3,8 @@ package BoardGame;
 /**
  * Represents a sub-task within a board game.
  * Each sub-task has a title, completion status, discount status, completion score, and resource costs.
+ * @author Curtis McCartney
+ * @author Isaac Edmonds (Supporting)
  */
 public class SubTask {
     private String title;
@@ -16,10 +18,8 @@ public class SubTask {
      *
      * @param title the title of the subtask
      * @param completionScore the score awarded upon completion of the subtask
-     * @param resourceCost1 the cost of the first resource required to complete the subtask
-     * @param resourceCost2 the cost of the second resource required to complete the subtask
-     * @param resourceCost3 the cost of the third resource required to complete the subtask
-     * @param resourceCost4 the cost of the fourth resource required to complete the subtask
+     * @param resourceCost the cost of the resource to be used in the completion of the subtask
+     * @param resourceType the type of resource to be used in the completion of the subtask
      */
     public SubTask(String title, int completionScore, int resourceCost, ResourceType resourceType) {
         this.title = title;
@@ -49,6 +49,7 @@ public class SubTask {
     private boolean discountSubTask() {
         if(!isDiscounted()) {
         	setResourceCost(this.resourceCost / 2);
+        	setCompletionScore(this.completionScore / 2);
         	setDiscounted(true);
         	return true;
         }
