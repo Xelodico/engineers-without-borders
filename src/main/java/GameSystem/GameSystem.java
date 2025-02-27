@@ -195,19 +195,6 @@ public abstract class GameSystem {
         Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
         sqrAtPosition.activateSquareEffect();
         
-        
-        SubTask st1 = new SubTask("SubTask1", 10, 5, ResourceType.ASPHALT);
-        SubTask st2 = new SubTask("SubTask2", 10, 5, ResourceType.ASPHALT);
-        SubTask st3 = new SubTask("SubTask3", 10, 5, ResourceType.ASPHALT);
-        SubTask[] stArray = {st1, st2, st3};
-        Task newTask = new Task("Task1", null, "Describe", stArray, 10, 1, ResourceType.ASPHALT);
-        ArrayList<Task> list = new ArrayList<Task>();
-        list.add(newTask);
-        Objective ob = new Objective("Objective1", turnOrder[0], list, Color.RED);
-        newTask.setBelongsTo(ob);
-        newTask.setCurrentStepNumber(2);
-        
-
     }
 
     /**
