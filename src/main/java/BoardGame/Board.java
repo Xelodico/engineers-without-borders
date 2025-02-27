@@ -45,7 +45,9 @@ public class Board extends JPanel {
         this.setLayout(new java.awt.GridLayout(boardSideLength, boardSideLength));
 
         squareArray = generateBoardSquares(tasks);
-        generateTaskSquares(tasks);
+        for (int i = 0; i < 12; i++) {
+            generateNewSquares(1, new TaskSquare(tasks.get(i)));
+        }
         renderBoard(squareArray);
     }
 
@@ -172,7 +174,7 @@ public class Board extends JPanel {
      *                                  squares on the board or if the amount is
      *                                  negative.
      */
-    public void generateNewSquares(int amount, SquareType squareType) {
+    public void generateNewSquares(int amount, Square squareType) {
         if (amount > squareArray.size()) {
             throw new IllegalArgumentException("Amount of potholes cannot exceed the number of squares on the board.");
         }
@@ -194,52 +196,9 @@ public class Board extends JPanel {
             while (!valid) {
                 int randomIndex = (int) (Math.random() * squareArray.size());
                 if (squareArray.get(randomIndex).getSquareType() == SquareType.SQUARE) {
-                    switch (squareType) {
-                        case SHOPSQUARE:
-                            squareArray.set(randomIndex, new ShopSquare());
-                            break;
-                        case TASKSQUARE:
-                            squareArray.set(randomIndex, new TaskSquare(null));
-                            break;
-                        case MONEYSQUARE:
-                            squareArray.set(randomIndex, new MoneySquare());
-                            break;
-                        case SQUARE:
-                            squareArray.set(randomIndex, new Square());
-                            break;
-                        default:
-                            break;
-                    }
+                    squareArray.set(randomIndex, squareType);
                     valid = true;
                 }
-            }
-        }
-
-        refresh();
-    }
-
-    public void generateTaskSquares(ArrayList<Task> tasks) {
-        int amount = 12;
-        if (amount > squareArray.size()) {
-            throw new IllegalArgumentException("Amount of potholes cannot exceed the number of squares on the board.");
-        }
-
-        if (amount < 0) {
-            throw new IllegalArgumentException("Amount of potholes cannot be negative.");
-        }
-
-        long normalSquareCount = squareArray.stream()
-                .filter(square -> square.getSquareType() == SquareType.SQUARE)
-                .count();
-
-        if (amount > normalSquareCount) {
-            throw new IllegalArgumentException("Not enough normal squares to generate " + amount + " pothole(s).");
-        }
-
-        for (int i = 0; i < amount; i++) {
-            int randomIndex = (int) (Math.random() * squareArray.size());
-            if (squareArray.get(randomIndex).getSquareType() == SquareType.SQUARE) {
-                    squareArray.set(randomIndex, new TaskSquare(tasks.get(i)));
             }
         }
 
