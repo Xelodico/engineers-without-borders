@@ -42,14 +42,15 @@ public class SubTask {
 
     /**
      * 'Discounts' the SubTask by halving its resource cost and then setting the isDiscounted flag to true. 
-     * A SubTask can only be discounted once
+     * A SubTask can only be discounted once.
+     * In the event of an odd value for the completion score before discount, the number will be rounded up
      * 
      * @return true if the SubTask was discounted, false if the SubTask was already discounted
      */
-    private boolean discountSubTask() {
+    public boolean discountSubTask() {
         if(!isDiscounted()) {
         	setResourceCost(this.resourceCost / 2);
-        	setCompletionScore(this.completionScore / 2);
+        	setCompletionScore(this.completionScore / 2 + (this.completionScore % 2));
         	setDiscounted(true);
         	return true;
         }
