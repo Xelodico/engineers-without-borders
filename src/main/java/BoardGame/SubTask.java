@@ -6,7 +6,6 @@ package BoardGame;
  */
 public class SubTask {
     private String title;
-    private boolean completed;
     private boolean discounted;
     private int completionScore;
     private int resourceCost;
@@ -24,7 +23,6 @@ public class SubTask {
      */
     public SubTask(String title, int completionScore, int resourceCost, ResourceType resourceType) {
         this.title = title;
-        this.completed = false;
         this.discounted = false;
         this.completionScore = completionScore;
         this.resourceCost = resourceCost;
@@ -36,62 +34,113 @@ public class SubTask {
      */
     public SubTask() {
         this.title = "";
-        this.completed = false;
         this.discounted = false;
         this.completionScore = 0;
         this.resourceCost = 0;
         this.resourceType = ResourceType.ASPHALT;
     }
 
+    /**
+     * 'Discounts' the SubTask by halving its resource cost and then setting the isDiscounted flag to true. 
+     * A SubTask can only be discounted once
+     * 
+     * @return true if the SubTask was discounted, false if the SubTask was already discounted
+     */
     private boolean discountSubTask() {
-        // TODO: Implement discountSubTask
+        if(!isDiscounted()) {
+        	setResourceCost(this.resourceCost / 2);
+        	setDiscounted(true);
+        	return true;
+        }
         return false;
     }
 
+    /**
+     * Gets the title
+     * 
+     * @return the title of the SubTask
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Sets the value of title
+     * 
+     * @param title - The new title
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
-
+    /**
+     * Gets the discount status
+     * 
+     * @return true if the subtask is discounted, false if not
+     */
     public boolean isDiscounted() {
         return discounted;
     }
 
+    /**
+     * Sets the discount status
+     * 
+     * @param discounted - The new discount status of the SubTask
+     */
     public void setDiscounted(boolean discounted) {
         this.discounted = discounted;
     }
 
+    /**
+     * Gets the score for completing this SubTask
+     * 
+     * @return the score for completing the SubTask
+     */
     public int getCompletionScore() {
         return completionScore;
     }
 
+    /**
+     * Sets the score received upon completion
+     * 
+     * @param completionScore - The new score received upon completion
+     */
     public void setCompletionScore(int completionScore) {
         this.completionScore = completionScore;
     }
 
+    /**
+     * Gets the resource cost for completing this SubTask
+     * 
+     * @return the resource cost for completion
+     */
     public int getResourceCost() {
         return resourceCost;
     }
 
+    /**
+     * Sets the resource cost for completing this SubTask
+     * 
+     * @param resourceCost - The new resource cost required for completion
+     */
     public void setResourceCost(int resourceCost) {
         this.resourceCost = resourceCost;
     }
 
+    /**
+     * Gets the type of resource needed for completion
+     * 
+     * @return the type of resource needed for completion
+     */
     public ResourceType getResourceType() {
         return resourceType;
     }
 
+    /**
+     * Sets the type of resource needed for completion
+     * 
+     * @param resourceType - The new type of resource needed for completion
+     */
     public void setResourceType(ResourceType resourceType) {
         this.resourceType = resourceType;
     }
