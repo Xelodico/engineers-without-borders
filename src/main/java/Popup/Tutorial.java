@@ -15,8 +15,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * The Tutorial class represents a tutorial panel in a board game application.
+ * It displays a tutorial text loaded from a file and provides a close button
+ * to hide the tutorial.
+ *
+ * @author Nathan Watkins
+ */
 public class Tutorial extends JPanel {
 
+    /**
+     * Constructs a Tutorial panel with a specified width and height.
+     * The tutorial text is loaded from a file, and the panel is set up with
+     * a close button and title.
+     */
     public Tutorial() {
         final int WIDTH = 700;
         final int HEIGHT = 500;
@@ -51,6 +63,12 @@ public class Tutorial extends JPanel {
         add(scrollPane);
     }
 
+    /**
+     * Loads the tutorial text from a file and inserts it into the document.
+     *
+     * @param doc      The StyledDocument to insert the text into.
+     * @param boldAttr The SimpleAttributeSet for bold text.
+     */
     private void loadTutorialText(StyledDocument doc, SimpleAttributeSet boldAttr) {
         String filePath = "src/main/resources/data/tutorial.txt";
 
@@ -71,6 +89,9 @@ public class Tutorial extends JPanel {
         }
     }
 
+    /**
+     * Adds a close button and title to the tutorial panel.
+     */
     private void addCloseButtonAndTitle() {
         URL closeIconUrl = getClass().getResource("/images/closeTutorial.png");
         URL closeIconRedUrl = getClass().getResource("/images/closeRed.png");
@@ -114,6 +135,11 @@ public class Tutorial extends JPanel {
         add(closePanel);
     }
 
+    /**
+     * Renders a custom scroll bar for the given JScrollPane.
+     *
+     * @param scrollPane The JScrollPane to customize.
+     */
     private void renderScrollBar(JScrollPane scrollPane) {
         JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
 
