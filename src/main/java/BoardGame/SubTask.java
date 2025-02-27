@@ -9,11 +9,9 @@ public class SubTask {
     private boolean completed;
     private boolean discounted;
     private int completionScore;
-    private int resourceCost1;
-    private int resourceCost2;
-    private int resourceCost3;
-    private int resourceCost4;
-
+    private int resourceCost;
+    private ResourceType resourceType;
+    
     /**
      * Constructs a new SubTask with the specified title, completion score, and resource costs.
      *
@@ -24,15 +22,13 @@ public class SubTask {
      * @param resourceCost3 the cost of the third resource required to complete the subtask
      * @param resourceCost4 the cost of the fourth resource required to complete the subtask
      */
-    public SubTask(String title, int completionScore, int resourceCost1, int resourceCost2, int resourceCost3, int resourceCost4) {
+    public SubTask(String title, int completionScore, int resourceCost, ResourceType resourceType) {
         this.title = title;
         this.completed = false;
         this.discounted = false;
         this.completionScore = completionScore;
-        this.resourceCost1 = resourceCost1;
-        this.resourceCost2 = resourceCost2;
-        this.resourceCost3 = resourceCost3;
-        this.resourceCost4 = resourceCost4;
+        this.resourceCost = resourceCost;
+        this.resourceType = resourceType;
     }
 
     /**
@@ -43,10 +39,8 @@ public class SubTask {
         this.completed = false;
         this.discounted = false;
         this.completionScore = 0;
-        this.resourceCost1 = 0;
-        this.resourceCost2 = 0;
-        this.resourceCost3 = 0;
-        this.resourceCost4 = 0;
+        this.resourceCost = 0;
+        this.resourceType = ResourceType.ASPHALT;
     }
 
     private boolean discountSubTask() {
@@ -86,36 +80,20 @@ public class SubTask {
         this.completionScore = completionScore;
     }
 
-    public int getResourceCost1() {
-        return resourceCost1;
+    public int getResourceCost() {
+        return resourceCost;
     }
 
-    public void setResourceCost1(int resourceCost1) {
-        this.resourceCost1 = resourceCost1;
+    public void setResourceCost(int resourceCost) {
+        this.resourceCost = resourceCost;
     }
 
-    public int getResourceCost2() {
-        return resourceCost2;
+    public ResourceType getResourceType() {
+        return resourceType;
     }
 
-    public void setResourceCost2(int resourceCost2) {
-        this.resourceCost2 = resourceCost2;
-    }
-
-    public int getResourceCost3() {
-        return resourceCost3;
-    }
-
-    public void setResourceCost3(int resourceCost3) {
-        this.resourceCost3 = resourceCost3;
-    }
-
-    public int getResourceCost4() {
-        return resourceCost4;
-    }
-
-    public void setResourceCost4(int resourceCost4) {
-        this.resourceCost4 = resourceCost4;
+    public void setResourceType(ResourceType resourceType) {
+        this.resourceType = resourceType;
     }
 
     

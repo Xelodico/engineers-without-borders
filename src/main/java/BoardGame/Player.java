@@ -15,11 +15,12 @@ import java.util.Random;
 public class Player {
     private String name;
     private int coord;
+    private int score;
     private int money;
-    private int resource1;
-    private int resource2;
-    private int resource3;
-    private int resource4;
+    private int asphalt;
+    private int volunteer;
+    private int influence;
+    private int knowledge;
     private int movesLeft;
     private ArrayList<Task> tasks;
 
@@ -35,11 +36,12 @@ public class Player {
     public Player(String name, int coord, int resources, int movesLeft) {
         this.name = name;
         this.coord = coord;
+        this.score = 0;
         this.money = 0;
-        this.resource1 = 0;
-        this.resource2 = 0;
-        this.resource3 = 0;
-        this.resource4 = 0;
+        this.asphalt = 0;
+        this.volunteer = 0;
+        this.influence = 0;
+        this.knowledge = 0;
         this.movesLeft = movesLeft;
         this.tasks = new ArrayList<Task>();
     }
@@ -56,11 +58,12 @@ public class Player {
     public Player(String name, int coords) {
         this.name = name;
         this.coord = coords;
+        this.score = 0;
         this.money = 0;
-        this.resource1 = 0;
-        this.resource2 = 0;
-        this.resource3 = 0;
-        this.resource4 = 0;
+        this.asphalt = 0;
+        this.volunteer = 0;
+        this.influence = 0;
+        this.knowledge = 0;
         this.movesLeft = 0;
         this.tasks = new ArrayList<Task>();
     }
@@ -73,11 +76,12 @@ public class Player {
     public Player() {
         this.name = "";
         this.coord = 0;
+        this.score = 0;
         this.money = 0;
-        this.resource1 = 0;
-        this.resource2 = 0;
-        this.resource3 = 0;
-        this.resource4 = 0;
+        this.asphalt = 0;
+        this.volunteer = 0;
+        this.influence = 0;
+        this.knowledge = 0;
         this.movesLeft = 0;
         this.tasks = new ArrayList<Task>();
     }
@@ -125,6 +129,28 @@ public class Player {
         }
         this.coord = coord;
     }
+    
+    /**
+     * Gets the score of the player
+     * 
+     * @return the score of the player
+     */
+    public int getScore() {
+        return this.score;
+    }
+    
+    /** 
+     * Changes the score of the player by the given amount. Score cannot go below 0
+     * 
+     * @param changeAmount - the amount to change the score by
+     */
+    public void changeScoreBy(int changeAmount) {
+        if(this.score + changeAmount < 0) {
+        	this.score = 0;
+        } else {
+        	this.score += changeAmount;
+        }
+    }
 
     /**
      * changes existing money value by a certain amount
@@ -167,36 +193,45 @@ public class Player {
         this.money = money;
     }
 
-    public int getResource1() {
-        return resource1;
+    
+    /**
+     * Gets the amount of the resource referenced by the inputed ResourceType
+     * 
+     * @param resourceType - The type of resource amount to return
+     * @return the amount of the resource referenced by resourceType
+     */
+    public int getResource(ResourceType resourceType) {
+        switch(resourceType) {
+        case ASPHALT: 
+        	return asphalt;
+        case VOLUNTEERS: 
+        	return volunteer;
+        case INFLUENCE:
+        	return influence;
+        case KNOWLEDGE:
+        	return knowledge;
+        default: 
+        	return 0;
+        }
     }
 
-    public void setResource1(int resource1) {
-        this.resource1 = resource1;
-    }
-
-    public int getResource2() {
-        return resource2;
-    }
-
-    public void setResource2(int resource2) {
-        this.resource2 = resource2;
-    }
-
-    public int getResource3() {
-        return resource3;
-    }
-
-    public void setResource3(int resource3) {
-        this.resource3 = resource3;
-    }
-
-    public int getResource4() {
-        return resource4;
-    }
-
-    public void setResource4(int resource4) {
-        this.resource4 = resource4;
+    /**
+     * Sets the amount of the resource referenced by the inputed ResourceType
+     * 
+     * @param resource - The new amount of the resource
+     * @param resourceType - The type of resource to set
+     */
+    public void setResource(int resource, ResourceType resourceType) {
+    	switch(resourceType) {
+        case ASPHALT: 
+        	this.asphalt = resource;
+        case VOLUNTEERS: 
+        	this.volunteer = resource;
+        case INFLUENCE:
+        	this.influence = resource;
+        case KNOWLEDGE:
+        	this.knowledge = resource;
+        }
     }
 
     public ArrayList<Task> getTasks() {

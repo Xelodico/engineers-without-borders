@@ -14,26 +14,23 @@ public class Task {
 	private Player ownedBy;
 	private String description;
 	private SubTask[] steps;
-	private int currentStep;
+	private int currentStepNumber;
 	private int completionScore;
-	private int resourceCost1;
-	private int resourceCost2;
-	private int resourceCost3;
-	private int resourceCost4;
+	private int resourceCost;
+	private ResourceType resourceType;
+
 	
 	// METHODS //
-	public Task(String title, Objective belongsTo, String description, SubTask[] steps, int completionScore, int resourceCost1, int resourceCost2, int resourceCost3, int resourceCost4) {
+	public Task(String title, Objective belongsTo, String description, SubTask[] steps, int completionScore, int resourceCost, ResourceType resourceType) {
 		this.title = title;
 		this.belongsTo = belongsTo;
 		this.ownedBy = null;
 		this.description = description;
 		this.steps = steps;
-		this.currentStep = 0;
+		this.currentStepNumber = 0;
 		this.completionScore = completionScore;
-		this.resourceCost1 = resourceCost1;
-		this.resourceCost2 = resourceCost2;
-		this.resourceCost3 = resourceCost3;
-		this.resourceCost4 = resourceCost4;
+		this.resourceCost = resourceCost;
+		this.resourceType = resourceType;
 	}
 
 	public Task() {
@@ -42,28 +39,27 @@ public class Task {
 		this.ownedBy = null;
 		this.description = "";
 		this.steps = new SubTask[0];
-		this.currentStep = 0;
+		this.currentStepNumber = 0;
 		this.completionScore = 0;
-		this.resourceCost1 = 0;
-		this.resourceCost2 = 0;
-		this.resourceCost3 = 0;
-		this.resourceCost4 = 0;
+		this.resourceCost = 0;
+		this.resourceType = ResourceType.ASPHALT;
 	}
 
 	public SubTask currentSubTask() {
-		return steps[currentStep];
+		return steps[currentStepNumber];
 	}
 
 	public boolean completeStep() {
-		if (currentStep < steps.length) {
-			currentStep++;
+		if (currentStepNumber < steps.length) {
+			currentSubTask().setCompleted(true);
+			currentStepNumber++;
 			return true;
 		}
 		return false;
 	}
 
 	public boolean isCompleted() {
-		return currentStep == steps.length;
+		return currentStepNumber == steps.length;
 	}
 
 	// GETTERS & SETTERS //
@@ -107,12 +103,20 @@ public class Task {
 		this.steps = steps;
 	}
 
-	public int getCurrentStep() {
-		return currentStep;
+	public SubTask getCurrentStep() {
+		return steps[currentStepNumber];
+	}
+	
+	public void setCurrentStep(SubTask newStep) {
+		this.steps[currentStepNumber] = newStep;
+	}
+	
+	public int getCurrentStepNumber() {
+		return currentStepNumber;
 	}
 
-	public void setCurrentStep(int currentStep) {
-		this.currentStep = currentStep;
+	public void setCurrentStepNumber(int currentStep) {
+		this.currentStepNumber = currentStep;
 	}
 
 	public int getCompletionScore() {
@@ -123,35 +127,19 @@ public class Task {
 		this.completionScore = completionScore;
 	}
 
-	public int getResourceCost1() {
-		return resourceCost1;
+	public int getResourceCost() {
+		return resourceCost;
 	}
 
-	public void setResourceCost1(int resourceCost1) {
-		this.resourceCost1 = resourceCost1;
+	public void setResourceCost(int resourceCost) {
+		this.resourceCost = resourceCost;
+	}
+	
+	public ResourceType getResourceType() {
+		return resourceType;
 	}
 
-	public int getResourceCost2() {
-		return resourceCost2;
-	}
-
-	public void setResourceCost2(int resourceCost2) {
-		this.resourceCost2 = resourceCost2;
-	}
-
-	public int getResourceCost3() {
-		return resourceCost3;
-	}
-
-	public void setResourceCost3(int resourceCost3) {
-		this.resourceCost3 = resourceCost3;
-	}
-
-	public int getResourceCost4() {
-		return resourceCost4;
-	}
-
-	public void setResourceCost4(int resourceCost4) {
-		this.resourceCost4 = resourceCost4;
+	public void setResourceType(ResourceType resourceType) {
+		this.resourceType = resourceType;
 	}
 }
