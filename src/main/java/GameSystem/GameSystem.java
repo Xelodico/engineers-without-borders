@@ -4,7 +4,10 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList; // File class for reading files
+import java.util.Scanner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,7 +44,6 @@ public abstract class GameSystem {
     // Keeps track of the current turn within a round
     private static int turnNumber;
 
-    // private static ArrayList<JobRole> roles;
     private static ArrayList<Objective> objectives;
     private static ArrayList<Task> tasks;
     private static SubTask[] subtasks;
@@ -167,6 +169,11 @@ public abstract class GameSystem {
         return tasks;
     }
 
+    /**
+     * Retrieves the list of objectives available in the game.
+     * 
+     * @return An ArrayList of Objective objects.
+     */
     public static ArrayList<Objective> getObjectives() {
         return objectives;
     }
@@ -200,11 +207,19 @@ public abstract class GameSystem {
      * If all players have taken their turn, the game progresses to the next round.
      */
     public static void nextTurn() {
+        // Check if the player has completed all objectives
+        // if (checkWinCondition()) {
+        // endGame();
+        // return;
+        // }
+
         // If the last player in the turn order has finished their turn, reset to the
         // first player
         if (turnNumber >= turnOrder.length - 1) {
             turnNumber = 0; // Reset turn number to first player
             roundNumber++; // Start a new round
+
+            // TODO: Implement logic to handle end of round events
         } else {
             // Otherwise, move to the next player's turn
             turnNumber++;
@@ -232,27 +247,146 @@ public abstract class GameSystem {
 
     /**
      * Ends the game and handles any necessary cleanup or victory conditions.
-     * (Currently, no implementation provided.)
+     * This method determines whether the player has won or lost, displays an
+     * epilogue based on the outcome, and prompts the player to start a new game.
      */
-    // public static void endGame() {
-    // boolean win = checkWinCondition();
-
-    private static boolean checkWinCondition() {
-        for (Task task : tasks) {
-            // If the task isn't completed return false
-            if (!task.isCompleted())
-                return false;
-        }
-        return true;
-    }
-
-    private static void nextStage() {
-
-    }
-
     public static void endGame() {
+        // TODO: Replace placeholder value with checkWinCondition() when ready
+        boolean win = false;
+
+        // Declare message and file path for epilogue event storage
+        String winMessage;
+        String filePath;
+
+        // Determine the appropriate ending based on game outcome
+        if (win) {
+            winMessage = "Congratulations! You have completed all objectives!";
+            System.out.println(winMessage);
+            filePath = "src\\main\\resources\\data\\goodEndingEvents.txt";
+        } else {
+            winMessage = "You have failed to complete all objectives.";
+            System.out.println(winMessage);
+            filePath = "src\\main\\resources\\data\\badEndingEvents.txt";
+        }
+
+        // Display epilogue to the player
+        System.out.println("\nThe path ahead...");
+        File file = new File(filePath);
+        int year = 2025; // Starting year for event projections
+
+        // try (Scanner fileReader = new Scanner(file)) {
+        // while (fileReader.hasNextLine()) {
+        // String data = fileReader.nextLine();
+        // if (data.isEmpty())
+        // continue;
+        // System.out.println("By " + year + "...\n" + data);
+        // year++;
+
+        // // Introduce a brief pause for readability
+        // // This also fulfils the requirement for a pause between events
+        // try {
+        // TimeUnit.SECONDS.sleep(1);
+        // } catch (InterruptedException e) {
+        // // Handle thread interruption exception
+        // e.printStackTrace();
+        // }
+
+        // fileReader.close();
+        // }
+        // } catch (FileNotFoundException exception) {
+        // // Handle the case where the epilogue file is missing
+        // System.err.print("File not found.");
+        // }
+
+        // TODO: Implement final game logic, such as displaying scores and resetting the
+        // game state
+
+        // TODO: Remove placeholder players
+        Player player1 = new Player("Kal", 0, 100, 4);
+        player1.changeMoney(5000);
+        player1.increaseMoneySpent(1000);
+        player1.setScore(100);
+        Player player2 = new Player("Nathan", 0, 120, 2);
+        player2.changeMoney(1000);
+        player2.increaseMoneySpent(500);
+        player2.setScore(500);
+        turnOrder = new Player[] { player1, player2 };
+
+        // Display player scores
+        System.out.println("Final Scores:");
+
+        // Stores the indices of players who achieved notable milestones:
+        // - Highest Scorer: The player with the most points.
+        // - Lowest Spender: The player who spent the least amount of money.
+        // - Traveller: The player who moved the most across the board.
+        // - Resource Hogger: The player who collected the most resources.
+        // TODO: Consider adding a "Team Player" achievement for the most contributive
+        // player.
+        int highestScorer = 0, lowestSpender = 0, traveller = 0, resourceHogger = 0;
+        int maxScore = 0, minSpent = Integer.MAX_VALUE, maxResources = 0, maxTravelled = 0;
+
+        // Iterate through each player to determine the top achievers
+        // TODO: Update to reflect changes to resources in Player class
+        for (int i = 0; i < turnOrder.length; i++) {
+            // Determine the player with the highest score
+            if (turnOrder[i].getScore() > maxScore) {
+                highestScorer = i;
+                maxScore = turnOrder[i].getScore();
+            }
+
+            // Determine the player who spent the least money
+            if (turnOrder[i].getMoneySpent() < minSpent) {
+                lowestSpender = i;
+                minSpent = turnOrder[i].getMoneySpent();
+            }
+
+            // Determine the player who accumulated the most resources
+            // if (turnOrder[i].getResources() > maxResources) {
+            // resourceHogger = i;
+            // maxResources = turnOrder[i].getResources();
+            // }
+
+            // Determine the player who travelled the most
+            if (turnOrder[i].getMovesTravelled() > maxTravelled) {
+                traveller = i;
+                maxTravelled = turnOrder[i].getMovesTravelled();
+            }
+
+            // Print player stats
+            System.out.println(turnOrder[i].getName() + ":\n" +
+                    "Score: " + turnOrder[i].getScore() + "\n" +
+                    // "Resources: " + turnOrder[i].getResources() + "\n" +
+                    "Money: " + turnOrder[i].getMoney() + "\n");
+        }
+
+        // Display Player Achievements
+        System.out.println("Special Achievements!");
+        System.out.println("Highest Scorer: " + getPlayerAt(highestScorer).getName() +
+                " (" + getPlayerAt(highestScorer).getScore() + " points)");
+        System.out.println("The Cheapskate: " + getPlayerAt(lowestSpender).getName() +
+                " (Spent " + getPlayerAt(lowestSpender).getMoneySpent() + " rand)");
+        // System.out.println("The Resource Hogger: " +
+        // getPlayerAt(resourceHogger).getName() +
+        // " (Kept " + getPlayerAt(resourceHogger).getResources() + " bags of cold
+        // asphalt)");
+        System.out.println("The Traveller: " + getPlayerAt(traveller).getName() +
+                " (Travelled " + getPlayerAt(traveller).getMovesTravelled() + " squares)");
+
+        // showPopup("Thanks for playing Pavers Valley!", "Start a new game?", "Yes",
+        // "No");
+
+        // Terminate the game process
+        System.exit(0);
     }
 
+    /**
+     * Displays a popup message to the player with customizable buttons.
+     *
+     * @param title     The title of the popup window.
+     * @param desc      The description or message to display in the popup.
+     * @param yesButton The text for the "Yes" button.
+     * @param noButton  The text for the "No" button.
+     */
     public static void showPopup(String title, String desc, String yesButton, String noButton, ActionListener yesAction,
             ActionListener noAction) {
         gameBoardUI.showPopup(title, desc, yesButton, noButton, yesAction, noAction);
@@ -268,6 +402,10 @@ public abstract class GameSystem {
 
     public static void toggleShop() {
         gameBoardUI.toggleShop();
+    }
+
+    public static void playTutorial() {
+        gameBoardUI.toggleTutorial();
     }
 
     public static void toggleTransfer(Task task) {

@@ -21,9 +21,18 @@ public class Player {
     private int resource3;
     private int resource4;
     private int movesLeft;
+    private int moneySpent;
+    private int score;
+    private int movesTravelled;
     private ArrayList<Task> tasks;
 
     /**
+     * Default constructor for a blank player object.
+     * Initializes a player with default values for name, coordinates,
+     * resources, and moves left. The player's ID is set using a unique counter.
+     * private ArrayList<Task> tasks;
+     * 
+     * /**
      * Constructor for a player object with a name, coordinates, resources,
      * and available moves.
      * 
@@ -40,6 +49,8 @@ public class Player {
         this.resource2 = 0;
         this.resource3 = 0;
         this.resource4 = 0;
+        this.moneySpent = 0;
+        this.score = 0;
         this.movesLeft = movesLeft;
         this.tasks = new ArrayList<Task>();
     }
@@ -61,6 +72,8 @@ public class Player {
         this.resource2 = 0;
         this.resource3 = 0;
         this.resource4 = 0;
+        this.moneySpent = 0;
+        this.score = 0;
         this.movesLeft = 0;
         this.tasks = new ArrayList<Task>();
     }
@@ -78,6 +91,8 @@ public class Player {
         this.resource2 = 0;
         this.resource3 = 0;
         this.resource4 = 0;
+        this.moneySpent = 0;
+        this.score = 0;
         this.movesLeft = 0;
         this.tasks = new ArrayList<Task>();
     }
@@ -127,6 +142,26 @@ public class Player {
     }
 
     /**
+     * Retrieves the money value of the player
+     * 
+     * @return returns current money amount of the player
+     */
+
+    public int getMoney() {
+        return this.money;
+    }
+
+    /**
+     * Sets the money value of the player.
+     * 
+     * @param money The new money value to assign to the player
+     */
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
+    /**
      * changes existing money value by a certain amount
      * 
      * @param money change in money value
@@ -134,6 +169,51 @@ public class Player {
 
     public void changeMoney(int money) {
         this.money = this.money + money;
+    }
+
+    /**
+     * Retrieves the total amount of money the player has spent.
+     *
+     * @return The total money spent by the player.
+     */
+    public int getMoneySpent() {
+        return this.moneySpent;
+    }
+
+    /**
+     * Increases the amount of money the player has spent.
+     *
+     * @param money The amount to add to the player's total money spent.
+     */
+    public void increaseMoneySpent(int money) {
+        this.moneySpent += money;
+    }
+
+    /**
+     * Retrieves the player's current score.
+     *
+     * @return The player's score.
+     */
+    public int getScore() {
+        return this.score;
+    }
+
+    /**
+     * Updates the player's score.
+     *
+     * @param score The new score to set for the player.
+     */
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    /**
+     * Retrieves the total number of moves the player has traveled.
+     *
+     * @return The number of moves the player has made.
+     */
+    public int getMovesTravelled() {
+        return this.movesTravelled;
     }
 
     /**
@@ -157,14 +237,6 @@ public class Player {
             throw new IllegalArgumentException("Moves left cannot be greater than 6");
         }
         this.movesLeft = movesLeft;
-    }
-
-    public int getMoney() {
-        return money;
-    }
-
-    public void setMoney(int money) {
-        this.money = money;
     }
 
     public int getResource1() {
@@ -288,7 +360,9 @@ public class Player {
             if (newCoord != currentCoord) {
                 this.setCoord(newCoord);
                 this.setMovesLeft(this.getMovesLeft() - 1); // Decrease moves after moving
+                this.movesTravelled++;
                 System.out.println(this.getName() + " moved to position " + newCoord);
+                System.out.println("Moves travelled: " + this.movesTravelled);
             }
         } else {
             System.out.println(this.getName() + " has no moves left this turn.");
