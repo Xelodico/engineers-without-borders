@@ -40,11 +40,12 @@ public class Board extends JPanel {
      * Constructs a new Board object and initializes the board with the default
      * settings.
      */
-    public Board() {
+    public Board(ArrayList<Task> tasks) {
         this.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         this.setLayout(new java.awt.GridLayout(boardSideLength, boardSideLength));
 
-        squareArray = generateBoardSquares();
+        squareArray = generateBoardSquares(tasks);
+        generateTaskSquares(tasks);
         renderBoard(squareArray);
     }
 
@@ -55,20 +56,26 @@ public class Board extends JPanel {
      * 
      * @return A list of strings representing the type of each square on the board.
      */
-    private List<Square> generateBoardSquares() {
+    private List<Square> generateBoardSquares(ArrayList<Task> tasks) {
         int totalSquares = boardSideLength * boardSideLength;
         final List<Integer> spawnLocations = Arrays.asList(65, 66, 77, 78);
         List<Square> squareArray = new ArrayList<>();
 
         int totalWeight = Arrays.stream(squareTypeRatios).sum();
         int numTask = totalSquares / totalWeight * squareTypeRatios[0];
-        int numNormal = totalSquares - numTask;
+        int numNormal = totalSquares;
 
         squareArray.addAll(Collections.nCopies(numNormal, new Square()));
 
-        for (int i = 0; i < numTask; i++) {
-            squareArray.add(new TaskSquare(new Task()));
-        }
+        // for (int i = 0; i < numTask; i++) {
+        //     // squareArray.add(new TaskSquare(new Task()));
+        //     if(i < tasks.size()) {
+        //         squareArray.add(new TaskSquare(tasks.get(i)));
+        //     } else {
+        //         System.out.println("Too many TaskSquares are being created! Some TaskSquares will be empty.");
+        //         squareArray.add(new TaskSquare(new Task()));
+        //     }
+        // }
 
         Collections.shuffle(squareArray);
 
@@ -211,6 +218,34 @@ public class Board extends JPanel {
         refresh();
     }
 
+    public void generateTaskSquares(ArrayList<Task> tasks) {
+        int amount = 12;
+        if (amount > squareArray.size()) {
+            throw new IllegalArgumentException("Amount of potholes cannot exceed the number of squares on the board.");
+        }
+
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount of potholes cannot be negative.");
+        }
+
+        long normalSquareCount = squareArray.stream()
+                .filter(square -> square.getSquareType() == SquareType.SQUARE)
+                .count();
+
+        if (amount > normalSquareCount) {
+            throw new IllegalArgumentException("Not enough normal squares to generate " + amount + " pothole(s).");
+        }
+
+        for (int i = 0; i < amount; i++) {
+            int randomIndex = (int) (Math.random() * squareArray.size());
+            if (squareArray.get(randomIndex).getSquareType() == SquareType.SQUARE) {
+                    squareArray.set(randomIndex, new TaskSquare(tasks.get(i)));
+            }
+        }
+
+        refresh();
+    }
+
     /**
      * Renders the players on the board.
      * 
@@ -260,7 +295,7 @@ public class Board extends JPanel {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(650, 650);
-        frame.add(new Board());
+        frame.add(new Board(new ArrayList<Task>()));
         frame.setVisible(true);
     }
 }

@@ -98,6 +98,11 @@ public class TransferPopup extends JPanel {
                 JButton button = createButton(player.getName());
                 if (task.getOwnedBy() == player) {
                     button.setEnabled(false);
+                } else {
+                    button.addActionListener(e -> {
+                        task.setOwnedBy(player);
+                        GameSystem.toggleTransfer(null);
+                    });
                 }
                 buttonContainer.add(button);
                 if (players.length > 1 && player != players[players.length - 1]) {
