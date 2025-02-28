@@ -57,15 +57,11 @@ public class BoardGameUI extends JFrame {
         startScreen.setVisible(true);
 
         popup = new Popup("", "", "", "", null, null);
-        add(popup);
-
         journal = new Journal();
-
         shop = new Shop();
-
         endGame = new EndGame();
-
         transferPopup = new TransferPopup("Transfer Task", "Description");
+        tutorial = new Tutorial();
 
         dimBackground = new JPanel();
         dimBackground.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -74,10 +70,12 @@ public class BoardGameUI extends JFrame {
         add(dimBackground);
 
         JLayeredPane layeredPane = getLayeredPane();
-        layeredPane.add(transferPopup, JLayeredPane.POPUP_LAYER);
+        layeredPane.add(popup, JLayeredPane.POPUP_LAYER);
         layeredPane.add(journal, JLayeredPane.POPUP_LAYER);
         layeredPane.add(shop, JLayeredPane.POPUP_LAYER);
         layeredPane.add(endGame, JLayeredPane.POPUP_LAYER);
+        layeredPane.add(transferPopup, JLayeredPane.POPUP_LAYER);
+        layeredPane.add(tutorial, JLayeredPane.POPUP_LAYER);
 
         initComponents();
         setVisible(true);
@@ -447,8 +445,8 @@ public class BoardGameUI extends JFrame {
     }
 
     public void toggleTutorial() {
-        // tutorial.setVisible(!tutorial.isVisible());
-        // dimBackground.setVisible(!dimBackground.isVisible());
+         tutorial.setVisible(!tutorial.isVisible());
+         dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
     }
 

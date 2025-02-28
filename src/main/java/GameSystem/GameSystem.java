@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList; // File class for reading files
-import java.util.Scanner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -87,6 +85,7 @@ public abstract class GameSystem {
         roundNumber++; // Increment the round counter
         gameBoardUI.startGame(); // Start the game through the UI
         gameBoardUI.refresh(); // Refresh the UI to reflect updated game state
+        toggleTutorial();
     }
 
     /**
@@ -406,7 +405,7 @@ public abstract class GameSystem {
         gameBoardUI.toggleShop();
     }
 
-    public static void playTutorial() {
+    public static void toggleTutorial() {
         gameBoardUI.toggleTutorial();
     }
 
