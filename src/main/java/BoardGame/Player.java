@@ -24,6 +24,7 @@ public class Player {
     private int moneySpent;
     private int score;
     private int movesTravelled;
+    private int timesHelped;
     private ArrayList<Task> tasks;
 
     /**
@@ -52,6 +53,7 @@ public class Player {
         this.moneySpent = 0;
         this.score = 0;
         this.movesLeft = movesLeft;
+        this.timesHelped = timesHelped;
         this.tasks = new ArrayList<Task>();
     }
 
@@ -269,6 +271,14 @@ public class Player {
 
     public void setResource4(int resource4) {
         this.resource4 = resource4;
+    }
+
+    public int getTimesHelped() {
+        return timesHelped;
+    }
+
+    public void changeTimesHelped(int timesHelped) {
+        this.timesHelped += timesHelped;
     }
 
     public ArrayList<Task> getTasks() {

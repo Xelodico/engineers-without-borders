@@ -1,5 +1,7 @@
 package BoardGame;
 
+import GameSystem.GameSystem;
+
 /**
  * Represents a sub-task within a board game.
  * Each sub-task has a title, completion status, discount status, completion score, and resource costs.
@@ -51,6 +53,7 @@ public class SubTask {
 
     private boolean discountSubTask() {
         // TODO: Implement discountSubTask
+        GameSystem.getPlayerAt().changeTimesHelped(1);
         return false;
     }
 

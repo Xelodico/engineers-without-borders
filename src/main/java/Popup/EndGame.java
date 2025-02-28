@@ -276,14 +276,20 @@ public class EndGame extends JPanel {
 
         playerCard.add(Box.createVerticalStrut(20));
 
-//        JPanel totalScore = createStat("Score: ", String.valueOf(player.getScore()));
-//        playerCard.add(totalScore);
+       JPanel totalScore = createStat("Score: ", String.valueOf(player.getScore()));
+       playerCard.add(totalScore);
 
         JPanel movesTaken = createStat("Moves Taken: ", String.valueOf(player.getMovesLeft()));
         playerCard.add(movesTaken);
 
-        JPanel moneySpent = createStat("Money Spent: ", String.valueOf(player.getMoney()));
+        JPanel currentMoney = createStat("Current Money: ", String.valueOf(player.getMoney()));
+        playerCard.add(currentMoney);
+
+        JPanel moneySpent = createStat("Money Spent: ", String.valueOf(player.getMoneySpent()));
         playerCard.add(moneySpent);
+
+        JPanel timesHelped = createStat("Times Helped: ", String.valueOf(player.getTimesHelped()));
+        playerCard.add(timesHelped);
 
         playerCard.add(Box.createVerticalStrut(200));
 
