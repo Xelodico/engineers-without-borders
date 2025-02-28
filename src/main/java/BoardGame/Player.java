@@ -77,6 +77,7 @@ public class Player {
         this.moneySpent = 0;
         this.score = 0;
         this.movesLeft = 0;
+        this.timesHelped = 0;
         this.tasks = new ArrayList<Task>();
     }
 
@@ -96,6 +97,7 @@ public class Player {
         this.moneySpent = 0;
         this.score = 0;
         this.movesLeft = 0;
+        this.timesHelped = 0;
         this.tasks = new ArrayList<Task>();
     }
 

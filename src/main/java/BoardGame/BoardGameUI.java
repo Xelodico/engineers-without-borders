@@ -71,11 +71,11 @@ public class BoardGameUI extends JFrame {
 
         JLayeredPane layeredPane = getLayeredPane();
         layeredPane.add(popup, JLayeredPane.POPUP_LAYER);
+        layeredPane.add(tutorial, JLayeredPane.POPUP_LAYER);
+        layeredPane.add(transferPopup, JLayeredPane.POPUP_LAYER);
         layeredPane.add(journal, JLayeredPane.POPUP_LAYER);
         layeredPane.add(shop, JLayeredPane.POPUP_LAYER);
         layeredPane.add(endGame, JLayeredPane.POPUP_LAYER);
-        layeredPane.add(transferPopup, JLayeredPane.POPUP_LAYER);
-        layeredPane.add(tutorial, JLayeredPane.POPUP_LAYER);
 
         initComponents();
         setVisible(true);
