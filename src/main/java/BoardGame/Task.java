@@ -12,7 +12,6 @@ public class Task {
 	private String title;
 	private Objective belongsTo;
 	private Player ownedBy;
-	private String description;
 	private SubTask[] steps;
 	private int currentStep;
 	private int completionScore;
@@ -22,11 +21,10 @@ public class Task {
 	private int resourceCost4;
 	
 	// METHODS //
-	public Task(String title, Objective belongsTo, String description, SubTask[] steps, int completionScore, int resourceCost1, int resourceCost2, int resourceCost3, int resourceCost4) {
+	public Task(String title, Objective belongsTo, SubTask[] steps, int completionScore, int resourceCost1, int resourceCost2, int resourceCost3, int resourceCost4) {
 		this.title = title;
 		this.belongsTo = belongsTo;
 		this.ownedBy = null;
-		this.description = description;
 		this.steps = steps;
 		this.currentStep = 0;
 		this.completionScore = completionScore;
@@ -40,7 +38,6 @@ public class Task {
 		this.title = "";
 		this.belongsTo = null;
 		this.ownedBy = null;
-		this.description = "";
 		this.steps = new SubTask[0];
 		this.currentStep = 0;
 		this.completionScore = 0;
@@ -89,14 +86,6 @@ public class Task {
 
 	public void setOwnedBy(Player ownedBy) {
 		this.ownedBy = ownedBy;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public SubTask[] getSteps() {

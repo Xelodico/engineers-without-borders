@@ -1,5 +1,6 @@
 package GameSystem;
 
+import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -60,7 +61,6 @@ public abstract class GameSystem {
             turnNumber = 0; // Reset turn number
             roundNumber = 0; // Reset round count
 
-            // roles = new ArrayList<JobRole>();
             objectives = new ArrayList<Objective>();
             tasks = new ArrayList<Task>();
 
@@ -69,12 +69,14 @@ public abstract class GameSystem {
             createData();
 
             // Create a new board and its associated GUI
-            gameBoard = new Board();
+            gameBoard = new Board(tasks);
             gameBoardUI = new BoardGameUI(gameBoard);
             gameBoardUI.setTitle("Pavers Valley"); // Set the title for the game window
 
             gameBoardUI.setVisible(true); // Make the game UI visible
             gameActive = true; // Mark the game as active
+
+            
         }
     }
 
@@ -437,6 +439,7 @@ public abstract class GameSystem {
                     for (int i = 0; i < subtasksArr.length(); i++) {
                         SubTask subtask = new SubTask();
                         subtask.setTitle(subtasksArr.getString(i));
+                        task.setBelongsTo(o1);
                         task.addStep(subtask);
                     }
 
@@ -448,6 +451,12 @@ public abstract class GameSystem {
             System.err.println("Error reading file: " + file);
             System.exit(1);
         }
+
+        objectives.get(0).setUiColour(Color.RED);
+        objectives.get(1).setUiColour(Color.ORANGE);
+        objectives.get(2).setUiColour(Color.MAGENTA);
+        objectives.get(3).setUiColour(Color.CYAN);
+
     }
 
     /**
