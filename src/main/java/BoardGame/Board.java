@@ -19,12 +19,6 @@ public class Board extends JPanel {
     public final int boardSideLength = 12;
 
     /**
-     * The distribution ratio of the square types on the board.
-     * The ratio is Task : Resource : Normal.
-     */
-    private final static int[] squareTypeRatios = { 2, 2, 6 };
-
-    /**
      * The List of all the Players in the game.
      */
     private Player[] players;

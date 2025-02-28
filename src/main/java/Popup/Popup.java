@@ -5,12 +5,8 @@ import BoardGame.BoardGameUI;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
+import javax.swing.*;
+import javax.swing.text.*;
 
 /**
  * Popup is a custom JPanel that displays a popup window with a title, description,
@@ -31,11 +27,13 @@ import javax.swing.SwingConstants;
 public class Popup extends JPanel {
 
     private final JLabel popupTitle;
-    private final JTextArea popupDesc;
+    private final JTextPane popupDesc;
     private final JButton yesButtonComponent;
     private final JButton noButtonComponent;
 
+    @SuppressWarnings("unused")
     private boolean yesButtonVisible = true;
+    @SuppressWarnings("unused")
     private boolean noButtonVisible = true;
 
     private final int WIDTH = 500;
@@ -51,51 +49,71 @@ public class Popup extends JPanel {
      * @param noAction The action to perform when the No button is clicked.
      */
     public Popup(String title, String desc, String yesButtonText, String noButtonText, ActionListener yesAction, ActionListener noAction) {
-        setLayout(null);
-        setBounds(BoardGameUI.WINDOW_WIDTH /2 - WIDTH/2, BoardGameUI.WINDOW_HEIGHT/2 - HEIGHT/2, WIDTH, HEIGHT);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBounds(BoardGameUI.WINDOW_WIDTH / 2 - WIDTH / 2, BoardGameUI.WINDOW_HEIGHT / 2 - HEIGHT / 2, WIDTH, HEIGHT);
         setBackground(new java.awt.Color(240, 240, 240));
         setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         setVisible(false);
+
+        add(Box.createVerticalStrut(20));
 
         popupTitle = new JLabel(title);
         popupTitle.setFont(new java.awt.Font("Segue UI", Font.BOLD, 24));
         popupTitle.setHorizontalAlignment(SwingConstants.CENTER);
         popupTitle.setText("<html>" + title + "</html>");
-        popupTitle.setBounds(0, 0, WIDTH, 70);
+        popupTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(popupTitle);
 
-        popupDesc = new JTextArea(desc);
+        add(Box.createVerticalStrut(20));
+
+        popupDesc = new JTextPane();
+        popupDesc.setText(desc);
         popupDesc.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 18));
-        popupDesc.setLineWrap(true);
-        popupDesc.setWrapStyleWord(true);
         popupDesc.setEditable(false);
         popupDesc.setBackground(new java.awt.Color(240, 240, 240));
         popupDesc.setBorder(null);
         popupDesc.setEnabled(false);
         popupDesc.setDisabledTextColor(Color.BLACK);
-        popupDesc.setBounds(10, 80, WIDTH - 20, HEIGHT - 200);
+
+        StyledDocument doc = popupDesc.getStyledDocument();
+        SimpleAttributeSet center = new SimpleAttributeSet();
+        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), center, false);
+
         add(popupDesc);
 
-        yesButtonComponent = new JButton(yesButtonText);
-        yesButtonComponent.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 18));
-        yesButtonComponent.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        yesButtonComponent.setFocusPainted(false);
-        yesButtonComponent.setContentAreaFilled(false);
-        yesButtonComponent.setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-        yesButtonComponent.setBounds((WIDTH / 2) - 110, HEIGHT - 60, 100, 30);
-        add(yesButtonComponent);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        buttonPanel.setOpaque(false);
 
-        noButtonComponent = new JButton(noButtonText);
-        noButtonComponent.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 18));
-        noButtonComponent.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        noButtonComponent.setFocusPainted(false);
-        noButtonComponent.setContentAreaFilled(false);
-        noButtonComponent.setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-        noButtonComponent.setBounds((WIDTH / 2) + 10, HEIGHT - 60, 100, 30);
-        add(noButtonComponent);
+        yesButtonComponent = createButton(yesButtonText, yesAction);
+        buttonPanel.add(yesButtonComponent);
+        
+        buttonPanel.add(Box.createHorizontalStrut(20));
+        
+        noButtonComponent = createButton(noButtonText, noAction);
+        buttonPanel.add(noButtonComponent);
 
-        yesButtonComponent.addActionListener(yesAction);
-        noButtonComponent.addActionListener(noAction);
+        add(buttonPanel);
+        add(Box.createVerticalStrut(20));
+    }
+
+    private JButton createButton(String text, ActionListener action) {
+        JButton button = new JButton(text);
+        button.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 18));
+        button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button.setFocusPainted(false);
+        button.setContentAreaFilled(false);
+        button.setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.addActionListener(action);
+
+        button.setPreferredSize(new Dimension(100, 30));
+        button.setMinimumSize(new Dimension(100, 30));
+        button.setMaximumSize(new Dimension(100, 30));
+
+        return button;
     }
 
     public void setTitle(String title) {
@@ -104,17 +122,6 @@ public class Popup extends JPanel {
 
     public void setDescription(String desc) {
         popupDesc.setText(desc);
-    }
-
-    public void positionButtons() {
-        if (yesButtonVisible && noButtonVisible) {
-            yesButtonComponent.setBounds((WIDTH / 2) - 110, HEIGHT - 60, 100, 30);
-            noButtonComponent.setBounds((WIDTH / 2) + 10, HEIGHT - 60, 100, 30);
-        } else if (yesButtonVisible) {
-            yesButtonComponent.setBounds((WIDTH / 2) - 50, HEIGHT - 60, 100, 30);
-        } else if (noButtonVisible) {
-            noButtonComponent.setBounds((WIDTH / 2) - 50, HEIGHT - 60, 100, 30);
-        }
     }
 
     public void setYesButtonText(String text) {
@@ -126,7 +133,6 @@ public class Popup extends JPanel {
             yesButtonComponent.setVisible(true);
             yesButtonVisible = true;
         }
-        positionButtons();
     }
 
     public void setNoButtonText(String text) {
@@ -138,7 +144,6 @@ public class Popup extends JPanel {
             noButtonComponent.setVisible(true);
             noButtonVisible = true;
         }
-        positionButtons();
     }
 
     public void setYesButtonAction(ActionListener action) {
