@@ -63,22 +63,7 @@ public class Board extends JPanel {
         final List<Integer> spawnLocations = Arrays.asList(65, 66, 77, 78);
         List<Square> squareArray = new ArrayList<>();
 
-        int totalWeight = Arrays.stream(squareTypeRatios).sum();
-        int numTask = totalSquares / totalWeight * squareTypeRatios[0];
-        int numNormal = totalSquares;
-
-        squareArray.addAll(Collections.nCopies(numNormal, new Square()));
-
-        // for (int i = 0; i < numTask; i++) {
-        //     // squareArray.add(new TaskSquare(new Task()));
-        //     if(i < tasks.size()) {
-        //         squareArray.add(new TaskSquare(tasks.get(i)));
-        //     } else {
-        //         System.out.println("Too many TaskSquares are being created! Some TaskSquares will be empty.");
-        //         squareArray.add(new TaskSquare(new Task()));
-        //     }
-        // }
-
+        squareArray.addAll(Collections.nCopies(totalSquares, new Square()));
         Collections.shuffle(squareArray);
 
         for (int location : spawnLocations) {
@@ -248,13 +233,5 @@ public class Board extends JPanel {
             revalidate();
             repaint();
         }
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(650, 650);
-        frame.add(new Board(new ArrayList<Task>()));
-        frame.setVisible(true);
     }
 }
