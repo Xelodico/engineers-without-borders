@@ -49,6 +49,10 @@ public abstract class GameSystem {
 
     // Boolean flag to determine whether the game is active or not
     private static boolean gameActive = false;
+    
+    // Global variables for resource purchase price and solution implementation percentage
+    private final static int RESOURCE_PRICE = 100;
+    private static int implementationPercentage = 0;
 
     /**
      * Initialises the game by setting up essential components.
@@ -225,7 +229,7 @@ public abstract class GameSystem {
     	
     	// Check that the next step is able to be completed and task is not completed already
     	ResourceType resourceType = selectedTask.getResourceType();
-    	SubTask currentStep = selectedTask.getCurrentStep();
+    	SubTask currentStep = selectedTask.getCurrentSubTask();
     	boolean resourceCheck = currentPlayer.getResource(resourceType) >= currentStep.getResourceCost();
     	
     	if (!selectedTask.isCompleted() && resourceCheck) {
@@ -236,10 +240,33 @@ public abstract class GameSystem {
     	
     		// Progress the task onto the next subtask
     		selectedTask.completeStep();
-    	} 
-    	
-    	
+    	}  	
     }
+    
+    
+    /**
+     * Subtracts funds equal to RESOURCE_PRICE from the current player's funds and gives them a set amount of 
+     * resources of the type inputed in return.
+     * Cannot purchase if the player doesn't have enough funds
+     * 
+     * @param resourceType - The type of resource being purchased
+     * @return - True if there was enough money to purchase the resources, false if not
+     */
+    public static boolean purchaseResource(ResourceType resourceType) {
+    	// Get current player
+    	Player currentPlayer = getPlayerAt();
+    	
+    	// Check that player has enough funds to buy some resources (from RESOURCE_PRICE constant)
+    	if (currentPlayer.getResource(resourceType) < RESOURCE_PRICE) {
+    		return false;
+    	}
+    	
+    	// Subtract funds from player and add resources
+    	currentPlayer.changeMoney(-RESOURCE_PRICE);
+    	currentPlayer.changeResource(25, resourceType);
+    	
+		return true;
+	}
     
     /**
      * Evaluates whether all objectives have been completed, determining if the game
