@@ -6,6 +6,9 @@ import java.util.ArrayList;
 /**
  * The Objective class represents a goal or objective that one Player can take for the game.
  * Each objective has a title, a responsible player, a list of tasks, and a UI color.
+ * 
+ * @author Curtis McCartney
+ * 
  */
 public class Objective {
     
@@ -29,6 +32,9 @@ public class Objective {
         this.uiColour = uiColour;
     }
 
+    /**
+     * @param title
+     */
     public Objective(String title) {
         this.title = title;
         this.responsiblePlayer = null;
