@@ -18,7 +18,7 @@ public class Player {
     private int score;
     private int money;
     private int asphalt;
-    private int volunteer;
+    private int volunteers;
     private int influence;
     private int knowledge;
     private int movesLeft;
@@ -39,7 +39,7 @@ public class Player {
         this.score = 0;
         this.money = 0;
         this.asphalt = 0;
-        this.volunteer = 0;
+        this.volunteers = 0;
         this.influence = 0;
         this.knowledge = 0;
         this.movesLeft = movesLeft;
@@ -61,7 +61,7 @@ public class Player {
         this.score = 0;
         this.money = 0;
         this.asphalt = 0;
-        this.volunteer = 0;
+        this.volunteers = 0;
         this.influence = 0;
         this.knowledge = 0;
         this.movesLeft = 0;
@@ -79,7 +79,7 @@ public class Player {
         this.score = 0;
         this.money = 0;
         this.asphalt = 0;
-        this.volunteer = 0;
+        this.volunteers = 0;
         this.influence = 0;
         this.knowledge = 0;
         this.movesLeft = 0;
@@ -205,7 +205,7 @@ public class Player {
         case ASPHALT: 
         	return asphalt;
         case VOLUNTEERS: 
-        	return volunteer;
+        	return volunteers;
         case INFLUENCE:
         	return influence;
         case KNOWLEDGE:
@@ -226,11 +226,46 @@ public class Player {
         case ASPHALT: 
         	this.asphalt = resource;
         case VOLUNTEERS: 
-        	this.volunteer = resource;
+        	this.volunteers = resource;
         case INFLUENCE:
         	this.influence = resource;
         case KNOWLEDGE:
         	this.knowledge = resource;
+        }
+    }
+    
+    /**
+     * changes the amount of the resource referenced by the inputed ResourceType by the amount inputed
+     * 
+     * @param changeAmount - The amount to change resource by (can be negative)
+     * @param resourceType - The type of resource to set
+     */
+    public void changeResource(int changeAmount, ResourceType resourceType) {
+    	switch(resourceType) {
+        case ASPHALT: 
+        	if(this.asphalt + changeAmount < 0) {
+            	this.asphalt = 0;
+            } else {
+            	this.asphalt += changeAmount;
+            } 
+        case VOLUNTEERS: 
+        	if(this.volunteers + changeAmount < 0) {
+            	this.volunteers = 0;
+            } else {
+            	this.volunteers += changeAmount;
+            } 
+        case INFLUENCE:
+        	if(this.influence + changeAmount < 0) {
+            	this.influence = 0;
+            } else {
+            	this.influence += changeAmount;
+            } 
+        case KNOWLEDGE:
+        	if(this.knowledge + changeAmount < 0) {
+            	this.knowledge = 0;
+            } else {
+            	this.knowledge += changeAmount;
+            }
         }
     }
 
