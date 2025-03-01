@@ -94,7 +94,7 @@ public class TaskSquare extends Square {
         if (task.getOwnedBy() == null) {
             GameSystem.showPopup("Do you want to get this task?", "", "Yes", "No", takeTask, rejectTask);
         } else if (task.getOwnedBy() != GameSystem.getPlayerAt()) {
-            GameSystem.showPopup("Do you want to help complete this task?", task.getDescription(), "Yes", "No",
+            GameSystem.showPopup("Do you want to help complete this task?", task.getTitle(), "Yes", "No",
                     beginHelping, ignoreHelping);
         } else {
             GameSystem.showPopup("You already own this task!", null, "Ok", null, okSingleButton, null);
