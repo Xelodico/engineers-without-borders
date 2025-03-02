@@ -50,9 +50,10 @@ public abstract class GameSystem {
     // Boolean flag to determine whether the game is active or not
     private static boolean gameActive = false;
     
-    // Global variables for resource purchase price and solution implementation percentage
+    // Global variables for resource purchase price and scores for calculating the solution implementation percentage
     private final static int RESOURCE_PRICE = 100;
-    private static int implementationPercentage = 0;
+    private static int maxScore;
+    private static int currentTotalAwardedScore;
 
     /**
      * Initialises the game by setting up essential components.
@@ -69,8 +70,12 @@ public abstract class GameSystem {
 
             // Setting up a default player array with at least one player to avoid errors
             turnOrder = new Player[] { new Player() };
+            
+            // Create data and update maxScore
             createData();
-
+            maxScore = calculateMaxScore();
+            
+            
             // Create a new board and its associated GUI
             gameBoard = new Board();
             gameBoardUI = new BoardGameUI(gameBoard);
@@ -233,13 +238,22 @@ public abstract class GameSystem {
     	boolean resourceCheck = currentPlayer.getResource(resourceType) >= currentStep.getResourceCost();
     	
     	if (!selectedTask.isCompleted() && resourceCheck) {
-    		// Subtract from current player's resources and update their score
+    		// Subtract from current player's resources
     		int newResourceAmount = currentPlayer.getResource(resourceType) - currentStep.getResourceCost();
     		currentPlayer.setResource(newResourceAmount, resourceType);
-    		currentPlayer.changeScoreBy(currentStep.getCompletionScore());
+    		
+    		// Update player score and global score
+    		int scoreIncrease = currentStep.getCompletionScore();
+    		currentPlayer.changeScoreBy(scoreIncrease);
+    		currentTotalAwardedScore += scoreIncrease;
     	
     		// Progress the task onto the next subtask
     		selectedTask.completeStep();
+    		
+    		// If the task is now fully complete, award the task's completion score to the player
+    		if(selectedTask.isCompleted()) {
+    			currentPlayer.changeScoreBy(selectedTask.getCompletionScore());
+    		}
     	}  	
     }
     
@@ -267,6 +281,17 @@ public abstract class GameSystem {
     	
 		return true;
 	}
+    
+    /**
+     * Calculates the implementation progress of the game and gives it as a fraction rounded to 3 decimal points.
+     * (e.g. 0.762 = 76.2% completed)
+     * 
+     * @return a fraction rounded to 3dp showing the current completion progress of the game (e.g. 0.762 = 76.2% completed)
+     */
+    public static double getImplementationPercent() {
+    	double percentUnrounded = currentTotalAwardedScore / maxScore;
+    	return Math.round(percentUnrounded * 1000.0) / 1000.0;
+    }
     
     /**
      * Evaluates whether all objectives have been completed, determining if the game
@@ -354,6 +379,29 @@ public abstract class GameSystem {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Calculates the total score of all tasks and subtasks in the game
+     * Should be called ideally after data has already been initialised
+     * 
+     * @return The total score of all tasks and subtasks in the game
+     */
+    private static int calculateMaxScore() {
+    	int scoreCalculation = 0;
+    	
+    	// Loop through all tasks and add their completion score to the calculation (including step scores)
+    	for(Task currentTask : tasks) {
+    		scoreCalculation += currentTask.getCompletionScore();
+    		
+    		// Loop through all of this task's steps and add their score to the calculation as well
+    		for(SubTask currentSub : currentTask.getSteps()) {
+    			scoreCalculation += currentSub.getCompletionScore();
+    		}
+    	}
+    	
+    	return scoreCalculation;
+    	
     }
 
     /**
