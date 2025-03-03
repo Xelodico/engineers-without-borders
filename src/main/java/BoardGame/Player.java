@@ -15,11 +15,12 @@ import java.util.Random;
 public class Player {
     private String name;
     private int coord;
+    private int score;
     private int money;
-    private int resource1;
-    private int resource2;
-    private int resource3;
-    private int resource4;
+    private int asphalt;
+    private int volunteers;
+    private int influence;
+    private int knowledge;
     private int movesLeft;
     private int moneySpent;
     private int score;
@@ -45,13 +46,12 @@ public class Player {
     public Player(String name, int coord, int resources, int movesLeft) {
         this.name = name;
         this.coord = coord;
-        this.money = 0;
-        this.resource1 = 0;
-        this.resource2 = 0;
-        this.resource3 = 0;
-        this.resource4 = 0;
-        this.moneySpent = 0;
         this.score = 0;
+        this.money = 0;
+        this.asphalt = 0;
+        this.volunteers = 0;
+        this.influence = 0;
+        this.knowledge = 0;
         this.movesLeft = movesLeft;
         this.timesHelped = timesHelped;
         this.tasks = new ArrayList<Task>();
@@ -69,13 +69,12 @@ public class Player {
     public Player(String name, int coords) {
         this.name = name;
         this.coord = coords;
-        this.money = 0;
-        this.resource1 = 0;
-        this.resource2 = 0;
-        this.resource3 = 0;
-        this.resource4 = 0;
-        this.moneySpent = 0;
         this.score = 0;
+        this.money = 0;
+        this.asphalt = 0;
+        this.volunteers = 0;
+        this.influence = 0;
+        this.knowledge = 0;
         this.movesLeft = 0;
         this.timesHelped = 0;
         this.tasks = new ArrayList<Task>();
@@ -89,13 +88,12 @@ public class Player {
     public Player() {
         this.name = "";
         this.coord = 0;
-        this.money = 0;
-        this.resource1 = 0;
-        this.resource2 = 0;
-        this.resource3 = 0;
-        this.resource4 = 0;
-        this.moneySpent = 0;
         this.score = 0;
+        this.money = 0;
+        this.asphalt = 0;
+        this.volunteers = 0;
+        this.influence = 0;
+        this.knowledge = 0;
         this.movesLeft = 0;
         this.timesHelped = 0;
         this.tasks = new ArrayList<Task>();
@@ -143,6 +141,28 @@ public class Player {
             throw new IllegalArgumentException("Coordinate cannot be greater than 143");
         }
         this.coord = coord;
+    }
+    
+    /**
+     * Gets the score of the player
+     * 
+     * @return the score of the player
+     */
+    public int getScore() {
+        return this.score;
+    }
+    
+    /** 
+     * Changes the score of the player by the given amount. Score cannot go below 0
+     * 
+     * @param changeAmount - the amount to change the score by
+     */
+    public void changeScoreBy(int changeAmount) {
+        if(this.score + changeAmount < 0) {
+        	this.score = 0;
+        } else {
+        	this.score += changeAmount;
+        }
     }
 
     /**
@@ -243,36 +263,88 @@ public class Player {
         this.movesLeft = movesLeft;
     }
 
-    public int getResource1() {
-        return resource1;
+    public int getMoney() {
+        return money;
     }
 
-    public void setResource1(int resource1) {
-        this.resource1 = resource1;
+    public void setMoney(int money) {
+        this.money = money;
     }
 
-    public int getResource2() {
-        return resource2;
+    
+    /**
+     * Gets the amount of the resource referenced by the inputed ResourceType
+     * 
+     * @param resourceType - The type of resource amount to return
+     * @return the amount of the resource referenced by resourceType
+     */
+    public int getResource(ResourceType resourceType) {
+        switch(resourceType) {
+        case ASPHALT: 
+        	return asphalt;
+        case VOLUNTEERS: 
+        	return volunteers;
+        case INFLUENCE:
+        	return influence;
+        case KNOWLEDGE:
+        	return knowledge;
+        default: 
+        	return 0;
+        }
     }
 
-    public void setResource2(int resource2) {
-        this.resource2 = resource2;
+    /**
+     * Sets the amount of the resource referenced by the inputed ResourceType
+     * 
+     * @param resource - The new amount of the resource
+     * @param resourceType - The type of resource to set
+     */
+    public void setResource(int resource, ResourceType resourceType) {
+    	switch(resourceType) {
+        case ASPHALT: 
+        	this.asphalt = resource;
+        case VOLUNTEERS: 
+        	this.volunteers = resource;
+        case INFLUENCE:
+        	this.influence = resource;
+        case KNOWLEDGE:
+        	this.knowledge = resource;
+        }
     }
-
-    public int getResource3() {
-        return resource3;
-    }
-
-    public void setResource3(int resource3) {
-        this.resource3 = resource3;
-    }
-
-    public int getResource4() {
-        return resource4;
-    }
-
-    public void setResource4(int resource4) {
-        this.resource4 = resource4;
+    
+    /**
+     * changes the amount of the resource referenced by the inputed ResourceType by the amount inputed
+     * 
+     * @param changeAmount - The amount to change resource by (can be negative)
+     * @param resourceType - The type of resource to set
+     */
+    public void changeResource(int changeAmount, ResourceType resourceType) {
+    	switch(resourceType) {
+        case ASPHALT: 
+        	if(this.asphalt + changeAmount < 0) {
+            	this.asphalt = 0;
+            } else {
+            	this.asphalt += changeAmount;
+            } 
+        case VOLUNTEERS: 
+        	if(this.volunteers + changeAmount < 0) {
+            	this.volunteers = 0;
+            } else {
+            	this.volunteers += changeAmount;
+            } 
+        case INFLUENCE:
+        	if(this.influence + changeAmount < 0) {
+            	this.influence = 0;
+            } else {
+            	this.influence += changeAmount;
+            } 
+        case KNOWLEDGE:
+        	if(this.knowledge + changeAmount < 0) {
+            	this.knowledge = 0;
+            } else {
+            	this.knowledge += changeAmount;
+            }
+        }
     }
 
     public int getTimesHelped() {
