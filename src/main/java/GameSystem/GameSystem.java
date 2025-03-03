@@ -1,7 +1,7 @@
 package GameSystem;
 
+import java.awt.Color;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -16,6 +16,8 @@ import BoardGame.Direction;
 import BoardGame.Objective;
 import BoardGame.Player;
 import BoardGame.Task;
+import BoardGame.ResourceType;
+import BoardGame.SubTask;
 import square.Square;
 
 /**
@@ -49,9 +51,16 @@ public abstract class GameSystem {
 
     private static ArrayList<Objective> objectives;
     private static ArrayList<Task> tasks;
+    private static SubTask[] subtasks;
 
     // Boolean flag to determine whether the game is active or not
     private static boolean gameActive = false;
+
+    // Global variables for resource purchase price and scores for calculating the
+    // solution implementation percentage
+    private final static int RESOURCE_PRICE = 100;
+    private static int maxScore;
+    private static int currentTotalAwardedScore;
 
     /**
      * Initialises the game by setting up essential components.
@@ -67,15 +76,19 @@ public abstract class GameSystem {
 
             // Setting up a default player array with at least one player to avoid errors
             turnOrder = new Player[] { new Player() };
+
+            // Create data and update maxScore
             createData();
+            maxScore = calculateMaxScore();
 
             // Create a new board and its associated GUI
-            gameBoard = new Board();
+            gameBoard = new Board(tasks);
             gameBoardUI = new BoardGameUI(gameBoard);
             gameBoardUI.setTitle("Pavers Valley"); // Set the title for the game window
 
             gameBoardUI.setVisible(true); // Make the game UI visible
             gameActive = true; // Mark the game as active
+
         }
     }
 
@@ -86,6 +99,7 @@ public abstract class GameSystem {
         roundNumber++; // Increment the round counter
         gameBoardUI.startGame(); // Start the game through the UI
         gameBoardUI.refresh(); // Refresh the UI to reflect updated game state
+        toggleTutorial();
     }
 
     /**
@@ -205,6 +219,7 @@ public abstract class GameSystem {
         // added using a button).
         Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
         sqrAtPosition.activateSquareEffect();
+
     }
 
     /**
@@ -229,6 +244,84 @@ public abstract class GameSystem {
             // Otherwise, move to the next player's turn
             turnNumber++;
         }
+    }
+
+    /**
+     * Completes one step of the inputed Task object and awards the current player
+     * points before moving to
+     * the next step
+     * 
+     * @param selectedTask - The task to progress
+     */
+    public static void progressTask(Task selectedTask) {
+        // Get current player
+        Player currentPlayer = getPlayerAt();
+
+        // Check that the next step is able to be completed and task is not completed
+        // already
+        ResourceType resourceType = selectedTask.getResourceType();
+        SubTask currentStep = selectedTask.getCurrentSubTask();
+        boolean resourceCheck = currentPlayer.getResource(resourceType) >= currentStep.getResourceCost();
+
+        if (!selectedTask.isCompleted() && resourceCheck) {
+            // Subtract from current player's resources
+            int newResourceAmount = currentPlayer.getResource(resourceType) - currentStep.getResourceCost();
+            currentPlayer.setResource(newResourceAmount, resourceType);
+
+            // Update player score and global score
+            int scoreIncrease = currentStep.getCompletionScore();
+            currentPlayer.changeScoreBy(scoreIncrease);
+            currentTotalAwardedScore += scoreIncrease;
+
+            // Progress the task onto the next subtask
+            selectedTask.completeStep();
+
+            // If the task is now fully complete, award the task's completion score to the
+            // player
+            if (selectedTask.isCompleted()) {
+                currentPlayer.changeScoreBy(selectedTask.getCompletionScore());
+            }
+        }
+    }
+
+    /**
+     * Subtracts funds equal to RESOURCE_PRICE from the current player's funds and
+     * gives them a set amount of
+     * resources of the type inputed in return.
+     * Cannot purchase if the player doesn't have enough funds
+     * 
+     * @param resourceType - The type of resource being purchased
+     * @return - True if there was enough money to purchase the resources, false if
+     *         not
+     */
+    public static boolean purchaseResource(ResourceType resourceType) {
+        // Get current player
+        Player currentPlayer = getPlayerAt();
+
+        // Check that player has enough funds to buy some resources (from RESOURCE_PRICE
+        // constant)
+        if (currentPlayer.getResource(resourceType) < RESOURCE_PRICE) {
+            return false;
+        }
+
+        // Subtract funds from player and add resources
+        currentPlayer.changeMoney(-RESOURCE_PRICE);
+        currentPlayer.changeResource(25, resourceType);
+
+        return true;
+    }
+
+    /**
+     * Calculates the implementation progress of the game and gives it as a fraction
+     * rounded to 3 decimal points.
+     * (e.g. 0.762 = 76.2% completed)
+     * 
+     * @return a fraction rounded to 3dp showing the current completion progress of
+     *         the game (e.g. 0.762 = 76.2% completed)
+     */
+    public static double getImplementationPercent() {
+        double percentUnrounded = currentTotalAwardedScore / maxScore;
+        return Math.round(percentUnrounded * 1000.0) / 1000.0;
     }
 
     /**
@@ -292,8 +385,12 @@ public abstract class GameSystem {
      * Starts or toggles the tutorial mode for the game.
      * This guides new players through key mechanics and gameplay features.
      */
-    public static void playTutorial() {
+    public static void toggleTutorial() {
         gameBoardUI.toggleTutorial();
+    }
+
+    public static void toggleTransfer(Task task) {
+        gameBoardUI.toggleTransfer(task);
     }
 
     /**
@@ -316,13 +413,54 @@ public abstract class GameSystem {
                     Task task = new Task();
                     task.setTitle(tObj.getString("task"));
                     tasks.add(task);
+
+                    JSONArray subtasksArr = tObj.getJSONArray("subtasks");
+                    for (int i = 0; i < subtasksArr.length(); i++) {
+                        SubTask subtask = new SubTask();
+                        subtask.setTitle(subtasksArr.getString(i));
+                        task.setBelongsTo(o1);
+                        task.addStep(subtask);
+                    }
+
                     o1.addTask(task);
                 });
             });
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | NullPointerException e) {
+            System.err.println("Error reading file: " + file);
+            System.exit(1);
         }
+
+        objectives.get(0).setUiColour(Color.RED);
+        objectives.get(1).setUiColour(Color.ORANGE);
+        objectives.get(2).setUiColour(Color.MAGENTA);
+        objectives.get(3).setUiColour(Color.CYAN);
+
+    }
+
+    /**
+     * Calculates the total score of all tasks and subtasks in the game
+     * Should be called ideally after data has already been initialised
+     * 
+     * @return The total score of all tasks and subtasks in the game
+     */
+    private static int calculateMaxScore() {
+        int scoreCalculation = 0;
+
+        // Loop through all tasks and add their completion score to the calculation
+        // (including step scores)
+        for (Task currentTask : tasks) {
+            scoreCalculation += currentTask.getCompletionScore();
+
+            // Loop through all of this task's steps and add their score to the calculation
+            // as well
+            for (SubTask currentSub : currentTask.getSteps()) {
+                scoreCalculation += currentSub.getCompletionScore();
+            }
+        }
+
+        return scoreCalculation;
+
     }
 
     /**

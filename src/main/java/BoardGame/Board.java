@@ -19,12 +19,6 @@ public class Board extends JPanel {
     public final int boardSideLength = 12;
 
     /**
-     * The distribution ratio of the square types on the board.
-     * The ratio is Task : Resource : Normal.
-     */
-    private final static int[] squareTypeRatios = { 2, 2, 6 };
-
-    /**
      * The List of all the Players in the game.
      */
     private Player[] players;
@@ -40,11 +34,14 @@ public class Board extends JPanel {
      * Constructs a new Board object and initializes the board with the default
      * settings.
      */
-    public Board() {
+    public Board(ArrayList<Task> tasks) {
         this.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         this.setLayout(new java.awt.GridLayout(boardSideLength, boardSideLength));
 
-        squareArray = generateBoardSquares();
+        squareArray = generateBoardSquares(tasks);
+        for (int i = 0; i < 12; i++) {
+            generateNewSquares(1, new TaskSquare(tasks.get(i)));
+        }
         renderBoard(squareArray);
     }
 
@@ -55,21 +52,12 @@ public class Board extends JPanel {
      * 
      * @return A list of strings representing the type of each square on the board.
      */
-    private List<Square> generateBoardSquares() {
+    private List<Square> generateBoardSquares(ArrayList<Task> tasks) {
         int totalSquares = boardSideLength * boardSideLength;
         final List<Integer> spawnLocations = Arrays.asList(65, 66, 77, 78);
         List<Square> squareArray = new ArrayList<>();
 
-        int totalWeight = Arrays.stream(squareTypeRatios).sum();
-        int numTask = totalSquares / totalWeight * squareTypeRatios[0];
-        int numNormal = totalSquares - numTask;
-
-        squareArray.addAll(Collections.nCopies(numNormal, new Square()));
-
-        for (int i = 0; i < numTask; i++) {
-            squareArray.add(new TaskSquare(new Task()));
-        }
-
+        squareArray.addAll(Collections.nCopies(totalSquares, new Square()));
         Collections.shuffle(squareArray);
 
         for (int location : spawnLocations) {
@@ -165,7 +153,7 @@ public class Board extends JPanel {
      *                                  squares on the board or if the amount is
      *                                  negative.
      */
-    public void generateNewSquares(int amount, SquareType squareType) {
+    public void generateNewSquares(int amount, Square squareType) {
         if (amount > squareArray.size()) {
             throw new IllegalArgumentException("Amount of potholes cannot exceed the number of squares on the board.");
         }
@@ -187,22 +175,7 @@ public class Board extends JPanel {
             while (!valid) {
                 int randomIndex = (int) (Math.random() * squareArray.size());
                 if (squareArray.get(randomIndex).getSquareType() == SquareType.SQUARE) {
-                    switch (squareType) {
-                        case SHOPSQUARE:
-                            squareArray.set(randomIndex, new ShopSquare());
-                            break;
-                        case TASKSQUARE:
-                            squareArray.set(randomIndex, new TaskSquare(null));
-                            break;
-                        case MONEYSQUARE:
-                            squareArray.set(randomIndex, new MoneySquare());
-                            break;
-                        case SQUARE:
-                            squareArray.set(randomIndex, new Square());
-                            break;
-                        default:
-                            break;
-                    }
+                    squareArray.set(randomIndex, squareType);
                     valid = true;
                 }
             }
@@ -254,13 +227,5 @@ public class Board extends JPanel {
             revalidate();
             repaint();
         }
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(650, 650);
-        frame.add(new Board());
-        frame.setVisible(true);
     }
 }

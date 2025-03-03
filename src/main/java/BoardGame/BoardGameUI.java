@@ -7,10 +7,12 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import GameSystem.GameSystem;
+import Popup.EndGame;
 import Popup.Journal;
 import Popup.Popup;
 import Popup.Shop;
 import Popup.Tutorial;
+import Popup.TransferPopup;
 import square.SquareType;
 
 /**
@@ -29,10 +31,6 @@ import square.SquareType;
 public class BoardGameUI extends JFrame {
 
     Player[] players;
-    String player1Name;
-    String player2Name;
-    String player3Name;
-    String player4Name;
 
     public static final int WINDOW_WIDTH = 1075;
     public static final int WINDOW_HEIGHT = 705;
@@ -40,6 +38,10 @@ public class BoardGameUI extends JFrame {
     private static final int BOARD_HEIGHT = BOARD_WIDTH;
 
     public StartScreen startScreen;
+
+    public TransferPopup transferPopup;
+
+    public EndGame endGame;
 
     /**
      * Creates a new BoardGameUI instance with the specified list of players.
@@ -55,11 +57,11 @@ public class BoardGameUI extends JFrame {
         startScreen.setVisible(true);
 
         popup = new Popup("", "", "", "", null, null);
-        add(popup);
-
         journal = new Journal();
-
         shop = new Shop();
+        endGame = new EndGame();
+        transferPopup = new TransferPopup("Transfer Task", "Description");
+        tutorial = new Tutorial();
 
         dimBackground = new JPanel();
         dimBackground.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -68,12 +70,17 @@ public class BoardGameUI extends JFrame {
         add(dimBackground);
 
         JLayeredPane layeredPane = getLayeredPane();
+        layeredPane.add(popup, JLayeredPane.POPUP_LAYER);
+        layeredPane.add(tutorial, JLayeredPane.POPUP_LAYER);
+        layeredPane.add(transferPopup, JLayeredPane.POPUP_LAYER);
         layeredPane.add(journal, JLayeredPane.POPUP_LAYER);
         layeredPane.add(shop, JLayeredPane.POPUP_LAYER);
+        layeredPane.add(endGame, JLayeredPane.POPUP_LAYER);
 
         initComponents();
         setVisible(true);
         setResizable(false);
+        setLocationRelativeTo(null);
     }
 
     public void showPopup(String title, String desc, String yesButton, String noButton, ActionListener yesAction,
@@ -396,7 +403,6 @@ public class BoardGameUI extends JFrame {
                                 .addGap(10, 10, 10)));
 
         setSize(new java.awt.Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
-        setLocationRelativeTo(null);
     }
 
     private void toggleEnableButtons() {
@@ -424,6 +430,9 @@ public class BoardGameUI extends JFrame {
     }
 
     public void toggleJournal() {
+        if (!journal.isVisible()) {
+            journal.refresh();
+        }
         journal.setVisible(!journal.isVisible());
         dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
@@ -436,9 +445,31 @@ public class BoardGameUI extends JFrame {
     }
 
     public void toggleTutorial() {
-        // tutorial.setVisible(!tutorial.isVisible());
-        // dimBackground.setVisible(!dimBackground.isVisible());
+         tutorial.setVisible(!tutorial.isVisible());
+         dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
+    }
+
+    public void toggleTransfer(Task task) {
+        transferPopup.setVisible(!transferPopup.isVisible());
+        journal.closeButton.setEnabled(!transferPopup.isVisible());
+        if (task != null) {
+            transferPopup.setTask(task);
+        }
+        transferPopup.renderButtons(this.players);
+    }
+
+    public void toggleEndGame(EndGame.Ending endingType) {
+        endGame.setVisible(!endGame.isVisible());
+        dimBackground.setVisible(!dimBackground.isVisible());
+        toggleEnableButtons();
+        if (endingType == null) {
+            System.err.println("Ending type is null");
+        } else if (endingType == EndGame.Ending.GOOD) {
+            endGame.showGoodEnding();
+        } else if (endingType == EndGame.Ending.BAD) {
+            endGame.showBadEnding();
+        }
     }
 
     private JLabel movesLeftLabel;
