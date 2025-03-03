@@ -20,7 +20,7 @@ public class TaskSquare extends Square {
     /**
      * The color representation of this square.
      */
-    private final Color squareColor = Color.RED;
+    private Color squareColor = Color.BLACK;
 
     /**
      * Constructs a TaskSquare object with the specified task.
@@ -32,6 +32,9 @@ public class TaskSquare extends Square {
     public TaskSquare(Task ts) {
         super();
         this.task = ts;
+        if(ts.getBelongsTo() != null) {
+            this.squareColor = ts.getBelongsTo().getUiColour();
+        }
     }
 
     /**
@@ -64,6 +67,7 @@ public class TaskSquare extends Square {
                 // Reject task logic
                 System.out.println("Show the task to other players");
                 GameSystem.hidePopup();
+                GameSystem.toggleTransfer(task);
             }
         };
 
@@ -92,12 +96,12 @@ public class TaskSquare extends Square {
 
         super.activateSquareEffect();
         if (task.getOwnedBy() == null) {
-            GameSystem.showPopup("Do you want to get this task?", "", "Yes", "No", takeTask, rejectTask);
+            GameSystem.showPopup("Do you want to get this task?", task.getTitle(), "Yes", "No", takeTask, rejectTask);
         } else if (task.getOwnedBy() != GameSystem.getPlayerAt()) {
             GameSystem.showPopup("Do you want to help complete this task?", task.getTitle(), "Yes", "No",
                     beginHelping, ignoreHelping);
         } else {
-            GameSystem.showPopup("You already own this task!", null, "Ok", null, okSingleButton, null);
+            GameSystem.showPopup("You already own this task!", task.getTitle(), "Ok", null, okSingleButton, null);
         }
         return true;
     }

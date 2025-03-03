@@ -42,6 +42,13 @@ public class Objective {
         this.uiColour = Color.BLACK;
     }
 
+    public Objective(String title, Color uiColour) {
+        this.title = title;
+        this.responsiblePlayer = null;
+        this.tasks = new ArrayList<>();
+        this.uiColour = uiColour;
+    }
+
     /**
      * Checks if all tasks in the objective are completed.
      *

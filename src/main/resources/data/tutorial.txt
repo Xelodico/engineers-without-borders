@@ -1,0 +1,50 @@
+#About Makers Valley
+Makers Valley is an informal cluster of suburbs on the eastern edge of inner Johannesburg, including areas like New Doornfontein, Bezuidenhout Valley, Bertrams, Judith’s Paarl, Troyeville, and Lorentzville.
+It is home to roughly 46,000 residents, characterised by rich cultural diversity and a predominantly young population.
+Historically, the area has faced challenges such as urban decay, high unemployment, and inadequate infrastructure.
+In recent years, Makers Valley has been undergoing regeneration, driven by a vibrant local creative and maker movement.
+Community initiatives and projects led by organisations like Engineers Without Borders and the Makers Valley Partnership are repurposing abandoned spaces and fostering sustainable development.
+
+#The Problem
+In Makers Valley, poor road maintenance has led to widespread potholes that pose significant hazards for drivers and pedestrians alike.
+These potholes contribute to vehicle damage and increase the risk of accidents.
+Community leader Desiree Beukes has highlighted several initiatives aimed at repairing these roads were attempted but ultimately aborted due to bureaucratic challenges.
+DIY repairs are against the law - The Johannesburg Roads Agency (JRA) has emphasised that the materials used by residents in these repairs—including concrete, stones, and bricks—are not up to standard and can put motorists at risk.
+Most importantly, potholes force vehicles to work inefficiently, increasing fuel use and emissions—a finding confirmed by a Taylor & Francis Online study. This adds urgency to repairing road infrastructure in Makers Valley.
+
+#Our solution and your goal
+We have designed a community initiative in association with the Makers Valley Partnership where residents learn and get certified in pothole repair techniques.
+They use shovels and cold asphalt mix to fix potholes and track progress with a software application.
+Your team will collaborate on supporting this effort by crowdfunding, sourcing materials, gathering volunteers and more.
+
+#How to move across the board
+Players start in the centre of the board; This is where the shop is located; you can purchase items here.
+To move, click the "Roll Die" button, which will display how many moves you have.
+You can move freely on the board by clicking the arrow buttons. When no moves are left, click the "End Turn" button to indicate your turn has finished.
+There are special squares on the board, these are:
+- Money (Yellow): Receive South African Rand in a specific amount.
+- Shop (Green): Where items are purchased.
+- Task (Different depending on the objective): An opportunity to claim a task and complete it, or help another player fulfil the task.
+
+#Objectives, tasks and subtasks
+There are 4 Objectives, each with their own tasks and subtasks:
+1. Secure Grant (Influence)
+2. Repair Potholes (Cold Asphalt)
+3. Train Volunteers (Teaching Material)
+4. Secure Longevity (Volunteers)
+Each player is assigned an objective at the start of the game. Tasks can be collected by landing on a task square.
+Objectives, tasks and subtasks can be viewed anytime by clicking the Journal icon.
+If you have enough resources to fulfil a task or subtask, you can complete it in the Journal.
+
+#Interacting with the shop and journal
+The Shop is where you can purchase and source materials. Four items are displayed at a time. To buy an item, click on its icon.
+The Journal allows you to view remaining objectives, tasks and subtasks.
+The two buttons beside each task allow for transferring and completing tasks respectively. 
+
+#Transferring tasks to other players
+If you wish to give an assigned task to another player (e.g., if they have sufficient resources for the task), access the journal and click the swap icon.
+A list of options will be displayed. Select the name of the player you want to give the task to. If you change your mind, select "Cancel".
+
+#Winning/Losing Criteria
+Your team must work together to fulfil all Objectives.
+You can quit at any time, but in doing so, you will be letting your teammates and the Makers Valley community down.
