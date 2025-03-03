@@ -164,6 +164,16 @@ public class Task {
 		}
 	}
 	
+	public void addStep(SubTask step) {
+		SubTask[] newSteps = new SubTask[steps.length + 1];
+		for(int i = 0; i < steps.length; i++) {
+			newSteps[i] = steps[i];
+		}
+		newSteps[steps.length] = step;
+		steps = newSteps;
+	}
+
+	
 	/**
 	 * Gets the index of the current step this task is on
 	 * 
