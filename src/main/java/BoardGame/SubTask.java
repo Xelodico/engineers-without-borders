@@ -49,7 +49,7 @@ public class SubTask {
      */
     public boolean discountSubTask() {
         if(!isDiscounted()) {
-        	setResourceCost(this.resourceCost / 2);
+        	setResourceCost(this.resourceCost / 2 + (this.completionScore % 2));
         	setCompletionScore(this.completionScore / 2 + (this.completionScore % 2));
         	setDiscounted(true);
         	return true;
