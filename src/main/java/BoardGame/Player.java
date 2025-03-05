@@ -23,7 +23,6 @@ public class Player {
     private int knowledge;
     private int movesLeft;
     private int moneySpent;
-    private int score;
     private int movesTravelled;
     private int timesHelped;
     private ArrayList<Task> tasks;
@@ -143,14 +142,6 @@ public class Player {
         this.coord = coord;
     }
     
-    /**
-     * Gets the score of the player
-     * 
-     * @return the score of the player
-     */
-    public int getScore() {
-        return this.score;
-    }
     
     /** 
      * Changes the score of the player by the given amount. Score cannot go below 0
@@ -166,13 +157,11 @@ public class Player {
     }
 
     /**
-     * Retrieves the money value of the player
+     * Gets the money value of the player.
      * 
-     * @return returns current money amount of the player
      */
-
     public int getMoney() {
-        return this.money;
+        return money;
     }
 
     /**
@@ -180,7 +169,6 @@ public class Player {
      * 
      * @param money The new money value to assign to the player
      */
-
     public void setMoney(int money) {
         this.money = money;
     }
@@ -261,14 +249,6 @@ public class Player {
             throw new IllegalArgumentException("Moves left cannot be greater than 6");
         }
         this.movesLeft = movesLeft;
-    }
-
-    public int getMoney() {
-        return money;
-    }
-
-    public void setMoney(int money) {
-        this.money = money;
     }
 
     
