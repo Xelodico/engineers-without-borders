@@ -237,6 +237,10 @@ public abstract class GameSystem {
         }
     }
 
+    public static int[] getSpawnLocations() {
+        return new int[]{40};
+    }
+
     /**
      * Completes one step of the inputed Task object and awards the current player points before moving to
      * the next step

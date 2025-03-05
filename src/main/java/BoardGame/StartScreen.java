@@ -31,7 +31,7 @@ public class StartScreen extends JPanel {
     private static final int BUTTON_SPACING = 10;
     private static final int MAX_PLAYERS = 4;
 
-    private static final int[] STARTING_COORDS = { 65, 66, 77, 78 };
+    private static final int[] STARTING_COORDS = GameSystem.getSpawnLocations();
 
     private final ImageIcon playerBackgroundIcon = new ImageIcon(getClass().getResource("/images/playerTurn.png"));
     private final ImageIcon addPlayerIcon = new ImageIcon(getClass().getResource("/images/addPlayer.png"));
@@ -151,8 +151,9 @@ public class StartScreen extends JPanel {
         }
 
         for (int i = 0; i < numOfPlayers; i++) {
-            players[i].setCoord(STARTING_COORDS[i]);
+            players[i].setCoord(STARTING_COORDS[i % STARTING_COORDS.length]);
         }
+
         return players;
     }
 

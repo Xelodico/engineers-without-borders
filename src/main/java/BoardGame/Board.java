@@ -1,6 +1,7 @@
 package BoardGame;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 
 import GameSystem.GameSystem;
 import square.*;
@@ -16,7 +17,7 @@ public class Board extends JPanel {
     /**
      * The side length of the grid.
      */
-    public final int boardSideLength = 12;
+    public final int boardSideLength = 9;
 
     /**
      * The List of all the Players in the game.
@@ -35,8 +36,12 @@ public class Board extends JPanel {
      * settings.
      */
     public Board(ArrayList<Task> tasks) {
-        this.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        this.setLayout(new java.awt.GridLayout(boardSideLength, boardSideLength));
+
+        this.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(30, 0, 0, 0),
+                BorderFactory.createBevelBorder(BevelBorder.LOWERED)
+        ));
+        this.setLayout(new GridLayout(boardSideLength, boardSideLength));
 
         squareArray = generateBoardSquares(tasks);
         for (int i = 0; i < 12; i++) {
@@ -54,7 +59,7 @@ public class Board extends JPanel {
      */
     private List<Square> generateBoardSquares(ArrayList<Task> tasks) {
         int totalSquares = boardSideLength * boardSideLength;
-        final List<Integer> spawnLocations = Arrays.asList(65, 66, 77, 78);
+        final int[] spawnLocations = GameSystem.getSpawnLocations();
         List<Square> squareArray = new ArrayList<>();
 
         squareArray.addAll(Collections.nCopies(totalSquares, new Square()));
@@ -219,7 +224,7 @@ public class Board extends JPanel {
 
             if (imageIcon != null) {
                 ImageIcon resizedImage = new ImageIcon(
-                        imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+                        imageIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
                 JLabel playerIcon = new JLabel(resizedImage);
                 panel.add(playerIcon, BorderLayout.CENTER);
             }

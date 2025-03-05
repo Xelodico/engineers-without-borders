@@ -56,39 +56,39 @@ public class Shop extends JPanel {
      */
     public void addShopItemsAndPrices() {
         item1 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        item1.setBounds(428, 187, 41, 60);
+        item1.setBounds(428, 200, 41, 60);
         addHoverEffect(item1);
         add(item1);
 
         price1 = newPrice("100");
-        price1.setBounds(396, 288, 100, 39);
+        price1.setBounds(396, 300, 100, 39);
         add(price1);
 
         item2 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        item2.setBounds(617, 187, 41, 60);
+        item2.setBounds(617, 200, 41, 60);
         addHoverEffect(item2);
         add(item2);
 
         price2 = newPrice("200");
-        price2.setBounds(585, 288, 100, 39);
+        price2.setBounds(585, 300, 100, 39);
         add(price2);
 
         item3 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        item3.setBounds(428, 351, 41, 60);
+        item3.setBounds(428, 370, 41, 60);
         addHoverEffect(item3);
         add(item3);
 
         price3 = newPrice("300");
-        price3.setBounds(396, 452, 100, 39);
+        price3.setBounds(396, 470, 100, 39);
         add(price3);
 
         item4 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        item4.setBounds(617, 351, 41, 60);
+        item4.setBounds(617, 370, 41, 60);
         addHoverEffect(item4);
         add(item4);
 
         price4 = newPrice("400");
-        price4.setBounds(585, 452, 100, 39);
+        price4.setBounds(585, 470, 100, 39);
         add(price4);
     }
 
