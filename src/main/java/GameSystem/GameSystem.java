@@ -95,7 +95,6 @@ public abstract class GameSystem {
         gameBoardUI.startGame(); // Start the game through the UI
         gameBoardUI.refresh(); // Refresh the UI to reflect updated game state
         toggleTutorial();
-        getPlayerAt().setMoney(500);
     }
 
     /**

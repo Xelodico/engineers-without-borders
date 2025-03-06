@@ -153,10 +153,8 @@ public class Journal extends JPanel {
      * @return A JPanel representing the objective, including its title, tasks, and sub-tasks.
      */
     private JPanel createObjective(int objectiveIndex) {
-
         Objective objectiveObj = GameSystem.getObjectives().get(objectiveIndex);
         ArrayList<Task> tasksObj = objectiveObj.getTasks();
-        tasksObj.get(0).setCurrentStepNumber(3);
 
         JPanel objective = new JPanel();
         objective.setLayout(new BorderLayout());
