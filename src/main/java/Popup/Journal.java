@@ -1,7 +1,6 @@
 package Popup;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 
 import BoardGame.BoardGameUI;
 import BoardGame.Objective;

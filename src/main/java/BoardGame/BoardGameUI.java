@@ -106,6 +106,29 @@ public class BoardGameUI extends JFrame {
         sidePanelContainer.setVisible(true);
     }
 
+    public void setResourceValues() {
+        for (int i = 0; i < players.length; i++) {
+            Player currentPlayer = players[i];
+            
+            // Ensure resource values are valid (non-negative)
+            int volunteers = currentPlayer.getResource(ResourceType.VOLUNTEERS);
+            int knowledge = currentPlayer.getResource(ResourceType.KNOWLEDGE);
+            int asphalt = currentPlayer.getResource(ResourceType.ASPHALT);
+            int influence = currentPlayer.getResource(ResourceType.INFLUENCE);
+            int money = currentPlayer.getMoney();
+            int score = currentPlayer.getScore();
+    
+            // Set text for player resource labels
+            playerSatisfactions[i].setText(volunteers >= 0 ? Integer.toString(volunteers) : "0");
+            playerKnowledges[i].setText(knowledge >= 0 ? Integer.toString(knowledge) : "0");
+            playerAsphalts[i].setText(asphalt >= 0 ? Integer.toString(asphalt) : "0");
+            playerInfluences[i].setText(influence >= 0 ? Integer.toString(influence) : "0");
+            playerMoneys[i].setText(money >= 0 ? Integer.toString(money) : "0");
+            playerScores[i].setText(score >= 0 ? Integer.toString(score) : "0");
+        }
+
+    }
+
     /**
      * Starts the game by hiding the start screen and showing the game board.
      */
@@ -269,62 +292,60 @@ public class BoardGameUI extends JFrame {
     }
 
     private void setupPlayerPanels() {
-        Player1Resources = new JPanel();
-        player1ResourceTitle = new JLabel();
-        player1Satisfaction = new JLabel();
-        player1Knowledge = new JLabel();
-        player1Asphalt = new JLabel();
-        Player2Resources = new JPanel();
-        player2ResourceTitle = new JLabel();
-        player2Satisfaction = new JLabel();
-        player2Knowledge = new JLabel();
-        player2Asphalt = new JLabel();
-        Player3Resources = new JPanel();
-        player3ResourceTitle = new JLabel();
-        player3Satisfaction = new JLabel();
-        player3Knowledge = new JLabel();
-        player3Asphalt = new JLabel();
-        Player4Resources = new JPanel();
-        player4ResourceTitle = new JLabel();
-        player4Satisfaction = new JLabel();
-        player4Knowledge = new JLabel();
-        player4Asphalt = new JLabel();
-
         JPanel[] playerResources = { Player1Resources, Player2Resources, Player3Resources, Player4Resources };
         JLabel[] playerResourceTitles = { player1ResourceTitle, player2ResourceTitle, player3ResourceTitle,
                 player4ResourceTitle };
-        JLabel[] playerSatisfactions = { player1Satisfaction, player2Satisfaction, player3Satisfaction,
-                player4Satisfaction };
-        JLabel[] playerKnowledges = { player1Knowledge, player2Knowledge, player3Knowledge, player4Knowledge };
-        JLabel[] playerAsphalts = { player1Asphalt, player2Asphalt, player3Asphalt, player4Asphalt };
 
+        playerAsphalts = new JLabel[players.length];
+        playerKnowledges = new JLabel[players.length];
+        playerSatisfactions = new JLabel[players.length];
+        playerInfluences = new JLabel[players.length];
+        playerMoneys = new JLabel[players.length];
+        playerScores = new JLabel[players.length];
+        
         ImageIcon backgroundIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/Resources 1.png")));
         backgroundIcon.setImage(backgroundIcon.getImage().getScaledInstance(373, 127, Image.SCALE_SMOOTH));
 
         for (int i = 0; i < players.length; i++) {
             Player currentPlayer = players[i];
 
+            playerResources[i] = new JPanel();
             playerResources[i].setLayout(null);
 
+            playerResourceTitles[i] = new JLabel(currentPlayer.getName());
             playerResourceTitles[i].setFont(new java.awt.Font("Segue UI", Font.BOLD, 18));
-            playerResourceTitles[i].setText(currentPlayer.getName()); // Get name from the Player object
             playerResourceTitles[i].setBounds(10, -3, 350, 30);
             playerResources[i].add(playerResourceTitles[i]);
-
-            playerSatisfactions[i].setBounds(310, 23, 60, 40);
-            playerSatisfactions[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
-            playerSatisfactions[i].setText("999");
-            playerResources[i].add(playerSatisfactions[i]);
-
-            playerKnowledges[i].setBounds(185, 23, 60, 40);
-            playerKnowledges[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
-            playerKnowledges[i].setText("999");
-            playerResources[i].add(playerKnowledges[i]);
-
+            
+            playerAsphalts[i] = new JLabel(Integer.toString(currentPlayer.getResource(ResourceType.ASPHALT)));
             playerAsphalts[i].setBounds(60, 23, 60, 40);
             playerAsphalts[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
-            playerAsphalts[i].setText("999");
             playerResources[i].add(playerAsphalts[i]);
+
+            playerKnowledges[i] = new JLabel(Integer.toString(currentPlayer.getResource(ResourceType.KNOWLEDGE)));
+            playerKnowledges[i].setBounds(185, 23, 60, 40);
+            playerKnowledges[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerResources[i].add(playerKnowledges[i]);
+
+            playerSatisfactions[i] = new JLabel(Integer.toString(currentPlayer.getResource(ResourceType.VOLUNTEERS)));
+            playerSatisfactions[i].setBounds(310, 23, 60, 40);
+            playerSatisfactions[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerResources[i].add(playerSatisfactions[i]);
+
+            playerInfluences[i] = new JLabel(Integer.toString(currentPlayer.getResource(ResourceType.INFLUENCE)));
+            playerInfluences[i].setBounds(60, 75, 60, 40);
+            playerInfluences[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerResources[i].add(playerInfluences[i]);
+
+            playerMoneys[i] = new JLabel(Integer.toString(currentPlayer.getMoney()));
+            playerMoneys[i].setBounds(185, 75, 60, 40);
+            playerMoneys[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerResources[i].add(playerMoneys[i]);
+
+            playerScores[i] = new JLabel(Integer.toString(currentPlayer.getScore()));
+            playerScores[i].setBounds(310, 75, 60, 40);
+            playerScores[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerResources[i].add(playerScores[i]);
 
             JLabel background = new JLabel();
             background.setIcon(backgroundIcon);
@@ -419,8 +440,8 @@ public class BoardGameUI extends JFrame {
     }
 
     public void toggleTutorial() {
-         tutorial.setVisible(!tutorial.isVisible());
-         dimBackground.setVisible(!dimBackground.isVisible());
+        tutorial.setVisible(!tutorial.isVisible());
+        dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
     }
 
@@ -459,22 +480,19 @@ public class BoardGameUI extends JFrame {
     private JPanel arrowsContainer;
     public Board gameBoard;
     private JButton helpButton;
-    private JLabel player1Asphalt;
-    private JLabel player1Knowledge;
+
+    private JLabel[] playerAsphalts;
+    private JLabel[] playerKnowledges;
+    private JLabel[] playerSatisfactions;
+    private JLabel[] playerInfluences;
+    private JLabel[] playerMoneys;
+    private JLabel[] playerScores;
+
     private JLabel player1ResourceTitle;
-    private JLabel player1Satisfaction;
-    private JLabel player2Asphalt;
-    private JLabel player2Knowledge;
     private JLabel player2ResourceTitle;
-    private JLabel player2Satisfaction;
-    private JLabel player3Asphalt;
-    private JLabel player3Knowledge;
     private JLabel player3ResourceTitle;
-    private JLabel player3Satisfaction;
-    private JLabel player4Asphalt;
-    private JLabel player4Knowledge;
     private JLabel player4ResourceTitle;
-    private JLabel player4Satisfaction;
+
     private JLabel playerTurnGraphic;
     private JButton rollDiceButton;
     private JLabel roundNumberGraphic;

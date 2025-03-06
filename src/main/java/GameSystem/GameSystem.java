@@ -95,6 +95,7 @@ public abstract class GameSystem {
         gameBoardUI.startGame(); // Start the game through the UI
         gameBoardUI.refresh(); // Refresh the UI to reflect updated game state
         toggleTutorial();
+        getPlayerAt().setMoney(500);
     }
 
     /**
@@ -210,7 +211,6 @@ public abstract class GameSystem {
         // added using a button).
         Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
         sqrAtPosition.activateSquareEffect();
-        
     }
 
     /**
@@ -290,7 +290,7 @@ public abstract class GameSystem {
     	Player currentPlayer = getPlayerAt();
     	
     	// Check that player has enough funds to buy some resources (from RESOURCE_PRICE constant)
-    	if (currentPlayer.getResource(resourceType) < RESOURCE_PRICE) {
+    	if (currentPlayer.getMoney() < RESOURCE_PRICE) {
     		return false;
     	}
     	
@@ -563,7 +563,10 @@ public abstract class GameSystem {
     	}
     	
     	return scoreCalculation;
-    	
+    }
+
+    public static void refreshResources() {
+        gameBoardUI.setResourceValues();
     }
 
     /**

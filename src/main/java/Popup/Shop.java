@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import BoardGame.BoardGameUI;
+import BoardGame.ResourceType;
 import GameSystem.GameSystem;
 
 import java.awt.*;
@@ -57,6 +58,9 @@ public class Shop extends JPanel {
     public void addShopItemsAndPrices() {
         item1 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
         item1.setBounds(428, 200, 41, 60);
+        item1.addActionListener(e -> {
+            GameSystem.purchaseResource(ResourceType.ASPHALT);
+        });
         addHoverEffect(item1);
         add(item1);
 
@@ -66,6 +70,9 @@ public class Shop extends JPanel {
 
         item2 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
         item2.setBounds(617, 200, 41, 60);
+        item2.addActionListener(e -> {
+            GameSystem.purchaseResource(ResourceType.INFLUENCE);
+        });
         addHoverEffect(item2);
         add(item2);
 
@@ -75,6 +82,9 @@ public class Shop extends JPanel {
 
         item3 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
         item3.setBounds(428, 370, 41, 60);
+        item3.addActionListener(e -> {
+            GameSystem.purchaseResource(ResourceType.KNOWLEDGE);
+        });
         addHoverEffect(item3);
         add(item3);
 
@@ -84,6 +94,9 @@ public class Shop extends JPanel {
 
         item4 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
         item4.setBounds(617, 370, 41, 60);
+        item4.addActionListener(e -> {
+            GameSystem.purchaseResource(ResourceType.VOLUNTEERS);
+        });
         addHoverEffect(item4);
         add(item4);
 
