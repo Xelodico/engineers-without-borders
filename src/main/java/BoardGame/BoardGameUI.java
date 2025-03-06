@@ -153,7 +153,7 @@ public class BoardGameUI extends JFrame {
             arrowButtons[i].setBorder(null);
             arrowButtons[i].setContentAreaFilled(false);
             arrowButtons[i].setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-            arrowButtons[i].setFocusPainted(false);
+            arrowButtons[i].setFocusable(false);
             arrowButtons[i].setRolloverEnabled(false);
 
             if (i == 0) { // Arrow Down
@@ -220,6 +220,7 @@ public class BoardGameUI extends JFrame {
         helpButton.setBorder(null);
         helpButton.setContentAreaFilled(false);
         helpButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        helpButton.setFocusable(false);
         sidePanelContainer.add(helpButton);
         helpButton.setRolloverEnabled(false);
         helpButton.setBounds(330, WINDOW_HEIGHT - 105 - 37, 37, 37);
@@ -230,6 +231,7 @@ public class BoardGameUI extends JFrame {
         journalButton.setBorder(null);
         journalButton.setContentAreaFilled(false);
         journalButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        journalButton.setFocusable(false);
         sidePanelContainer.add(journalButton);
         journalButton.setBounds(283, WINDOW_HEIGHT - 105 - 37, 37, 37);
         journalButton.addActionListener(evt -> toggleJournal());
@@ -239,6 +241,7 @@ public class BoardGameUI extends JFrame {
         shopButton.setBorder(null);
         shopButton.setContentAreaFilled(false);
         shopButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        shopButton.setFocusable(false);
         sidePanelContainer.add(shopButton);
         shopButton.setBounds(236, WINDOW_HEIGHT - 105 - 37, 37, 37);
         shopButton.addActionListener(e -> toggleShop());
