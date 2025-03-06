@@ -1,6 +1,7 @@
 package Popup;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import BoardGame.BoardGameUI;
 import BoardGame.Objective;
@@ -56,13 +57,28 @@ public class Journal extends JPanel {
         setBackground(new java.awt.Color(0, 0, 0, 0));
         setVisible(false);
 
+        JPanel titleBar = new JPanel();
+        titleBar.setBounds(25, 0, WIDTH - 100, 50);
+        titleBar.setBackground(new java.awt.Color(0, 0, 0, 0));
+        titleBar.setLayout(new BorderLayout());
+        titleBar.setOpaque(false);
+
         // Title Label for the objectives section
         JLabel title = new JLabel("Objectives");
         title.setFont(new Font("Arial", Font.BOLD, 20));
         title.setHorizontalAlignment(SwingConstants.LEFT);
         title.setBounds(24, 13, 617, 30);
+
+        JLabel solutionImplementation = new JLabel();
+        solutionImplementation.setText("Solution Implementation: FIX ME");
+        // solutionImplementation.setText("Solution Implementation: " + (int) (GameSystem.getImplementationPercent() * 100) + "%");
+        solutionImplementation.setFont(new Font("Arial", Font.PLAIN, 16));
+        solutionImplementation.setHorizontalAlignment(SwingConstants.RIGHT);
+        solutionImplementation.setBounds(24, 13, 617, 30);
         
-        add(title);
+        titleBar.add(title, BorderLayout.WEST);
+        titleBar.add(solutionImplementation, BorderLayout.EAST);
+        add(titleBar);
 
         // Set scroll bar width
         UIManager.put("ScrollBar.width", 10);

@@ -1,7 +1,6 @@
 package BoardGame;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
@@ -20,7 +19,6 @@ import square.SquareType;
  * The BoardGameUI class represents the user interface for the board game.
  * It extends JFrame and provides the main window for the game, including
  * the game board and side panel with player resources and controls.
- * 
  * The class includes methods for initializing the UI components, moving players
  * on the board, and handling user interactions such as button clicks.
  *
@@ -50,7 +48,6 @@ public class BoardGameUI extends JFrame {
         this.gameBoard = gameBoard;
 
         startScreen = new StartScreen();
-        // add(startScreen);
         startScreen.setVisible(true);
 
         popup = new Popup("", "", "", "", null, null);
@@ -64,11 +61,10 @@ public class BoardGameUI extends JFrame {
         dimBackground.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
         dimBackground.setBackground(new java.awt.Color(0, 0, 0, 150));
         dimBackground.setVisible(false);
-        // add(dimBackground);
+        add(dimBackground);
 
         JLayeredPane layeredPane = getLayeredPane();
         layeredPane.add(startScreen, JLayeredPane.DEFAULT_LAYER);
-        layeredPane.add(dimBackground, JLayeredPane.MODAL_LAYER);
         layeredPane.add(popup, JLayeredPane.POPUP_LAYER);
         layeredPane.add(tutorial, JLayeredPane.POPUP_LAYER);
         layeredPane.add(transferPopup, JLayeredPane.POPUP_LAYER);
@@ -131,7 +127,7 @@ public class BoardGameUI extends JFrame {
         String[] arrowIcons = { "/images/arrows/ArrowDown.png", "/images/arrows/ArrowUp.png",
                 "/images/arrows/ArrowLeft.png", "/images/arrows/ArrowRight.png" };
         for (int i = 0; i < arrowButtons.length; i++) {
-            arrowButtons[i].setIcon(new ImageIcon(getClass().getResource(arrowIcons[i])));
+            arrowButtons[i].setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource(arrowIcons[i]))));
             arrowButtons[i].setBorder(null);
             arrowButtons[i].setContentAreaFilled(false);
             arrowButtons[i].setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -144,7 +140,7 @@ public class BoardGameUI extends JFrame {
                 arrowButtons[i].setBounds(45, 1, 46, 46);
             } else if (i == 2) { // Arrow Left
                 arrowButtons[i].setBounds(0, 46, 46, 46);
-            } else if (i == 3) { // Arrow Right
+            } else { // Arrow Right
                 arrowButtons[i].setBounds(90, 46, 46, 46);
             }
 
@@ -161,23 +157,16 @@ public class BoardGameUI extends JFrame {
     }
 
     private void setupArrowButtonAction(JButton button, Direction direction) {
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.movePlayer(direction);
-                if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
-                    movesLeftLabel.setVisible(false);
-                    endTurnButton.setVisible(true);
-                } else {
-                    movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
-                }
-                if (gameBoard.getSquareAt(GameSystem.getPlayerAt().getCoord())
-                        .getSquareType() == SquareType.SHOPSQUARE) {
-                    shopButton.setVisible(true);
-                } else {
-                    shopButton.setVisible(false);
-                }
+        button.addActionListener(e -> {
+            GameSystem.movePlayer(direction);
+            if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
+                movesLeftLabel.setVisible(false);
+                endTurnButton.setVisible(true);
+            } else {
+                movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
             }
+            shopButton.setVisible(gameBoard.getSquareAt(GameSystem.getPlayerAt().getCoord())
+                    .getSquareType() == SquareType.SHOPSQUARE);
         });
     }
 
@@ -191,15 +180,15 @@ public class BoardGameUI extends JFrame {
         endTurnButton = new JButton();
         movesLeftLabel = new JLabel();
 
-        roundNumberGraphic.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 26)); // NOI18N
-        roundNumberGraphic.setIcon(new ImageIcon(getClass().getResource("/images/Round.png"))); // NOI18N
+        roundNumberGraphic.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
+        roundNumberGraphic.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/Round.png"))));
         roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
         roundNumberGraphic.setHorizontalTextPosition(SwingConstants.CENTER);
         sidePanelContainer.add(roundNumberGraphic);
         roundNumberGraphic.setBounds(251, 0, 122, 57);
 
-        playerTurnGraphic.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 26)); // NOI18N
-        playerTurnGraphic.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/PlayerTurn.png")))); // NOI18N
+        playerTurnGraphic.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
+        playerTurnGraphic.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/PlayerTurn.png"))));
         playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
         playerTurnGraphic.setToolTipText("");
         playerTurnGraphic.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -207,18 +196,14 @@ public class BoardGameUI extends JFrame {
         playerTurnGraphic.setBounds(0, 0, 241, 57);
 
         ImageIcon helpIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/help.png")));
-        helpButton.setIcon(new ImageIcon(helpIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH))); // NOI18N
+        helpButton.setIcon(new ImageIcon(helpIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH)));
         helpButton.setBorder(null);
         helpButton.setContentAreaFilled(false);
         helpButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         sidePanelContainer.add(helpButton);
         helpButton.setRolloverEnabled(false);
         helpButton.setBounds(330, WINDOW_HEIGHT - 105 - 37, 37, 37);
-        helpButton.addActionListener(new ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                toggleTutorial();
-            }
-        });
+        helpButton.addActionListener(evt -> toggleTutorial());
 
         ImageIcon journalIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/journalButton.png")));
         journalButton.setIcon(new ImageIcon(journalIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH)));
@@ -227,11 +212,7 @@ public class BoardGameUI extends JFrame {
         journalButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         sidePanelContainer.add(journalButton);
         journalButton.setBounds(283, WINDOW_HEIGHT - 105 - 37, 37, 37);
-        journalButton.addActionListener(new ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                toggleJournal();
-            }
-        });
+        journalButton.addActionListener(evt -> toggleJournal());
 
         ImageIcon shopIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/shopButton.png")));
         shopButton.setIcon(new ImageIcon(shopIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH)));
@@ -240,13 +221,9 @@ public class BoardGameUI extends JFrame {
         shopButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         sidePanelContainer.add(shopButton);
         shopButton.setBounds(236, WINDOW_HEIGHT - 105 - 37, 37, 37);
-        shopButton.addActionListener(new ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                toggleShop();
-            }
-        });
+        shopButton.addActionListener(e -> toggleShop());
 
-        rollDiceButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/RollDiceButton.png")))); // NOI18N
+        rollDiceButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/RollDiceButton.png"))));
         rollDiceButton.setBorder(null);
         rollDiceButton.setContentAreaFilled(false);
         rollDiceButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -255,28 +232,25 @@ public class BoardGameUI extends JFrame {
         rollDiceButton.setBounds(170, WINDOW_HEIGHT - 52 - 47, 192, 47);
         rollDiceButton.setRolloverEnabled(false);
 
-        rollDiceButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.getPlayerAt().rollDie();
-                rollDiceButton.setVisible(false);
-                movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
-                movesLeftLabel.setVisible(true);
-            }
+        rollDiceButton.addActionListener(e -> {
+            GameSystem.getPlayerAt().rollDie();
+            rollDiceButton.setVisible(false);
+            movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+            movesLeftLabel.setVisible(true);
         });
 
         movesLeftLabel.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/buttonBackground.png"))));
         movesLeftLabel.setBounds(170, WINDOW_HEIGHT - 52 - 47, 192, 47);
         movesLeftLabel.setVisible(false);
         movesLeftLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-        movesLeftLabel.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 26));
+        movesLeftLabel.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
         sidePanelContainer.add(movesLeftLabel);
 
         endTurnButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/buttonBackground.png"))));
         endTurnButton.setBounds(170, WINDOW_HEIGHT - 52 - 47, 192, 47);
         endTurnButton.setVisible(false);
         endTurnButton.setText("End Turn");
-        endTurnButton.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 26));
+        endTurnButton.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
         endTurnButton.setHorizontalTextPosition(SwingConstants.CENTER);
         endTurnButton.setContentAreaFilled(false);
         endTurnButton.setBorder(null);
@@ -284,16 +258,13 @@ public class BoardGameUI extends JFrame {
         endTurnButton.setRolloverEnabled(false);
         sidePanelContainer.add(endTurnButton);
 
-        endTurnButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.nextTurn();
-                playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
-                roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
-                movesLeftLabel.setVisible(false);
-                endTurnButton.setVisible(false);
-                rollDiceButton.setVisible(true);
-            }
+        endTurnButton.addActionListener(e -> {
+            GameSystem.nextTurn();
+            playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
+            roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
+            movesLeftLabel.setVisible(false);
+            endTurnButton.setVisible(false);
+            rollDiceButton.setVisible(true);
         });
     }
 
@@ -335,23 +306,23 @@ public class BoardGameUI extends JFrame {
 
             playerResources[i].setLayout(null);
 
-            playerResourceTitles[i].setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+            playerResourceTitles[i].setFont(new java.awt.Font("Segue UI", Font.BOLD, 18));
             playerResourceTitles[i].setText(currentPlayer.getName()); // Get name from the Player object
             playerResourceTitles[i].setBounds(10, -3, 350, 30);
             playerResources[i].add(playerResourceTitles[i]);
 
             playerSatisfactions[i].setBounds(310, 23, 60, 40);
-            playerSatisfactions[i].setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+            playerSatisfactions[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
             playerSatisfactions[i].setText("999");
             playerResources[i].add(playerSatisfactions[i]);
 
             playerKnowledges[i].setBounds(185, 23, 60, 40);
-            playerKnowledges[i].setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+            playerKnowledges[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
             playerKnowledges[i].setText("999");
             playerResources[i].add(playerKnowledges[i]);
 
             playerAsphalts[i].setBounds(60, 23, 60, 40);
-            playerAsphalts[i].setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+            playerAsphalts[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
             playerAsphalts[i].setText("999");
             playerResources[i].add(playerAsphalts[i]);
 
@@ -382,39 +353,30 @@ public class BoardGameUI extends JFrame {
         setupLabelsAndButtons();
         setupPlayerPanels();
 
-        // GroupLayout layout = new GroupLayout(getContentPane());
-        // getContentPane().setLayout(layout);
-        // layout.setHorizontalGroup(
-        //         layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-        //                 .addGroup(layout.createSequentialGroup()
-        //                         .addContainerGap()
-        //                         .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, BOARD_WIDTH,
-        //                                 GroupLayout.PREFERRED_SIZE)
-        //                         .addGap(10, 10, 10)
-        //                         .addComponent(sidePanelContainer, GroupLayout.DEFAULT_SIZE, 384,
-        //                                 Short.MAX_VALUE)
-        //                         .addGap(0, 0, 0)));
-        // layout.setVerticalGroup(
-        //         layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-        //                 .addGroup(layout.createSequentialGroup()
-        //                         .addGap(6, 6, 6)
-        //                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-        //                                 .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, BOARD_HEIGHT,
-        //                                         GroupLayout.PREFERRED_SIZE)
-        //                                 .addComponent(sidePanelContainer, GroupLayout.PREFERRED_SIZE, WINDOW_HEIGHT,
-        //                                         GroupLayout.PREFERRED_SIZE))
-        //                         .addGap(10, 10, 10)));
+         GroupLayout layout = new GroupLayout(getContentPane());
+         getContentPane().setLayout(layout);
+         layout.setHorizontalGroup(
+                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                         .addGroup(layout.createSequentialGroup()
+                                 .addContainerGap()
+                                 .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, BOARD_WIDTH,
+                                         GroupLayout.PREFERRED_SIZE)
+                                 .addGap(10, 10, 10)
+                                 .addComponent(sidePanelContainer, GroupLayout.DEFAULT_SIZE, 384,
+                                         Short.MAX_VALUE)
+                                 .addGap(0, 0, 0)));
+         layout.setVerticalGroup(
+                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                         .addGroup(layout.createSequentialGroup()
+                                 .addGap(6, 6, 6)
+                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                         .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, BOARD_HEIGHT,
+                                                 GroupLayout.PREFERRED_SIZE)
+                                         .addComponent(sidePanelContainer, GroupLayout.PREFERRED_SIZE, WINDOW_HEIGHT,
+                                                 GroupLayout.PREFERRED_SIZE))
+                                 .addGap(10, 10, 10)));
 
-        JPanel gameBoardContainer = new JPanel();
-        gameBoardContainer.setLayout(null);
-        gameBoardContainer.add(gameBoard);
-        gameBoard.setBounds(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
-
-        setLayout(new BorderLayout());
-        add(gameBoardContainer, BorderLayout.WEST);
-        add(sidePanelContainer, BorderLayout.EAST);
-
-        setSize(new java.awt.Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        setSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
     }
 
     private void toggleEnableButtons() {
