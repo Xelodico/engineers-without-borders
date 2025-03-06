@@ -1,6 +1,10 @@
 package Popup;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import BoardGame.BoardGameUI;
 import BoardGame.Objective;
@@ -128,6 +132,14 @@ public class Journal extends JPanel {
         SwingUtilities.invokeLater(() -> {
             scrollPane.getVerticalScrollBar().setValue(0);
         });
+
+        revalidate();
+        repaint();
+
+        if (isVisible()) {
+            GameSystem.toggleJournal();
+            GameSystem.toggleJournal();
+        }
     }
 
     /**
@@ -144,6 +156,7 @@ public class Journal extends JPanel {
 
         Objective objectiveObj = GameSystem.getObjectives().get(objectiveIndex);
         ArrayList<Task> tasksObj = objectiveObj.getTasks();
+        tasksObj.get(0).setCurrentStepNumber(3);
 
         JPanel objective = new JPanel();
         objective.setLayout(new BorderLayout());
@@ -177,8 +190,8 @@ public class Journal extends JPanel {
             taskPanel.add(taskRow);
 
             SubTask[] subTasks = task.getSteps();
-            for (SubTask subTask : subTasks) {
-                taskPanel.add(createSubTask(subTask));
+            for (int i = 0; i < subTasks.length; i++) {
+                taskPanel.add(createSubTask(subTasks[i], i < task.getCurrentStepNumber()));
                 taskPanel.add(Box.createVerticalStrut(10));
             }
 
@@ -206,6 +219,11 @@ public class Journal extends JPanel {
 
         JLabel taskLabel = new JLabel(t.getTitle());
         taskLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+
+        if (t.isCompleted()) {
+            taskLabel.setText("<html><s>" + t.getTitle() + "</s></html>");
+        }
+
         task.add(taskLabel);
 
         task.add(Box.createHorizontalGlue());
@@ -231,23 +249,28 @@ public class Journal extends JPanel {
             });
         }
 
-        ImageIcon completeIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/completeTaskButton.png")));
-        completeIcon.setImage(completeIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        JButton completeButton = new JButton(completeIcon);
+        if (t.getCurrentStepNumber() > 2 && !t.isCompleted()) {
+            ImageIcon completeIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/completeTaskButton.png")));
+            completeIcon.setImage(completeIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+            JButton completeButton = new JButton(completeIcon);
 
-        completeButton.setBorder(null);
-        completeButton.setFocusPainted(false);
-        completeButton.setContentAreaFilled(false);
-        completeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        completeButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        task.add(completeButton);
+            completeButton.setBorder(null);
+            completeButton.setFocusPainted(false);
+            completeButton.setContentAreaFilled(false);
+            completeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            completeButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+            task.add(completeButton);
+            
+            completeButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Complete button clicked!");
+                    t.setCompleted(true);
+                    refresh();
+                }
+            });
+        }
 
-        completeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Complete button clicked!");
-            }
-        });
 
         task.add(Box.createHorizontalStrut(50));
 
@@ -262,21 +285,34 @@ public class Journal extends JPanel {
      * @param t The SubTask object containing the details of the sub-task.
      * @return A JPanel representing the sub-task.
      */
-    private JPanel createSubTask(SubTask t) {
+    private JPanel createSubTask(SubTask t, boolean isComplete) {
         JPanel task = new JPanel();
         task.setLayout(new BoxLayout(task, BoxLayout.X_AXIS)); // BoxLayout for vertical stacking
         task.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 0)); // Indent subtasks (left margin)
         task.setBackground(new java.awt.Color(0, 0, 0, 0));
         task.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JTextArea taskLabel = new JTextArea(t.getTitle());
+        JTextPane taskLabel = new JTextPane();
         taskLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         taskLabel.setMaximumSize(new Dimension(350, 100));
-        taskLabel.setLineWrap(true);
-        taskLabel.setWrapStyleWord(true);
         taskLabel.setEditable(false);
-        taskLabel.setOpaque(false);
+        taskLabel.setBackground(new Color(214, 183, 109));
+        taskLabel.setHighlighter(null);
+        taskLabel.setCaretColor(new Color(0, 0, 0, 0));
         task.add(taskLabel);
+
+        if (isComplete) {
+            StyledDocument doc = taskLabel.getStyledDocument();
+            SimpleAttributeSet attributes = new SimpleAttributeSet();
+            StyleConstants.setStrikeThrough(attributes, true);
+            try {
+                doc.insertString(doc.getLength(), t.getTitle(), attributes);
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
+        } else {
+            taskLabel.setText(t.getTitle());
+        }
 
         return task;
     }

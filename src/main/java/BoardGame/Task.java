@@ -16,6 +16,7 @@ public class Task {
 	private SubTask[] steps;
 	private int currentStepNumber;
 	private int completionScore;
+	private boolean isCompleted = false;
 	private int resourceCost;
 	private ResourceType resourceType;
 
@@ -63,7 +64,14 @@ public class Task {
 	 * @return true if the task is completed, false if not
 	 */
 	public boolean isCompleted() {
-		return currentStepNumber >= steps.length;
+		return isCompleted;
+	}
+
+	/**
+	 * Sets the task as completed
+	 */
+	public void setCompleted(boolean status) {
+		this.isCompleted = status;
 	}
 
 	// GETTERS & SETTERS //
