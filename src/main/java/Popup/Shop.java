@@ -56,8 +56,8 @@ public class Shop extends JPanel {
      * Each price is represented by a JLabel with a string value.
      */
     public void addShopItemsAndPrices() {
-        item1 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        item1.setBounds(428, 200, 41, 60);
+        item1 = newShopItem(new ImageIcon(getClass().getResource("/images/resources/coldAsphalt.png")));
+        item1.setBounds(412, 188, 70, 70);
         item1.addActionListener(e -> {
             GameSystem.purchaseResource(ResourceType.ASPHALT);
         });
@@ -65,43 +65,43 @@ public class Shop extends JPanel {
         add(item1);
 
         price1 = newPrice("100");
-        price1.setBounds(396, 300, 100, 39);
+        price1.setBounds(396, 303, 100, 39);
         add(price1);
 
-        item2 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        item2.setBounds(617, 200, 41, 60);
+        item2 = newShopItem(new ImageIcon(getClass().getResource("/images/resources/influence.png")));
+        item2.setBounds(600, 188, 70, 70);
         item2.addActionListener(e -> {
             GameSystem.purchaseResource(ResourceType.INFLUENCE);
         });
         addHoverEffect(item2);
         add(item2);
 
-        price2 = newPrice("200");
-        price2.setBounds(585, 300, 100, 39);
+        price2 = newPrice("100");
+        price2.setBounds(585, 303, 100, 39);
         add(price2);
 
-        item3 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        item3.setBounds(428, 370, 41, 60);
+        item3 = newShopItem(new ImageIcon(getClass().getResource("/images/resources/knowledge.png")));
+        item3.setBounds(412, 360, 70, 70);
         item3.addActionListener(e -> {
             GameSystem.purchaseResource(ResourceType.KNOWLEDGE);
         });
         addHoverEffect(item3);
         add(item3);
 
-        price3 = newPrice("300");
-        price3.setBounds(396, 470, 100, 39);
+        price3 = newPrice("100");
+        price3.setBounds(396, 473, 100, 39);
         add(price3);
 
-        item4 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        item4.setBounds(617, 370, 41, 60);
+        item4 = newShopItem(new ImageIcon(getClass().getResource("/images/resources/volunteers.png")));
+        item4.setBounds(600, 360, 70, 70);
         item4.addActionListener(e -> {
             GameSystem.purchaseResource(ResourceType.VOLUNTEERS);
         });
         addHoverEffect(item4);
         add(item4);
 
-        price4 = newPrice("400");
-        price4.setBounds(585, 470, 100, 39);
+        price4 = newPrice("100");
+        price4.setBounds(585, 473, 100, 39);
         add(price4);
     }
 
@@ -109,6 +109,7 @@ public class Shop extends JPanel {
      * @return A new shop item button with the specified image icon.
      */
     public static JButton newShopItem(ImageIcon icon) {
+        icon = new ImageIcon(icon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
         JButton button = new JButton();
         button.setBorder(null);
         button.setContentAreaFilled(false);
