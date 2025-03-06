@@ -204,6 +204,12 @@ public abstract class GameSystem {
             currentPlayer.moveAction(direction, gameBoard.boardSideLength);
         }
 
+        if (gameBoard.getSquareAt(currentPlayer.getCoord()) instanceof ShopSquare) {
+            gameBoardUI.setShopButtonVisible(true);
+        } else {
+            gameBoardUI.setShopButtonVisible(false);
+        }
+
         // Update players on board and activate the tile they fell on
         gameBoard.renderPlayers(turnOrder);
 
@@ -235,6 +241,13 @@ public abstract class GameSystem {
             // Otherwise, move to the next player's turn
             turnNumber++;
         }
+
+        if (gameBoard.getSquareAt(getPlayerAt().getCoord()) instanceof ShopSquare) {
+            gameBoardUI.setShopButtonVisible(true);
+        } else {
+            gameBoardUI.setShopButtonVisible(false);
+        }
+
     }
 
     public static int[] getSpawnLocations() {

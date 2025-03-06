@@ -13,7 +13,6 @@ import Popup.Popup;
 import Popup.Shop;
 import Popup.Tutorial;
 import Popup.TransferPopup;
-import square.SquareType;
 
 /**
  * The BoardGameUI class represents the user interface for the board game.
@@ -188,8 +187,6 @@ public class BoardGameUI extends JFrame {
             } else {
                 movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
             }
-            shopButton.setVisible(gameBoard.getSquareAt(GameSystem.getPlayerAt().getCoord())
-                    .getSquareType() == SquareType.SHOPSQUARE);
         });
     }
 
@@ -437,6 +434,14 @@ public class BoardGameUI extends JFrame {
         shop.setVisible(!shop.isVisible());
         dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
+    }
+
+    public void setShopButtonVisible(boolean state) {
+        if (state) {
+            shopButton.setVisible(true);
+        } else {
+            shopButton.setVisible(false);
+        }
     }
 
     public void toggleTutorial() {
