@@ -125,6 +125,10 @@ public class EndGame extends JPanel {
         continueButton.setFont(new Font("Segue UI", Font.PLAIN, 18));
         continueButton.setPreferredSize(new Dimension(200, 50));
         continueButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        continueButton.addActionListener(e -> {
+            GameSystem.resetForTests();
+            GameSystem.initialise();
+        });
         buttonContainer.add(continueButton);
 
         buttonContainer.add(Box.createHorizontalStrut(20));

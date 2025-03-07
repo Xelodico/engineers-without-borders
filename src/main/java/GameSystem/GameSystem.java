@@ -18,6 +18,7 @@ import BoardGame.Player;
 import BoardGame.ResourceType;
 import BoardGame.SubTask;
 import BoardGame.Task;
+import Popup.EndGame.Ending;
 import square.Square;
 
 /**
@@ -99,7 +100,8 @@ public abstract class GameSystem {
         roundNumber++; // Increment the round counter
         gameBoardUI.startGame(); // Start the game through the UI
         gameBoardUI.refresh(); // Refresh the UI to reflect updated game state
-        toggleTutorial();
+        // toggleTutorial();
+        gameBoardUI.toggleEndGame(Ending.BAD);
     }
 
     /**
@@ -592,6 +594,8 @@ public abstract class GameSystem {
         // Reset lists and objects related to game objectives and tasks
         objectives = new ArrayList<>();
         tasks = new ArrayList<>();
+
+        gameBoardUI.dispose();
 
         // Clear turn order and UI components
         turnOrder = null;
