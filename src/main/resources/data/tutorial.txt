@@ -1,5 +1,5 @@
 #About Makers Valley
-Makers Valley is an informal cluster of suburbs on the eastern edge of inner Johannesburg, including areas like New Doornfontein, Bezuidenhout Valley, Bertrams, Judith’s Paarl, Troyeville, and Lorentzville.
+Makers Valley is an informal cluster of suburbs on the eastern edge of inner Johannesburg, including areas like New Doornfontein, Bezuidenhout Valley, Bertrams, Judith's Paarl, Troyeville, and Lorentzville.
 It is home to roughly 46,000 residents, characterised by rich cultural diversity and a predominantly young population.
 Historically, the area has faced challenges such as urban decay, high unemployment, and inadequate infrastructure.
 In recent years, Makers Valley has been undergoing regeneration, driven by a vibrant local creative and maker movement.
@@ -9,8 +9,8 @@ Community initiatives and projects led by organisations like Engineers Without B
 In Makers Valley, poor road maintenance has led to widespread potholes that pose significant hazards for drivers and pedestrians alike.
 These potholes contribute to vehicle damage and increase the risk of accidents.
 Community leader Desiree Beukes has highlighted several initiatives aimed at repairing these roads were attempted but ultimately aborted due to bureaucratic challenges.
-DIY repairs are against the law - The Johannesburg Roads Agency (JRA) has emphasised that the materials used by residents in these repairs—including concrete, stones, and bricks—are not up to standard and can put motorists at risk.
-Most importantly, potholes force vehicles to work inefficiently, increasing fuel use and emissions—a finding confirmed by a Taylor & Francis Online study. This adds urgency to repairing road infrastructure in Makers Valley.
+DIY repairs are against the law - The Johannesburg Roads Agency (JRA) has emphasised that the materials used by residents in these repairs, including concrete, stones, and bricks, are not up to standard and can put motorists at risk.
+Most importantly, potholes force vehicles to work inefficiently, increasing fuel use and emissions, a finding confirmed by a Taylor & Francis Online study. This adds urgency to repairing road infrastructure in Makers Valley.
 
 #Our solution and your goal
 We have designed a community initiative in association with the Makers Valley Partnership where residents learn and get certified in pothole repair techniques.
