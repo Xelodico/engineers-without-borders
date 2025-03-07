@@ -15,9 +15,9 @@ import BoardGame.BoardGameUI;
 import BoardGame.Direction;
 import BoardGame.Objective;
 import BoardGame.Player;
-import BoardGame.Task;
 import BoardGame.ResourceType;
 import BoardGame.SubTask;
+import BoardGame.Task;
 import square.Square;
 
 /**
@@ -130,6 +130,26 @@ public abstract class GameSystem {
     }
 
     /**
+     * Sets the maximum possible score that can be achieved in the game.
+     * 
+     * @param score The maximum score limit to set.
+     */
+    public static void setMaxScore(int score) {
+        maxScore = score;
+    }
+
+    /**
+     * Updates the total awarded score currently accumulated by players.
+     * This method is used to keep track of the total points earned
+     * throughout the game.
+     * 
+     * @param score The current total awarded score to be updated.
+     */
+    public static void setCurrentTotalAwardedScore(int score) {
+        currentTotalAwardedScore = score;
+    }
+
+    /**
      * Retrieves the turn order of players.
      * 
      * @return An array of players representing the turn order.
@@ -193,6 +213,13 @@ public abstract class GameSystem {
         return objectives;
     }
 
+    /**
+     * Retrieves the current game board instance for testing purposes.
+     * This method provides access to the main board object, allowing
+     * other components to reference and manipulate the game state.
+     * 
+     * @return The current Board object representing the game board.
+     */
     public static Board getBoard() {
         return gameBoard;
     }
@@ -228,8 +255,8 @@ public abstract class GameSystem {
      */
     public static void nextTurn() {
         // Check if all Objectives have been completed.
-        if(checkWinCondition()) {
-        	endGame();
+        if (checkWinCondition()) {
+            endGame();
             return;
         }
 
@@ -239,7 +266,6 @@ public abstract class GameSystem {
             turnNumber = 0; // Reset turn number to first player
             roundNumber++; // Start a new round
 
-            // TODO: Implement logic to handle end of round events
         } else {
             // Otherwise, move to the next player's turn
             turnNumber++;
@@ -323,24 +349,24 @@ public abstract class GameSystem {
         double percentUnrounded = currentTotalAwardedScore / maxScore;
         return Math.round(percentUnrounded * 1000.0) / 1000.0;
     }
-    
+
     /**
      * Evaluates whether all objectives have been completed, determining if the game
      * can progress.
      * 
      * @return true if all objectives have been completed; false otherwise.
-     *         //
+     * 
      */
-    private static boolean checkWinCondition() {
-    for (Objective objective : objectives) {
-    // If any task within the objectives is incomplete, return false
-    if (!objective.isCompleted()) {
-    return false;
-    }
-    }
+    public static boolean checkWinCondition() {
+        for (Objective objective : objectives) {
+            // If any task within the objectives is incomplete, return false
+            if (!objective.isCompleted()) {
+                return false;
+            }
+        }
 
-    // If all objectives are completed, return true
-    return true;
+        // If all objectives are completed, return true
+        return true;
     }
 
     /**
@@ -471,14 +497,19 @@ public abstract class GameSystem {
         gameBoardUI.toggleTutorial();
     }
 
+    /**
+     * Toggles the transfer interface for the given task.
+     * This method interacts with the game UI to enable or disable the
+     * task transfer feature, allowing players to manage their task assignments.
+     * 
+     * @param task The task object that is being transferred.
+     */
     public static void toggleTransfer(Task task) {
         gameBoardUI.toggleTransfer(task);
     }
 
     /**
-     * Temporarily generates Objectives, Tasks, and Subtasks.
-     * This method is a placeholder until file reading from the Data Access Layer is
-     * implemented.
+     * Generates Objectives, Tasks, and Subtasks.
      */
     private static void createData() {
         String file = "src/main/resources/tasks.json";
