@@ -20,7 +20,6 @@ public class Task {
 	private int resourceCost;
 	private ResourceType resourceType;
 
-	
 	// METHODS //
 	public Task(String title, Objective belongsTo, SubTask[] steps, int completionScore, int resourceCost, ResourceType resourceType) {
 		this.title = title;
@@ -53,8 +52,13 @@ public class Task {
 	public boolean completeStep() {
 		if (currentStepNumber < steps.length) {
 			currentStepNumber++;
+
+			if (currentStepNumber >= steps.length) {
+				setCompleted(true);
+			}
 			return true;
 		}
+		
 		return false;
 	}
 
