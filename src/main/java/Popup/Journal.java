@@ -243,7 +243,7 @@ public class Journal extends JPanel {
 
         task.add(Box.createHorizontalGlue());
 
-        if (GameSystem.getTurnOrder().length > 1) {
+        if (GameSystem.getTurnOrder().length > 1 && t.getOwnedBy() == GameSystem.getPlayerAt()) {
             ImageIcon transferIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/transferButton.png")));
             transferIcon.setImage(transferIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
             JButton transferButton = new JButton(transferIcon);
