@@ -141,8 +141,9 @@ public class Player {
         }
         this.coord = coord;
     }
-
-    /**
+    
+    
+    /** 
      * Changes the score of the player by the given amount. Score cannot go below 0
      * 
      * @param changeAmount - the amount to change the score by
@@ -156,13 +157,11 @@ public class Player {
     }
 
     /**
-     * Retrieves the money value of the player
+     * Gets the money value of the player.
      * 
-     * @return returns current money amount of the player
      */
-
     public int getMoney() {
-        return this.money;
+        return money;
     }
 
     /**
@@ -170,7 +169,6 @@ public class Player {
      * 
      * @param money The new money value to assign to the player
      */
-
     public void setMoney(int money) {
         this.money = money;
     }
@@ -253,6 +251,7 @@ public class Player {
         this.movesLeft = movesLeft;
     }
 
+    
     /**
      * Gets the amount of the resource referenced by the inputed ResourceType
      * 

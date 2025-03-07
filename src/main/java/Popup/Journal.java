@@ -230,7 +230,8 @@ public class Journal extends JPanel {
         completeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Complete button clicked!");
+                System.out.println("Complete button clicked for Task: " + t.getTitle());
+                GameSystem.progressTask(t);
             }
         });
 

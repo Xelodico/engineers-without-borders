@@ -227,11 +227,11 @@ public abstract class GameSystem {
      * If all players have taken their turn, the game progresses to the next round.
      */
     public static void nextTurn() {
-        // Check if the player has completed all objectives
-        // if (checkWinCondition()) {
-        // endGame();
-        // return;
-        // }
+        // Check if all Objectives have been completed.
+        if(checkWinCondition()) {
+        	endGame();
+            return;
+        }
 
         // If the last player in the turn order has finished their turn, reset to the
         // first player
@@ -323,7 +323,7 @@ public abstract class GameSystem {
         double percentUnrounded = currentTotalAwardedScore / maxScore;
         return Math.round(percentUnrounded * 1000.0) / 1000.0;
     }
-
+    
     /**
      * Evaluates whether all objectives have been completed, determining if the game
      * can progress.
@@ -331,17 +331,99 @@ public abstract class GameSystem {
      * @return true if all objectives have been completed; false otherwise.
      *         //
      */
-    // private static boolean checkWinCondition() {
-    // for (Objective objective : objectives) {
-    // // If any task within the objectives is incomplete, return false
-    // if (!objective.isCompleted()) {
-    // return false;
-    // }
-    // }
+    private static boolean checkWinCondition() {
+    for (Objective objective : objectives) {
+    // If any task within the objectives is incomplete, return false
+    if (!objective.isCompleted()) {
+    return false;
+    }
+    }
 
-    // // If all objectives are completed, return true
-    // return true;
-    // }
+    // If all objectives are completed, return true
+    return true;
+    }
+
+    /**
+     * TODO: Remove method once achievements are implemented.
+     */
+    public static void endGame() {
+        // TODO: Remove placeholder players
+        Player player1 = new Player("Kal", 0, 100, 4);
+        player1.changeMoney(5000);
+        player1.increaseMoneySpent(1000);
+        player1.setScore(100);
+        Player player2 = new Player("Nathan", 0, 120, 2);
+        player2.changeMoney(1000);
+        player2.increaseMoneySpent(500);
+        player2.setScore(500);
+        turnOrder = new Player[] { player1, player2 };
+
+        // Display player scores
+        System.out.println("Final Scores:");
+
+        // Stores the indices of players who achieved notable milestones:
+        // - Highest Scorer: The player with the most points.
+        // - Lowest Spender: The player who spent the least amount of money.
+        // - Traveller: The player who moved the most across the board.
+        // - Resource Hogger: The player who collected the most resources.
+        // TODO: Consider adding a "Team Player" achievement for the most contributive
+        // player.
+        int highestScorer = 0, lowestSpender = 0, traveller = 0, resourceHogger = 0;
+        int maxScore = 0, minSpent = Integer.MAX_VALUE, maxResources = 0, maxTravelled = 0;
+
+        // Iterate through each player to determine the top achievers
+        // TODO: Update to reflect changes to resources in Player class
+        for (int i = 0; i < turnOrder.length; i++) {
+            // Determine the player with the highest score
+            if (turnOrder[i].getScore() > maxScore) {
+                highestScorer = i;
+                maxScore = turnOrder[i].getScore();
+            }
+
+            // Determine the player who spent the least money
+            if (turnOrder[i].getMoneySpent() < minSpent) {
+                lowestSpender = i;
+                minSpent = turnOrder[i].getMoneySpent();
+            }
+
+            // Determine the player who accumulated the most resources
+            // if (turnOrder[i].getResources() > maxResources) {
+            // resourceHogger = i;
+            // maxResources = turnOrder[i].getResources();
+            // }
+
+            // Determine the player who travelled the most
+            if (turnOrder[i].getMovesTravelled() > maxTravelled) {
+                traveller = i;
+                maxTravelled = turnOrder[i].getMovesTravelled();
+            }
+
+            // Print player stats
+            System.out.println(turnOrder[i].getName() + ":\n" +
+                    "Score: " + turnOrder[i].getScore() + "\n" +
+                    // "Resources: " + turnOrder[i].getResources() + "\n" +
+                    "Money: " + turnOrder[i].getMoney() + "\n");
+        }
+
+        // Display Player Achievements
+        System.out.println("Special Achievements!");
+        System.out.println("Highest Scorer: " + getPlayerAt(highestScorer).getName() +
+                " (" + getPlayerAt(highestScorer).getScore() + " points)");
+        System.out.println("The Cheapskate: " + getPlayerAt(lowestSpender).getName() +
+                " (Spent " + getPlayerAt(lowestSpender).getMoneySpent() + " rand)");
+        // System.out.println("The Resource Hogger: " +
+        // getPlayerAt(resourceHogger).getName() +
+        // " (Kept " + getPlayerAt(resourceHogger).getResources() + " bags of cold
+        // asphalt)");
+        System.out.println("The Traveller: " + getPlayerAt(traveller).getName() +
+                " (Travelled " + getPlayerAt(traveller).getMovesTravelled() + " squares)");
+
+        // showPopup("Thanks for playing Pavers Valley!", "Start a new game?", "Yes",
+        // "No");
+
+        // Terminate the game process
+        System.exit(0);
+    }
 
     /**
      * Displays a popup message to the player with customizable buttons.
