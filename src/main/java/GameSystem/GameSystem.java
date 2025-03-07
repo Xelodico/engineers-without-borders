@@ -510,6 +510,10 @@ public abstract class GameSystem {
         gameBoardUI.toggleTransfer(task);
     }
 
+    public static void refreshJournal() {
+        gameBoardUI.refreshJournal();
+    }
+
     /**
      * Temporarily generates Objectives, Tasks, and Subtasks.
      * This method is a placeholder until file reading from the Data Access Layer is

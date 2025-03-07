@@ -462,6 +462,10 @@ public class BoardGameUI extends JFrame {
         transferPopup.renderButtons(this.players);
     }
 
+    public void refreshJournal() {
+        journal.refresh();
+    }
+
     public void toggleEndGame(EndGame.Ending endingType) {
         endGame.setVisible(!endGame.isVisible());
         dimBackground.setVisible(!dimBackground.isVisible());

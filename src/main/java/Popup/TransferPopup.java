@@ -102,6 +102,7 @@ public class TransferPopup extends JPanel {
                     button.addActionListener(e -> {
                         task.setOwnedBy(player);
                         GameSystem.toggleTransfer(null);
+                        GameSystem.refreshJournal();
                     });
                 }
                 buttonContainer.add(button);
