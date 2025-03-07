@@ -57,12 +57,12 @@ public class Journal extends JPanel {
 
         setLayout(null);
         setBounds((BoardGameUI.WINDOW_WIDTH / 2 - WIDTH / 2), (650 / 2 - HEIGHT / 2) + 6, WIDTH, HEIGHT);
-        setBackground(new java.awt.Color(0, 0, 0, 0));
+        setBackground(new Color(0, 0, 0, 0));
         setVisible(false);
 
         JPanel titleBar = new JPanel();
         titleBar.setBounds(25, 0, WIDTH - 100, 50);
-        titleBar.setBackground(new java.awt.Color(0, 0, 0, 0));
+        titleBar.setBackground(new Color(0, 0, 0, 0));
         titleBar.setLayout(new BorderLayout());
         titleBar.setOpaque(false);
 
@@ -93,21 +93,9 @@ public class Journal extends JPanel {
         page = new JPanel();
         page.setLayout(new BoxLayout(page, BoxLayout.Y_AXIS));
         page.setOpaque(false);
+        page.setBackground(new Color(214, 183, 109));
 
         addCloseButton(page);
-
-        // Add objectives with their tasks
-        JPanel objective1 = createObjective(0);
-        page.add(objective1);
-
-        JPanel objective2 = createObjective(1);
-        page.add(objective2);
-
-        JPanel objective3 = createObjective(2);
-        page.add(objective3);
-
-        JPanel objective4 = createObjective(3);
-        page.add(objective4);
 
         // Add the page (which contains the objectives) to the scroll pane
         scrollPane.setViewportView(page);
@@ -123,15 +111,42 @@ public class Journal extends JPanel {
         page.removeAll(); // Remove all existing components
         addCloseButton(page); // Re-add the close button
 
-        // Re-add the objectives
-        page.add(createObjective(0));
-        page.add(createObjective(1));
-        page.add(createObjective(2));
-        page.add(createObjective(3));
+        // Add objectives
+        ArrayList<Objective> objectives = GameSystem.getObjectives();
+        objectives.forEach(objective -> {
+            final boolean[] showObjective = {false};
 
-        SwingUtilities.invokeLater(() -> {
-            scrollPane.getVerticalScrollBar().setValue(0);
+            objective.getTasks().forEach(task -> {
+                if (task.getOwnedBy() != null) {
+                    showObjective[0] = true;
+                }
+            });
+
+            if (showObjective[0]) {
+                page.add(createObjective(objectives.indexOf(objective)));
+            }
         });
+
+        // Check if only one objective has a task owned by someone
+        long count = objectives.stream()
+            .filter(objective -> objective.getTasks().stream().anyMatch(task -> task.getOwnedBy() != null))
+            .count();
+
+        if (count == 0) {
+            JPanel noObjectives = new JPanel();
+            noObjectives.setLayout(new BorderLayout());
+            noObjectives.setBackground(new Color(0, 0, 0, 0));
+            noObjectives.setBorder(BorderFactory.createEmptyBorder(150, 0, 0, 0)); // Padding around the objective
+            JLabel noObjectivesLabel = new JLabel("No objectives discovered yet!");
+            noObjectivesLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+            noObjectivesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            noObjectives.add(noObjectivesLabel, BorderLayout.NORTH);
+            page.add(noObjectives);
+        } else if (count == 1) {
+            page.add(Box.createVerticalStrut(150));
+        }
+
+        SwingUtilities.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(0));
 
         revalidate();
         repaint();
@@ -158,7 +173,7 @@ public class Journal extends JPanel {
 
         JPanel objective = new JPanel();
         objective.setLayout(new BorderLayout());
-        objective.setBackground(new java.awt.Color(0, 0, 0, 0));
+        objective.setBackground(new Color(0, 0, 0, 0));
         objective.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding around the objective
         JLabel objectiveLabel = new JLabel(objectiveObj.getTitle());
         objectiveLabel.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -168,32 +183,34 @@ public class Journal extends JPanel {
         // Create a task panel with a vertical BoxLayout
         JPanel taskPanel = new JPanel();
         taskPanel.setLayout(new BoxLayout(taskPanel, BoxLayout.Y_AXIS));
-        taskPanel.setBackground(new java.awt.Color(0, 0, 0, 0));
+        taskPanel.setBackground(new Color(214, 183, 109));
         taskPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
         tasksObj.forEach(task -> {
-            JPanel taskRow = new JPanel();
-            taskRow.setLayout(new BoxLayout(taskRow, BoxLayout.Y_AXIS));
-            taskRow.setBackground(new java.awt.Color(0, 0, 0, 0));
-            taskRow.setAlignmentX(Component.LEFT_ALIGNMENT);
-
             if (task.getOwnedBy() != null) {
-                JLabel ownedByLabel = new JLabel("Owned by " + task.getOwnedBy().getName());
-                ownedByLabel.setFont(new Font("Arial", Font.ITALIC | Font.BOLD, 16));
-                ownedByLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-                taskPanel.add(ownedByLabel);
+                JPanel taskRow = new JPanel();
+                taskRow.setLayout(new BoxLayout(taskRow, BoxLayout.Y_AXIS));
+                taskRow.setBackground(new Color(0, 0, 0, 0));
+                taskRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+    
+                if (task.getOwnedBy() != null) {
+                    JLabel ownedByLabel = new JLabel("Owned by " + task.getOwnedBy().getName());
+                    ownedByLabel.setFont(new Font("Arial", Font.ITALIC | Font.BOLD, 16));
+                    ownedByLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+                    taskPanel.add(ownedByLabel);
+                }
+    
+                taskRow.add(createTask(task));
+                taskPanel.add(taskRow);
+    
+                SubTask[] subTasks = task.getSteps();
+                for (int i = 0; i < subTasks.length; i++) {
+                    taskPanel.add(createSubTask(subTasks[i], i < task.getCurrentStepNumber()));
+                    taskPanel.add(Box.createVerticalStrut(10));
+                }
+    
+                taskPanel.add(Box.createVerticalStrut(5)); // Space between tasks
             }
-
-            taskRow.add(createTask(task));
-            taskPanel.add(taskRow);
-
-            SubTask[] subTasks = task.getSteps();
-            for (int i = 0; i < subTasks.length; i++) {
-                taskPanel.add(createSubTask(subTasks[i], i < task.getCurrentStepNumber()));
-                taskPanel.add(Box.createVerticalStrut(10));
-            }
-
-            taskPanel.add(Box.createVerticalStrut(5)); // Space between tasks
         });
 
         objective.add(taskPanel, BorderLayout.CENTER);
@@ -213,7 +230,7 @@ public class Journal extends JPanel {
         JPanel task = new JPanel();
         task.setLayout(new BoxLayout(task, BoxLayout.X_AXIS));
         task.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0)); // Indent tasks (left margin)
-        task.setBackground(new java.awt.Color(0, 0, 0, 0));
+        task.setBackground(new Color(0, 0, 0, 0));
 
         JLabel taskLabel = new JLabel(t.getTitle());
         taskLabel.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -239,12 +256,7 @@ public class Journal extends JPanel {
             task.add(transferButton);
             task.add(Box.createHorizontalStrut(10));
 
-            transferButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    GameSystem.toggleTransfer(t);
-                }
-            });
+            transferButton.addActionListener(e -> GameSystem.toggleTransfer(t));
         }
 
         if (t.getCurrentStepNumber() > 2 && !t.isCompleted()) {
@@ -259,13 +271,10 @@ public class Journal extends JPanel {
             completeButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
             task.add(completeButton);
             
-            completeButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Complete button clicked!");
-                    t.setCompleted(true);
-                    refresh();
-                }
+            completeButton.addActionListener(e -> {
+                System.out.println("Complete button clicked!");
+                t.setCompleted(true);
+                refresh();
             });
         }
 
@@ -287,7 +296,7 @@ public class Journal extends JPanel {
         JPanel task = new JPanel();
         task.setLayout(new BoxLayout(task, BoxLayout.X_AXIS)); // BoxLayout for vertical stacking
         task.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 0)); // Indent subtasks (left margin)
-        task.setBackground(new java.awt.Color(0, 0, 0, 0));
+        task.setBackground(new Color(0, 0, 0, 0));
         task.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JTextPane taskLabel = new JTextPane();
@@ -306,7 +315,7 @@ public class Journal extends JPanel {
             try {
                 doc.insertString(doc.getLength(), t.getTitle(), attributes);
             } catch (BadLocationException e) {
-                e.printStackTrace();
+                System.err.println("Error inserting text into JTextPane: " + e.getMessage());
             }
         } else {
             taskLabel.setText(t.getTitle());
@@ -329,7 +338,7 @@ public class Journal extends JPanel {
         scrollPane.setBorder(null);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
-        scrollPane.getVerticalScrollBar().setBackground(new java.awt.Color(0, 0, 0, 0));
+        scrollPane.getVerticalScrollBar().setBackground(new Color(0, 0, 0, 0));
         scrollPane.getVerticalScrollBar().setBorder(null);
         renderScrollBar(scrollPane);
 
@@ -360,6 +369,7 @@ public class Journal extends JPanel {
         JPanel closeButtonPanel = new JPanel(new BorderLayout());
         closeButtonPanel.setOpaque(false);
         closeButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+        closeButtonPanel.setMaximumSize(new Dimension(700, 30));
     
         closeButton = new JButton();
         closeButton.setIcon(closeIcon);
@@ -367,12 +377,7 @@ public class Journal extends JPanel {
         closeButton.setContentAreaFilled(false);
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
     
-        closeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.toggleJournal();
-            }
-        });
+        closeButton.addActionListener(e -> GameSystem.toggleJournal());
     
         closeButton.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {
