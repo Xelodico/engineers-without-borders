@@ -126,7 +126,7 @@ public class EndGame extends JPanel {
         continueButton.setPreferredSize(new Dimension(200, 50));
         continueButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         continueButton.addActionListener(e -> {
-            GameSystem.resetForTests();
+            GameSystem.reset();
             GameSystem.initialise();
         });
         buttonContainer.add(continueButton);
@@ -280,8 +280,8 @@ public class EndGame extends JPanel {
 
         playerCard.add(Box.createVerticalStrut(20));
 
-       JPanel totalScore = createStat("Score: ", String.valueOf(player.getScore()));
-       playerCard.add(totalScore);
+        JPanel totalScore = createStat("Score: ", String.valueOf(player.getScore()));
+        playerCard.add(totalScore);
 
         JPanel movesTaken = createStat("Moves Taken: ", String.valueOf(player.getMovesLeft()));
         playerCard.add(movesTaken);
@@ -304,7 +304,6 @@ public class EndGame extends JPanel {
         gridBagConstraints.fill = GridBagConstraints.NONE;
 
         gridBagConstraints.insets = new Insets(0, 10, 0, 10);
-
 
         return playerCard;
     }

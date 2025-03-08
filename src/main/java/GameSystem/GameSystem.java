@@ -579,14 +579,16 @@ public abstract class GameSystem {
     }
 
     /**
-     * Resets the game state for testing purposes.
-     * This method clears all game data and resets key attributes,
-     * ensuring a fresh start for unit tests or debugging sessions.
+     * Resets the game state, preparing it for a fresh start.
      * 
-     * NOTE: This is a temporary method intended for development use only.
-     * It should not be included in the final production version of the game.
+     * This method is used both for restarting the game and during testing.
+     * It clears all game data, resets key attributes, and disposes of
+     * the current UI to allow for a complete reset.
+     * 
+     * This ensures that the game can be restarted properly without
+     * retaining previous session data or inconsistencies.
      */
-    public static void resetForTests() {
+    public static void reset() {
         gameActive = false; // Mark the game as inactive
         turnNumber = 0; // Reset turn tracking
         roundNumber = 0; // Reset round tracking
@@ -595,7 +597,10 @@ public abstract class GameSystem {
         objectives = new ArrayList<>();
         tasks = new ArrayList<>();
 
-        gameBoardUI.dispose();
+        // Dispose of the current game UI to ensure a clean restart
+        if (gameBoardUI != null) {
+            gameBoardUI.dispose();
+        }
 
         // Clear turn order and UI components
         turnOrder = null;
