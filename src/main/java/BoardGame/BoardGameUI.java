@@ -31,8 +31,7 @@ public class BoardGameUI extends JFrame {
 
     public static final int WINDOW_WIDTH = 1075;
     public static final int WINDOW_HEIGHT = 735;
-    private static final int BOARD_WIDTH = 650;
-    private static final int BOARD_HEIGHT = BOARD_WIDTH;
+    private static final int BOARD_WIDTH = 650, BOARD_HEIGHT = 650;
     private static final int SIDE_PANEL_WIDTH = 384;
 
     public StartScreen startScreen;
@@ -143,7 +142,7 @@ public class BoardGameUI extends JFrame {
     }
 
     private void setupArrowButtons() {
-        arrowsContainer = new JPanel();
+        JPanel arrowsContainer = new JPanel();
         arrowDown = new JButton();
         arrowUp = new JButton();
         arrowLeft = new JButton();
@@ -488,7 +487,6 @@ public class BoardGameUI extends JFrame {
     private JButton arrowLeft;
     private JButton arrowRight;
     private JButton arrowUp;
-    private JPanel arrowsContainer;
     public Board gameBoard;
     private JButton helpButton;
 
@@ -508,13 +506,13 @@ public class BoardGameUI extends JFrame {
     private JButton rollDiceButton;
     private JLabel roundNumberGraphic;
     private JPanel sidePanelContainer;
-    private Popup popup;
+    private final Popup popup;
     private JPanel popupButtonContainer;
     private JButton journalButton;
-    private Journal journal;
-    private JPanel dimBackground;
-    private Shop shop;
+    private final Journal journal;
+    private final JPanel dimBackground;
+    private final Shop shop;
     private JButton shopButton;
-    private Tutorial tutorial;
+    private final Tutorial tutorial;
     private JButton closeButton;
 }
