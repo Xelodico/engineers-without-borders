@@ -1,26 +1,49 @@
 package Popup;
 
-import BoardGame.BoardGameUI;
-import BoardGame.Player;
-import GameSystem.GameSystem;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Random;
+
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+
+import BoardGame.BoardGameUI;
+import BoardGame.Player;
+import GameSystem.GameSystem;
+import Popup.EndGame.Ending;
 
 /**
  * The EndGame class represents a JPanel that displays the end game screen
  * with a scrolling text area showing the game's epilogue.
  *
  * @author Nathan Watkins
+ * @author Peter Robinson (supporting)
  */
 public class EndGame extends JPanel {
 
@@ -269,16 +292,18 @@ public class EndGame extends JPanel {
         playerName.setFont(new Font("Segue UI", Font.BOLD, 18));
         playerName.setAlignmentX(Component.CENTER_ALIGNMENT);
         playerCard.add(playerName);
-
         playerCard.add(Box.createVerticalStrut(21));
 
-        JLabel playerTitle = new JLabel("[Title]");
-        playerTitle.setFont(new Font("Segue UI", Font.PLAIN, 16));
-        playerTitle.setForeground(Color.WHITE);
-        playerTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        playerCard.add(playerTitle);
-
-        playerCard.add(Box.createVerticalStrut(20));
+        if (!player.getAchievements().isEmpty()) {
+            for (String achievement : player.getAchievements()) {
+                JLabel playerTitle = new JLabel(achievement);
+                playerTitle.setFont(new Font("Segue UI", Font.PLAIN, 16));
+                playerTitle.setForeground(Color.WHITE);
+                playerTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+                playerCard.add(playerTitle);
+                playerCard.add(Box.createVerticalStrut(20));
+            }
+        }
 
         JPanel totalScore = createStat("Score: ", String.valueOf(player.getScore()));
         playerCard.add(totalScore);
@@ -346,6 +371,7 @@ public class EndGame extends JPanel {
         }
 
         Player[] players = GameSystem.getTurnOrder();
+        determineAchievements();
 
         for (Player player : players) {
             JPanel playerCard = createPlayerCard(player);
@@ -354,6 +380,55 @@ public class EndGame extends JPanel {
 
         setBounds(0, 0, BoardGameUI.WINDOW_WIDTH, (int) (BoardGameUI.WINDOW_HEIGHT * 0.95));
         cardLayout.show(cardPanel, "stats");
+    }
+
+    private void determineAchievements() {
+        Player[] players = GameSystem.getTurnOrder();
+
+        Random rand = new Random();
+        int highestScorerIndex = 0;
+        int lowestSpenderIndex = 0;
+        int teamPlayerIndex = 0;
+        int travellerIndex = 0;
+
+        for (int i = 1; i < players.length; i++) {
+            // For highest score
+            if (players[i].getScore() > players[highestScorerIndex].getScore()) {
+                highestScorerIndex = i;
+            } else if (players[i].getScore() == players[highestScorerIndex].getScore() && rand.nextBoolean()) {
+                highestScorerIndex = i;
+            }
+
+            // For lowest money spent
+            if (players[i].getMoneySpent() < players[lowestSpenderIndex].getMoneySpent()) {
+                lowestSpenderIndex = i;
+            } else if (players[i].getMoneySpent() == players[lowestSpenderIndex].getMoneySpent()
+                    && rand.nextBoolean()) {
+                lowestSpenderIndex = i;
+            }
+
+            // For most times helped
+            if (players[i].getTimesHelped() > players[teamPlayerIndex].getTimesHelped()) {
+                teamPlayerIndex = i;
+            } else if (players[i].getTimesHelped() == players[teamPlayerIndex].getTimesHelped() && rand.nextBoolean()) {
+                teamPlayerIndex = i;
+            }
+
+            // For most moves travelled
+            if (players[i].getMovesTravelled() > players[travellerIndex].getMovesTravelled()) {
+                travellerIndex = i;
+            } else if (players[i].getMovesTravelled() == players[travellerIndex].getMovesTravelled()
+                    && rand.nextBoolean()) {
+                travellerIndex = i;
+            }
+
+        }
+        
+        GameSystem.getPlayerAt(highestScorerIndex).addAchievement("Highest Scorer");
+        GameSystem.getPlayerAt(lowestSpenderIndex).addAchievement("Cheapskate");
+        GameSystem.getPlayerAt(teamPlayerIndex).addAchievement("Team Player");
+        GameSystem.getPlayerAt(travellerIndex).addAchievement("Traveller");
+
     }
 
     /**
