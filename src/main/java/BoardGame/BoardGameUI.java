@@ -151,8 +151,8 @@ public class BoardGameUI extends JFrame {
         arrowsContainer.setLayout(null);
 
         JButton[] arrowButtons = { arrowDown, arrowUp, arrowLeft, arrowRight };
-        String[] arrowIcons = { "/images/arrows/ArrowDown.png", "/images/arrows/ArrowUp.png",
-                "/images/arrows/ArrowLeft.png", "/images/arrows/ArrowRight.png" };
+        String[] arrowIcons = {"/images/arrows/downArrow.png", "/images/arrows/upArrow.png",
+                "/images/arrows/leftArrow.png", "/images/arrows/rightArrow.png"};
         for (int i = 0; i < arrowButtons.length; i++) {
             arrowButtons[i].setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource(arrowIcons[i]))));
             arrowButtons[i].setBorder(null);
@@ -207,7 +207,7 @@ public class BoardGameUI extends JFrame {
         movesLeftLabel = new JLabel();
 
         roundNumberGraphic.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
-        roundNumberGraphic.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/Round.png"))));
+        roundNumberGraphic.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/roundBackground.png"))));
         roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
         roundNumberGraphic.setHorizontalTextPosition(SwingConstants.CENTER);
         sidePanelContainer.add(roundNumberGraphic);
@@ -232,7 +232,7 @@ public class BoardGameUI extends JFrame {
         createPopupButton(journalButton, journalIcon);
         journalButton.addActionListener(evt -> toggleJournal());
 
-        ImageIcon helpIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/help.png")));
+        ImageIcon helpIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/helpButton.png")));
         createPopupButton(helpButton, helpIcon);
         helpButton.addActionListener(evt -> toggleTutorial());
 
@@ -243,7 +243,7 @@ public class BoardGameUI extends JFrame {
         setPopupButtonsPosition();
         sidePanelContainer.add(popupButtonContainer);
 
-        rollDiceButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/RollDiceButton.png"))));
+        rollDiceButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/rollDiceButton.png"))));
         rollDiceButton.setBorder(null);
         rollDiceButton.setContentAreaFilled(false);
         rollDiceButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -314,7 +314,7 @@ public class BoardGameUI extends JFrame {
         playerMoneys = new JLabel[players.length];
         playerScores = new JLabel[players.length];
         
-        ImageIcon backgroundIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/Resources 1.png")));
+        ImageIcon backgroundIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resourcesPanel.png")));
         backgroundIcon.setImage(backgroundIcon.getImage().getScaledInstance(373, 127, Image.SCALE_SMOOTH));
 
         for (int i = 0; i < players.length; i++) {

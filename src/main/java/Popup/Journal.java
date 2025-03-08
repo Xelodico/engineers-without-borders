@@ -49,7 +49,7 @@ public class Journal extends JPanel {
 
         try {
             // Load background image
-            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/images/journalBackground.png")));
+            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/images/popups/journalBackground.png")));
         } catch (NullPointerException | IOException e) {
             System.err.println("Error: Journal background image not found!");
             System.exit(1);

@@ -36,7 +36,7 @@ public class Shop extends JPanel {
     public Shop() {
         try {
             // Load background image
-            backgroundImage = ImageIO.read(getClass().getResource("/images/shop.png"));
+            backgroundImage = ImageIO.read(getClass().getResource("/images/popups/shop.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -30,7 +30,7 @@ public class JournalTest {
     @Test
     public void testBackgroundImageLoading() {
         try {
-            BufferedImage backgroundImage = ImageIO.read(getClass().getResource("/images/journalBackground.png"));
+            BufferedImage backgroundImage = ImageIO.read(getClass().getResource("/images/popups/journalBackground.png"));
             assertNotNull(backgroundImage);
         } catch (IOException e) {
             fail("Background image should be loaded without exceptions.");
