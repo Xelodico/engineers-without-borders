@@ -25,6 +25,7 @@ import java.net.URL;
 public class Shop extends JPanel {
 
     private BufferedImage backgroundImage;
+    private String resourceCost = "30 Rand";
 
     /**
      * Default constructor for the Shop object.
@@ -64,7 +65,7 @@ public class Shop extends JPanel {
         addHoverEffect(item1);
         add(item1);
 
-        price1 = newPrice("100");
+        price1 = newPrice(resourceCost);
         price1.setBounds(396, 303, 100, 39);
         add(price1);
 
@@ -76,7 +77,7 @@ public class Shop extends JPanel {
         addHoverEffect(item2);
         add(item2);
 
-        price2 = newPrice("100");
+        price2 = newPrice(resourceCost);
         price2.setBounds(585, 303, 100, 39);
         add(price2);
 
@@ -88,7 +89,7 @@ public class Shop extends JPanel {
         addHoverEffect(item3);
         add(item3);
 
-        price3 = newPrice("100");
+        price3 = newPrice(resourceCost);
         price3.setBounds(396, 473, 100, 39);
         add(price3);
 
@@ -100,7 +101,7 @@ public class Shop extends JPanel {
         addHoverEffect(item4);
         add(item4);
 
-        price4 = newPrice("100");
+        price4 = newPrice(resourceCost);
         price4.setBounds(585, 473, 100, 39);
         add(price4);
     }

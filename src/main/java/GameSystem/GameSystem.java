@@ -223,11 +223,10 @@ public abstract class GameSystem {
      * If all players have taken their turn, the game progresses to the next round.
      */
     public static void nextTurn() {
-        // Check if the player has completed all objectives
-        // if (checkWinCondition()) {
-        // endGame();
-        // return;
-        // }
+        // Check if all Objectives have been completed.
+        if(objectives.get(0).isCompleted() && objectives.get(1).isCompleted() && objectives.get(2).isCompleted() && objectives.get(3).isCompleted()) {
+        	endGame();
+        }
 
         // If the last player in the turn order has finished their turn, reset to the
         // first player
@@ -285,7 +284,7 @@ public abstract class GameSystem {
     		if(selectedTask.isCompleted()) {
     			currentPlayer.changeScoreBy(selectedTask.getCompletionScore());
     		}
-    	}  	
+    	}
     }
     
     
@@ -323,25 +322,6 @@ public abstract class GameSystem {
     	double percentUnrounded = currentTotalAwardedScore / maxScore;
     	return Math.round(percentUnrounded * 1000.0) / 1000.0;
     }
-    
-    /**
-     * Evaluates whether all objectives have been completed, determining if the game
-     * can progress.
-     * 
-     * @return true if all objectives have been completed; false otherwise.
-     *         //
-     */
-    // private static boolean checkWinCondition() {
-    // for (Objective objective : objectives) {
-    // // If any task within the objectives is incomplete, return false
-    // if (!objective.isCompleted()) {
-    // return false;
-    // }
-    // }
-
-    // // If all objectives are completed, return true
-    // return true;
-    // }
 
     /**
      * Ends the game and handles any necessary cleanup or victory conditions.

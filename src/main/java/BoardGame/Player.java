@@ -157,13 +157,11 @@ public class Player {
     }
 
     /**
-     * Retrieves the money value of the player
+     * Gets the money value of the player.
      * 
-     * @return returns current money amount of the player
      */
-
     public int getMoney() {
-        return this.money;
+        return money;
     }
 
     /**
@@ -171,7 +169,6 @@ public class Player {
      * 
      * @param money The new money value to assign to the player
      */
-
     public void setMoney(int money) {
         this.money = money;
         GameSystem.refreshResources();

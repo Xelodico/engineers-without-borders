@@ -108,6 +108,9 @@ public class Journal extends JPanel {
      * Additionally, it resets the vertical scroll position of the scroll pane to the top.
      */
     public void refresh() {
+
+        int originalScrollValue = scrollPane.getVerticalScrollBar().getValue();
+
         page.removeAll(); // Remove all existing components
         addCloseButton(page); // Re-add the close button
 
@@ -146,7 +149,7 @@ public class Journal extends JPanel {
             page.add(Box.createVerticalStrut(150));
         }
 
-        SwingUtilities.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(0));
+        SwingUtilities.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(originalScrollValue));
 
         revalidate();
         repaint();
@@ -186,7 +189,15 @@ public class Journal extends JPanel {
         taskPanel.setBackground(new Color(214, 183, 109));
         taskPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
+        boolean[] allTasksCompleted = {true};
+        
+
         tasksObj.forEach(task -> {
+
+            if (!task.isCompleted()) {
+                allTasksCompleted[0] = false;
+            }
+
             if (task.getOwnedBy() != null) {
                 JPanel taskRow = new JPanel();
                 taskRow.setLayout(new BoxLayout(taskRow, BoxLayout.Y_AXIS));
@@ -212,6 +223,10 @@ public class Journal extends JPanel {
                 taskPanel.add(Box.createVerticalStrut(5)); // Space between tasks
             }
         });
+
+        if (allTasksCompleted[0]) {
+            objectiveLabel.setText("<html><s>" + objectiveObj.getTitle() + "</s></html>");
+        }
 
         objective.add(taskPanel, BorderLayout.CENTER);
 
@@ -259,11 +274,18 @@ public class Journal extends JPanel {
             transferButton.addActionListener(e -> GameSystem.toggleTransfer(t));
         }
 
-        if (t.getCurrentStepNumber() > 2 && !t.isCompleted()) {
+        boolean[] allTasksOwnedByPlayer = {true};
+        t.getBelongsTo().getTasks().forEach(ta -> {
+            if (ta.getOwnedBy() != GameSystem.getPlayerAt()) {
+                allTasksOwnedByPlayer[0] = false;
+            }
+        });
+
+        if (allTasksOwnedByPlayer[0] && !t.isCompleted()) {
             ImageIcon completeIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/completeTaskButton.png")));
             completeIcon.setImage(completeIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
             JButton completeButton = new JButton(completeIcon);
-
+    
             completeButton.setBorder(null);
             completeButton.setFocusPainted(false);
             completeButton.setContentAreaFilled(false);
@@ -272,12 +294,10 @@ public class Journal extends JPanel {
             task.add(completeButton);
             
             completeButton.addActionListener(e -> {
-                System.out.println("Complete button clicked!");
-                t.setCompleted(true);
+                t.completeStep();
                 refresh();
             });
         }
-
 
         task.add(Box.createHorizontalStrut(50));
 
