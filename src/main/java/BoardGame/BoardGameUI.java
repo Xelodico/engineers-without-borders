@@ -88,10 +88,14 @@ public class BoardGameUI extends JFrame {
         popup.setYesButtonAction(yesAction);
         popup.setNoButtonAction(noAction);
         popup.setVisible(true);
+        dimBackground.setVisible(true);
+        toggleEnableButtons();
     }
 
     public void hidePopup() {
         popup.setVisible(false);
+        dimBackground.setVisible(false);
+        toggleEnableButtons();
     }
 
     /**
@@ -449,7 +453,8 @@ public class BoardGameUI extends JFrame {
 
     public void toggleTransfer(Task task) {
         transferPopup.setVisible(!transferPopup.isVisible());
-        journal.closeButton.setEnabled(!transferPopup.isVisible());
+        dimBackground.setVisible(!dimBackground.isVisible());
+        toggleEnableButtons();
         if (task != null) {
             transferPopup.setTask(task);
         }
