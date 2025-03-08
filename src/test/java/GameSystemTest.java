@@ -1,10 +1,24 @@
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.ArrayList;
 
-import GameSystem.GameSystem;
-import BoardGame.Player;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import BoardGame.Board;
 import BoardGame.Direction;
+import BoardGame.Objective;
+import BoardGame.Player;
+import BoardGame.ResourceType;
+import BoardGame.SubTask;
+import BoardGame.Task;
+import GameSystem.GameSystem;
 
 /**
  * Test suite for the {@link GameSystem} class.
@@ -20,17 +34,33 @@ import BoardGame.Direction;
 public class GameSystemTest {
 
     /**
-     * Sets up the testing environment by resetting and initialising the game state.
+     * Performs a one-time setup for the game system before all test cases run.
      * <p>
-     * This method is executed before each test case to ensure that the
-     * {@link GameSystem}
-     * is in a known state.
+     * This method ensures that the {@link GameSystem} is properly initialised
+     * before executing any tests. Since some tests depend on an initialised game
+     * state, this setup prevents redundant initialisation calls and maintains
+     * consistency across all test cases.
+     * </p>
+     */
+    @BeforeAll
+    public static void setupAll() {
+        GameSystem.initialise();
+    }
+
+    /**
+     * Resets and reinitialises the game system before each test case.
+     * <p>
+     * This method ensures that each test starts with a clean and predictable
+     * game state by first resetting any existing game data and then
+     * reinitialising the {@link GameSystem}.
      * </p>
      */
     @BeforeEach
     public void setUp() {
-        // For testing purposes, ensure the game state is reset.
-        GameSystem.resetForTests();
+        // Reset any existing game state to avoid interference between tests.
+        GameSystem.reset();
+
+        // Reinitialise the game system to ensure a fresh start for each test.
         GameSystem.initialise();
     }
 
@@ -134,7 +164,7 @@ public class GameSystemTest {
     public void testMovePlayer() {
         // Test a valid move to the RIGHT from coordinate 5.
         Player player = new Player("TestPlayer", 0);
-        player.setCoord(5); // 5 is not on the right boundary (5 % 12 != 11)
+        player.setCoord(5); // 5 is not on the right boundary
         Player[] players = { player };
         GameSystem.setTurnOrder(players);
         player.setMovesLeft(1);
@@ -183,13 +213,13 @@ public class GameSystemTest {
     /**
      * Tests that a player at the left boundary (coordinate 0) does not move left.
      * <p>
-     * Since coordinate 0 is on the left edge (0 % 12 == 0), a move to the LEFT
+     * Since coordinate 0 is on the left edge (0 % 9 == 0), a move to the LEFT
      * should not change the player's position or moves travelled.
      * </p>
      */
     @Test
     public void testMovePlayerBoundaryLeft() {
-        // Left boundary: coordinate 0 is on the left edge (0 % 12 == 0)
+        // Left boundary: coordinate 0 is on the left edge (0 % 9 == 0)
         Player player = new Player("BoundaryPlayer", 0);
         player.setCoord(0);
         player.setMovesLeft(1);
@@ -203,13 +233,13 @@ public class GameSystemTest {
     /**
      * Tests that a player at the top boundary does not move upward.
      * <p>
-     * A coordinate less than 12 (e.g., 3) represents the top row. A move UP should
+     * A coordinate less than 9 (e.g., 3) represents the top row. A move UP should
      * leave the player's coordinate unchanged.
      * </p>
      */
     @Test
     public void testMovePlayerBoundaryUp() {
-        // Top boundary: any coordinate less than 12 (e.g., 3)
+        // Top boundary: any coordinate less than 9 (e.g., 3)
         Player player = new Player("BoundaryPlayerUp", 0);
         player.setCoord(3);
         player.setMovesLeft(1);
@@ -223,66 +253,66 @@ public class GameSystemTest {
     /**
      * Tests that a player at the right boundary does not move right.
      * <p>
-     * A coordinate whose modulo 12 equals 11 (e.g., 11) is on the right edge.
+     * A coordinate whose modulo 9 equals 8 (e.g., 8) is on the right edge.
      * Attempting to move RIGHT should result in no change in position or moves
      * travelled.
      * </p>
      */
     @Test
     public void testMovePlayerBoundaryRight() {
-        // Right boundary: coordinate mod 12 must equal 11.
+        // Right boundary: coordinate mod 9 must equal 8.
         Player player = new Player("BoundaryPlayerRight", 0);
-        player.setCoord(11); // 11 % 12 == 11, so on the right edge.
+        player.setCoord(8); // 8 % 9 == 8, so on the right edge.
         player.setMovesLeft(1);
         Player[] players = { player };
         GameSystem.setTurnOrder(players);
         GameSystem.movePlayer(Direction.RIGHT);
         assertEquals(0, player.getMovesTravelled(), "Player should not move when at right boundary.");
-        assertEquals(11, player.getCoord(), "Player coordinate should remain unchanged.");
+        assertEquals(8, player.getCoord(), "Player coordinate should remain unchanged.");
     }
 
     /**
      * Tests that a player at the bottom boundary does not move down.
      * <p>
-     * For a board with a side length of 12, bottom row indices range from 132 to
-     * 143.
+     * For a board with a side length of 9, bottom row indices range from (9-1)*9 =
+     * 72 to 80.
      * A move DOWN at such a coordinate should leave the player's position
      * unchanged.
      * </p>
      */
     @Test
     public void testMovePlayerBoundaryDown() {
-        // Bottom boundary: for boardSideLength 12, bottom row indices are 132 to 143.
+        // Bottom boundary: for boardSideLength 9, bottom row indices are 72 to 80.
         Player player = new Player("BoundaryPlayerDown", 0);
-        player.setCoord(140); // 140 is in the bottom row.
+        player.setCoord(75); // 75 is in the bottom row.
         player.setMovesLeft(1);
         Player[] players = { player };
         GameSystem.setTurnOrder(players);
         GameSystem.movePlayer(Direction.DOWN);
         assertEquals(0, player.getMovesTravelled(), "Player should not move when at bottom boundary.");
-        assertEquals(140, player.getCoord(), "Player coordinate should remain unchanged.");
+        assertEquals(75, player.getCoord(), "Player coordinate should remain unchanged.");
     }
 
     /**
      * Tests that a valid move upward results in the expected new coordinate.
      * <p>
-     * For a valid UP move, the player's starting coordinate must be at least 12.
-     * With a starting coordinate of 20 and a board side length of 12, the expected
-     * new coordinate is 20 - 12 = 8.
+     * For a valid UP move, the player's starting coordinate must be at least 9.
+     * With a starting coordinate of 20 and a board side length of 9, the expected
+     * new coordinate is 20 - 9 = 11.
      * Also, the moves travelled should increase by one.
      * </p>
      */
     @Test
     public void testMovePlayerUpValid() {
-        // Test a valid move UP. Starting coordinate must be >= 12.
+        // Test a valid move UP. Starting coordinate must be >= 9.
         Player player = new Player("ValidUp", 0);
-        player.setCoord(20); // 20 is valid for moving UP (20 >= 12)
+        player.setCoord(20); // 20 is valid for moving UP (20 >= 9)
         player.setMovesLeft(1);
         Player[] players = { player };
         GameSystem.setTurnOrder(players);
         GameSystem.movePlayer(Direction.UP);
-        // Expected coordinate is 20 - 12 = 8.
-        assertEquals(8, player.getCoord(), "Player should move up from 20 to 8.");
+        // Expected coordinate is 20 - 9 = 11.
+        assertEquals(11, player.getCoord(), "Player should move up from 20 to 11.");
         assertEquals(1, player.getMovesTravelled(), "Player should have travelled one square.");
     }
 
@@ -290,23 +320,22 @@ public class GameSystemTest {
      * Tests that a valid move DOWN results in the expected new coordinate.
      * <p>
      * The player's starting coordinate is 50, which is valid for a move DOWN.
-     * With one move left and a board with a side length of 12, the expected new
-     * coordinate is 50 + 12 = 62.
+     * With one move left and a board with a side length of 9, the expected new
+     * coordinate is 50 + 9 = 59.
      * The player's moves travelled should increase by one.
      * </p>
      */
     @Test
     public void testMovePlayerDownValid() {
-        // Test a valid move DOWN. Starting coordinate must be less than (12-1)*12 =
-        // 132.
+        // Test a valid move DOWN. Starting coordinate must be less than (9-1)*9 = 72.
         Player player = new Player("ValidDown", 0);
         player.setCoord(50); // 50 is valid for moving down.
         player.setMovesLeft(1);
         Player[] players = { player };
         GameSystem.setTurnOrder(players);
         GameSystem.movePlayer(Direction.DOWN);
-        // Expected coordinate is 50 + 12 = 62.
-        assertEquals(62, player.getCoord(), "Player should move down from 50 to 62.");
+        // Expected coordinate is 50 + 9 = 59.
+        assertEquals(59, player.getCoord(), "Player should move down from 50 to 59.");
         assertEquals(1, player.getMovesTravelled(), "Player should have travelled one square.");
     }
 
@@ -384,19 +413,21 @@ public class GameSystemTest {
      * exceptions.
      * <p>
      * This includes testing methods such as showPopup, hidePopup, toggleJournal,
-     * toggleShop, and playTutorial.
+     * toggleShop, toggleTutorial and toggleTransfer.
      * </p>
      */
     @Test
     public void testUIInteractions() {
         assertDoesNotThrow(() -> {
+            Task task = new Task();
             GameSystem.showPopup("Test Title", "Test Description", "Yes", "No", e -> {
             }, e -> {
             });
             GameSystem.hidePopup();
             GameSystem.toggleJournal();
             GameSystem.toggleShop();
-            GameSystem.playTutorial();
+            GameSystem.toggleTutorial();
+            GameSystem.toggleTransfer(task);
         }, "UI interaction methods should execute without throwing exceptions.");
     }
 
@@ -412,10 +443,225 @@ public class GameSystemTest {
     public void testResetForTests() {
         GameSystem.setRoundNumber(10);
         GameSystem.setTurnNumber(3);
-        GameSystem.resetForTests();
+        GameSystem.reset();
         GameSystem.initialise();
         assertEquals(0, GameSystem.getRoundNumber(), "After reset, round number should be 0.");
         assertEquals(0, GameSystem.getTurnNumber(), "After reset, turn number should be 0.");
+    }
+
+    /**
+     * Checks that the board is not null and its side length is 12.
+     */
+    @Test
+    public void testGetBoard() {
+        Board board = GameSystem.getBoard();
+        assertNotNull(board, "getBoard() should not return null.");
+        assertEquals(9, board.boardSideLength, "Board side length should be 9.");
+    }
+
+    /**
+     * Tests the progress of a task by a player.
+     * <p>
+     * A dummy task is created with a single subtask that requires a specific
+     * resource (asphalt)
+     * and awards a completion score when finished. A player is initialized with
+     * enough asphalt and a zero score.
+     * After calling {@code GameSystem.progressTask(task)}, the test verifies that:
+     * <ul>
+     * <li>The player's asphalt resource decreases by the subtask's cost (30).</li>
+     * <li>The player's score increases by the subtask's score (20) plus the task's
+     * completion score (50),
+     * since the task becomes complete.</li>
+     * <li>The task is marked as completed.</li>
+     * </ul>
+     * </p>
+     */
+    @Test
+    public void testProgressTask() {
+        // Set up a dummy Task with one SubTask.
+        Task task = new Task();
+        task.setResourceType(ResourceType.ASPHALT);
+        task.setCompletionScore(50);
+
+        // Create a subtask with a resource cost and a completion score.
+        SubTask subtask = new SubTask();
+        subtask.setResourceCost(30);
+        subtask.setCompletionScore(20);
+        task.addStep(subtask);
+
+        // Set up a player with sufficient asphalt resource.
+        Player player = new Player("TaskTester", 0);
+        player.setResource(100, ResourceType.ASPHALT); // Ensure resource check passes.
+        player.setScore(0);
+        Player[] players = { player };
+        GameSystem.setTurnOrder(players);
+
+        int initialResource = player.getResource(ResourceType.ASPHALT);
+        int initialScore = player.getScore();
+
+        // Execute the task progression.
+        GameSystem.progressTask(task);
+
+        // Verify that the player's asphalt resource decreases by the subtask's cost.
+        assertEquals(initialResource - 30, player.getResource(ResourceType.ASPHALT),
+                "Player's resource should decrease by the subtask's resource cost.");
+        // Verify that the player's score increases by the subtask and task completion
+        // scores.
+        assertEquals(initialScore + 20 + 50, player.getScore(),
+                "Player's score should increase by the subtask and task completion scores.");
+        // Verify that the task is marked as complete.
+        assertTrue(task.isCompleted(), "Task should be marked as completed after progress.");
+    }
+
+    /**
+     * Tests that purchasing a resource is successful when the player has sufficient
+     * quantity.
+     * <p>
+     * The player is initialized with at least 150 units of VOLUNTEERS and 500
+     * money.
+     * When {@code GameSystem.purchaseResource(ResourceType.VOLUNTEERS)} is called,
+     * the purchase should succeed:
+     * <ul>
+     * <li>The player's money is reduced by 100 (the cost of the purchase).</li>
+     * <li>The player's VOLUNTEERS resource increases by 25.</li>
+     * </ul>
+     * </p>
+     */
+    @Test
+    public void testPurchaseResourceSuccess() {
+        Player player = new Player("Purchaser", 0);
+        // Ensure the player has sufficient VOLUNTEERS resource.
+        player.setResource(150, ResourceType.VOLUNTEERS);
+        // Provide the player with some money.
+        player.changeMoney(500);
+        int initialMoney = player.getMoney();
+        int initialResource = player.getResource(ResourceType.VOLUNTEERS);
+        Player[] players = { player };
+        GameSystem.setTurnOrder(players);
+
+        boolean success = GameSystem.purchaseResource(ResourceType.VOLUNTEERS);
+        assertTrue(success, "Purchase should succeed with sufficient resource.");
+        assertEquals(initialMoney - 100, player.getMoney(),
+                "Player's money should be reduced by RESOURCE_PRICE (100).");
+        assertEquals(initialResource + 25, player.getResource(ResourceType.VOLUNTEERS),
+                "Player's resource should increase by 25.");
+    }
+
+    /**
+     * Tests that purchasing a resource fails when the player has insufficient
+     * resource quantity.
+     * <p>
+     * The player's resource for KNOWLEDGE is set below the required threshold (less
+     * than 100).
+     * When {@code GameSystem.purchaseResource(ResourceType.KNOWLEDGE)} is called,
+     * the purchase should fail,
+     * and neither the player's money nor the KNOWLEDGE resource should change.
+     * </p>
+     */
+    @Test
+    public void testPurchaseResourceFailure() {
+        Player player = new Player("Purchaser", 0);
+        // Set insufficient KNOWLEDGE resource (below RESOURCE_PRICE, 100).
+        player.setResource(50, ResourceType.KNOWLEDGE);
+        player.changeMoney(500);
+        int initialMoney = player.getMoney();
+        int initialResource = player.getResource(ResourceType.KNOWLEDGE);
+        Player[] players = { player };
+        GameSystem.setTurnOrder(players);
+
+        boolean success = GameSystem.purchaseResource(ResourceType.KNOWLEDGE);
+        assertFalse(success, "Purchase should fail with insufficient resource.");
+        // Verify that neither money nor resource quantity has changed.
+        assertEquals(initialMoney, player.getMoney(), "Player's money should remain unchanged.");
+        assertEquals(initialResource, player.getResource(ResourceType.KNOWLEDGE),
+                "Player's resource should remain unchanged.");
+    }
+
+    /**
+     * Tests the calculation of the implementation progress percentage.
+     * <p>
+     * The method {@code GameSystem.getImplementationPercent()} should return a
+     * value between 0.0 and 1.0,
+     * representing the ratio of the current total awarded score to the maximum
+     * possible score.
+     * This test simulates:
+     * <ul>
+     * <li>No progress (score 0, percent 0.0).</li>
+     * <li>Full progress (score equals maxScore, percent 1.0).</li>
+     * <li>Half progress (score is half of maxScore, percent 0.5).</li>
+     * </ul>
+     * </p>
+     */
+    @Test
+    public void testGetImplementationPercent() {
+        // Simulate no progress.
+        GameSystem.setCurrentTotalAwardedScore(0);
+        double percent0 = GameSystem.getImplementationPercent();
+        assertEquals(0.0, percent0, "Implementation percent should be 0.0 when no progress is made.");
+
+        // Simulate full progress.
+        GameSystem.setMaxScore(1000);
+        GameSystem.setCurrentTotalAwardedScore(1000);
+        double percentFull = GameSystem.getImplementationPercent();
+        assertEquals(1.0, percentFull, "Implementation percent should be 1.0 when progress equals maxScore.");
+
+        // Simulate half progress.
+        GameSystem.setCurrentTotalAwardedScore(500);
+        double percentHalf = GameSystem.getImplementationPercent();
+        assertEquals(0.5, percentHalf, "Implementation percent should be 0.5 when progress is half of maxScore.");
+    }
+
+    /**
+     * Tests that {@code GameSystem.checkWinCondition()} correctly returns true when
+     * all objectives are marked as complete.
+     * 
+     * This test retrieves the list of objectives and simulates their completion
+     * by setting all tasks to their final step. It then verifies that the win
+     * condition method properly recognizes this
+     * state.
+     */
+    @Test
+    public void testCheckWinConditionAllComplete() throws Exception {
+        // Retrieve the list of objectives from the game system
+        ArrayList<Objective> completeList = GameSystem.getObjectives();
+
+        // Iterate through each objective and mark all tasks as complete
+        for (Objective o : completeList) {
+            for (Task t : o.getTasks()) {
+                t.setCurrentStepNumber(t.getSteps().length); // Set task to final step
+            }
+        }
+
+        // Verify that the win condition returns true when all objectives are complete
+        boolean result = GameSystem.checkWinCondition();
+        assertTrue(result, "checkWinCondition should return true when all objectives are complete.");
+    }
+
+    /**
+     * Tests that {@code GameSystem.checkWinCondition()} correctly returns false
+     * when at least one objective is incomplete.
+     * 
+     * This test retrieves a list of objectives and ensures that only half of them
+     * are marked as complete, while the other half remains incomplete.
+     * It then verifies that the win condition method correctly fails in this case.
+     */
+    @Test
+    public void testCheckWinConditionIncomplete() throws Exception {
+        // Retrieve the list of objectives from the game system
+        ArrayList<Objective> mixedList = GameSystem.getObjectives();
+
+        // Mark only half of the objectives as complete
+        for (int i = 0; i < mixedList.size() / 2; i++) {
+            Objective o = mixedList.get(i);
+            for (Task t : o.getTasks()) {
+                t.setCurrentStepNumber(t.getSteps().length); // Set task to final step
+            }
+        }
+
+        // Verify that the win condition returns false when at least one objective is
+        // incomplete
+        boolean result = GameSystem.checkWinCondition();
+        assertFalse(result, "checkWinCondition should return false when at least one objective is incomplete.");
     }
 
 }
