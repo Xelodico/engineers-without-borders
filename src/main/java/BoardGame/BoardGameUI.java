@@ -2,6 +2,7 @@ package BoardGame;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.Objects;
 
 import javax.swing.*;
@@ -32,6 +33,7 @@ public class BoardGameUI extends JFrame {
     public static final int WINDOW_HEIGHT = 735;
     private static final int BOARD_WIDTH = 650;
     private static final int BOARD_HEIGHT = BOARD_WIDTH;
+    private static final int SIDE_PANEL_WIDTH = 384;
 
     public StartScreen startScreen;
 
@@ -196,6 +198,7 @@ public class BoardGameUI extends JFrame {
         helpButton = new JButton();
         journalButton = new JButton();
         shopButton = new JButton();
+        closeButton = new JButton();
         rollDiceButton = new JButton();
         endTurnButton = new JButton();
         movesLeftLabel = new JLabel();
@@ -215,52 +218,42 @@ public class BoardGameUI extends JFrame {
         sidePanelContainer.add(playerTurnGraphic);
         playerTurnGraphic.setBounds(0, 0, 241, 57);
 
-        ImageIcon helpIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/help.png")));
-        helpButton.setIcon(new ImageIcon(helpIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH)));
-        helpButton.setBorder(null);
-        helpButton.setContentAreaFilled(false);
-        helpButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        helpButton.setFocusable(false);
-        sidePanelContainer.add(helpButton);
-        helpButton.setRolloverEnabled(false);
-        helpButton.setBounds(330, WINDOW_HEIGHT - 105 - 37, 37, 37);
-        helpButton.addActionListener(evt -> toggleTutorial());
-
-        ImageIcon journalIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/journalButton.png")));
-        journalButton.setIcon(new ImageIcon(journalIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH)));
-        journalButton.setBorder(null);
-        journalButton.setContentAreaFilled(false);
-        journalButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        journalButton.setFocusable(false);
-        sidePanelContainer.add(journalButton);
-        journalButton.setBounds(283, WINDOW_HEIGHT - 105 - 37, 37, 37);
-        journalButton.addActionListener(evt -> toggleJournal());
+        popupButtonContainer = new JPanel();
+        popupButtonContainer.setLayout(new BoxLayout(popupButtonContainer, BoxLayout.X_AXIS));
 
         ImageIcon shopIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/shopButton.png")));
-        shopButton.setIcon(new ImageIcon(shopIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH)));
-        shopButton.setBorder(null);
-        shopButton.setContentAreaFilled(false);
-        shopButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        shopButton.setFocusable(false);
-        sidePanelContainer.add(shopButton);
-        shopButton.setBounds(236, WINDOW_HEIGHT - 105 - 37, 37, 37);
+        createPopupButton(shopButton, shopIcon);
         shopButton.addActionListener(e -> toggleShop());
+
+        ImageIcon journalIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/journalButton.png")));
+        createPopupButton(journalButton, journalIcon);
+        journalButton.addActionListener(evt -> toggleJournal());
+
+        ImageIcon helpIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/help.png")));
+        createPopupButton(helpButton, helpIcon);
+        helpButton.addActionListener(evt -> toggleTutorial());
+
+        ImageIcon closeIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/quitGameButton.png")));
+        createPopupButton(closeButton, closeIcon);
+        closeButton.addActionListener(e -> toggleEndGame(EndGame.Ending.BAD));
+
+        setPopupButtonsPosition();
+        sidePanelContainer.add(popupButtonContainer);
 
         rollDiceButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/RollDiceButton.png"))));
         rollDiceButton.setBorder(null);
         rollDiceButton.setContentAreaFilled(false);
         rollDiceButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        rollDiceButton.setFocusPainted(false);
-        sidePanelContainer.add(rollDiceButton);
+        rollDiceButton.setFocusable(false);
         rollDiceButton.setBounds(170, WINDOW_HEIGHT - 52 - 47, 192, 47);
         rollDiceButton.setRolloverEnabled(false);
-
         rollDiceButton.addActionListener(e -> {
             GameSystem.getPlayerAt().rollDie();
             rollDiceButton.setVisible(false);
             movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
             movesLeftLabel.setVisible(true);
         });
+        sidePanelContainer.add(rollDiceButton);
 
         movesLeftLabel.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/buttonBackground.png"))));
         movesLeftLabel.setBounds(170, WINDOW_HEIGHT - 52 - 47, 192, 47);
@@ -289,6 +282,21 @@ public class BoardGameUI extends JFrame {
             endTurnButton.setVisible(false);
             rollDiceButton.setVisible(true);
         });
+    }
+
+    private void setPopupButtonsPosition() {
+        int numberOfButtons = Arrays.stream(popupButtonContainer.getComponents()).filter(component -> component instanceof JButton && component.isVisible()).toArray().length;
+        popupButtonContainer.setSize(37*numberOfButtons + 15*(numberOfButtons-1), 37);
+        popupButtonContainer.setLocation(SIDE_PANEL_WIDTH - popupButtonContainer.getWidth() - 22, WINDOW_HEIGHT - 105 - 37);
+    }
+
+    private void createPopupButton(JButton button, ImageIcon icon) {
+        button.setIcon(new ImageIcon(icon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH)));
+        button.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 15));
+        button.setContentAreaFilled(false);
+        button.setFocusable(false);
+        button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        popupButtonContainer.add(button);
     }
 
     private void setupPlayerPanels() {
@@ -356,7 +364,6 @@ public class BoardGameUI extends JFrame {
         }
     }
 
-
     /**
      * Initializes the UI components for the game window, including the game board,
      * side panel with player resources, and control buttons for moving players and
@@ -370,10 +377,6 @@ public class BoardGameUI extends JFrame {
         sidePanelContainer.setLayout(null);
         sidePanelContainer.setVisible(false);
 
-        setupArrowButtons();
-        setupLabelsAndButtons();
-        setupPlayerPanels();
-
          GroupLayout layout = new GroupLayout(getContentPane());
          getContentPane().setLayout(layout);
          layout.setHorizontalGroup(
@@ -383,7 +386,7 @@ public class BoardGameUI extends JFrame {
                                  .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, BOARD_WIDTH,
                                          GroupLayout.PREFERRED_SIZE)
                                  .addGap(10, 10, 10)
-                                 .addComponent(sidePanelContainer, GroupLayout.DEFAULT_SIZE, 384,
+                                 .addComponent(sidePanelContainer, GroupLayout.DEFAULT_SIZE, SIDE_PANEL_WIDTH,
                                          Short.MAX_VALUE)
                                  .addGap(0, 0, 0)));
          layout.setVerticalGroup(
@@ -397,31 +400,25 @@ public class BoardGameUI extends JFrame {
                                                  GroupLayout.PREFERRED_SIZE))
                                  .addGap(10, 10, 10)));
 
+        setupArrowButtons();
+        setupLabelsAndButtons();
+        setupPlayerPanels();
+
         setSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
     }
 
     private void toggleEnableButtons() {
-        if (helpButton.isEnabled()) {
-            arrowDown.setEnabled(false);
-            arrowUp.setEnabled(false);
-            arrowLeft.setEnabled(false);
-            arrowRight.setEnabled(false);
-            rollDiceButton.setEnabled(false);
-            endTurnButton.setEnabled(false);
-            helpButton.setEnabled(false);
-            journalButton.setEnabled(false);
-            shopButton.setEnabled(false);
-        } else {
-            arrowDown.setEnabled(true);
-            arrowUp.setEnabled(true);
-            arrowLeft.setEnabled(true);
-            arrowRight.setEnabled(true);
-            rollDiceButton.setEnabled(true);
-            endTurnButton.setEnabled(true);
-            helpButton.setEnabled(true);
-            journalButton.setEnabled(true);
-            shopButton.setEnabled(true);
-        }
+        arrowDown.setEnabled(!arrowDown.isEnabled());
+        arrowUp.setEnabled(!arrowUp.isEnabled());
+        arrowLeft.setEnabled(!arrowLeft.isEnabled());
+        arrowRight.setEnabled(!arrowRight.isEnabled());
+        rollDiceButton.setEnabled(!rollDiceButton.isEnabled());
+        movesLeftLabel.setEnabled(!movesLeftLabel.isEnabled());
+        endTurnButton.setEnabled(!endTurnButton.isEnabled());
+        helpButton.setEnabled(!helpButton.isEnabled());
+        journalButton.setEnabled(!journalButton.isEnabled());
+        shopButton.setEnabled(!shopButton.isEnabled());
+        closeButton.setEnabled(!closeButton.isEnabled());
     }
 
     public void toggleJournal() {
@@ -440,11 +437,8 @@ public class BoardGameUI extends JFrame {
     }
 
     public void setShopButtonVisible(boolean state) {
-        if (state) {
-            shopButton.setVisible(true);
-        } else {
-            shopButton.setVisible(false);
-        }
+        shopButton.setVisible(state);
+        setPopupButtonsPosition();
     }
 
     public void toggleTutorial() {
@@ -510,10 +504,12 @@ public class BoardGameUI extends JFrame {
     private JLabel roundNumberGraphic;
     private JPanel sidePanelContainer;
     private Popup popup;
+    private JPanel popupButtonContainer;
     private JButton journalButton;
     private Journal journal;
     private JPanel dimBackground;
     private Shop shop;
     private JButton shopButton;
     private Tutorial tutorial;
+    private JButton closeButton;
 }
