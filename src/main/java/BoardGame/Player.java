@@ -1,5 +1,6 @@
 package BoardGame;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -25,6 +26,7 @@ public class Player {
     private int moneySpent;
     private int movesTravelled;
     private int timesHelped;
+    private ArrayList<String> achievements;
     private ArrayList<Task> tasks;
 
     /**
@@ -52,8 +54,9 @@ public class Player {
         this.influence = 0;
         this.knowledge = 0;
         this.movesLeft = movesLeft;
-        this.timesHelped = timesHelped;
+        this.timesHelped = 0;
         this.tasks = new ArrayList<Task>();
+        this.achievements = new ArrayList<String>();
     }
 
     /**
@@ -77,6 +80,7 @@ public class Player {
         this.movesLeft = 0;
         this.timesHelped = 0;
         this.tasks = new ArrayList<Task>();
+        this.achievements = new ArrayList<String>();
     }
 
     /**
@@ -96,6 +100,7 @@ public class Player {
         this.movesLeft = 0;
         this.timesHelped = 0;
         this.tasks = new ArrayList<Task>();
+        this.achievements = new ArrayList<String>();
     }
 
     /**
@@ -141,9 +146,8 @@ public class Player {
         }
         this.coord = coord;
     }
-    
-    
-    /** 
+
+    /**
      * Changes the score of the player by the given amount. Score cannot go below 0
      * 
      * @param changeAmount - the amount to change the score by
@@ -251,7 +255,6 @@ public class Player {
         this.movesLeft = movesLeft;
     }
 
-    
     /**
      * Gets the amount of the resource referenced by the inputed ResourceType
      * 
@@ -359,6 +362,14 @@ public class Player {
             }
         }
         return null;
+    }
+
+    public ArrayList<String> getAchievements() {
+        return achievements;
+    }
+
+    public void addAchievement(String achievement) {
+        this.achievements.add(achievement);
     }
 
     /**
