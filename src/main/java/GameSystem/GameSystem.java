@@ -18,7 +18,6 @@ import BoardGame.Player;
 import BoardGame.ResourceType;
 import BoardGame.SubTask;
 import BoardGame.Task;
-import Popup.EndGame.Ending;
 import square.ShopSquare;
 import square.Square;
 
@@ -53,7 +52,6 @@ public abstract class GameSystem {
 
     private static ArrayList<Objective> objectives;
     private static ArrayList<Task> tasks;
-    private static SubTask[] subtasks;
 
     // Boolean flag to determine whether the game is active or not
     private static boolean gameActive = false;
@@ -73,8 +71,8 @@ public abstract class GameSystem {
             turnNumber = 0; // Reset turn number
             roundNumber = 0; // Reset round count
 
-            objectives = new ArrayList<Objective>();
-            tasks = new ArrayList<Task>();
+            objectives = new ArrayList<>();
+            tasks = new ArrayList<>();
 
             // Setting up a default player array with at least one player to avoid errors
             turnOrder = new Player[] { new Player() };
@@ -296,7 +294,7 @@ public abstract class GameSystem {
     }
 
     /**
-     * Completes one step of the inputed Task object and awards the current player
+     * Completes one step of the selected Task object and awards the current player
      * points before moving to
      * the next step
      * 
