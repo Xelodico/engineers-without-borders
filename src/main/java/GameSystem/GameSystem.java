@@ -95,6 +95,10 @@ public abstract class GameSystem {
         gameBoardUI.startGame(); // Start the game through the UI
         gameBoardUI.refresh(); // Refresh the UI to reflect updated game state
         toggleTutorial();
+        getPlayerAt().setResource(500, ResourceType.ASPHALT);
+        getPlayerAt().setResource(500, ResourceType.INFLUENCE);
+        getPlayerAt().setResource(500, ResourceType.KNOWLEDGE);
+        getPlayerAt().setResource(500, ResourceType.VOLUNTEERS);
     }
 
     /**
@@ -258,7 +262,7 @@ public abstract class GameSystem {
      * 
      * @param selectedTask - The task to progress
      */
-    public static void progressTask(Task selectedTask) {
+    public static boolean progressTask(Task selectedTask) {
     	// Get current player
     	Player currentPlayer = getPlayerAt();
     	
@@ -285,6 +289,7 @@ public abstract class GameSystem {
     			currentPlayer.changeScoreBy(selectedTask.getCompletionScore());
     		}
     	}
+        return true;
     }
     
     
@@ -319,7 +324,7 @@ public abstract class GameSystem {
      * @return a fraction rounded to 3dp showing the current completion progress of the game (e.g. 0.762 = 76.2% completed)
      */
     public static double getImplementationPercent() {
-    	double percentUnrounded = currentTotalAwardedScore / maxScore;
+    	double percentUnrounded = (double) currentTotalAwardedScore / maxScore;
     	return Math.round(percentUnrounded * 1000.0) / 1000.0;
     }
 
@@ -472,6 +477,15 @@ public abstract class GameSystem {
 
     public static void hidePopup() {
         gameBoardUI.hidePopup();
+    }
+
+    public static void showCostPopup(String title, String desc, String currency, int cost, ActionListener yesAction,
+            ActionListener noAction) {
+        gameBoardUI.showCostPopup(title, desc, currency, cost, yesAction, noAction);
+    }
+
+    public static void hideCostPopup() {
+        gameBoardUI.hideCostPopup();
     }
 
     public static void toggleJournal() {

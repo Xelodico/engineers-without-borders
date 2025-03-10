@@ -37,6 +37,7 @@ public class Journal extends JPanel {
     private final JScrollPane scrollPane;
 
     public JButton closeButton;
+    private JLabel solutionImplementation;
 
     /**
      * Constructs a new Journal panel with the following layout:
@@ -72,9 +73,9 @@ public class Journal extends JPanel {
         title.setHorizontalAlignment(SwingConstants.LEFT);
         title.setBounds(24, 13, 617, 30);
 
-        JLabel solutionImplementation = new JLabel();
-        solutionImplementation.setText("Solution Implementation: FIX ME");
-        // solutionImplementation.setText("Solution Implementation: " + (int) (GameSystem.getImplementationPercent() * 100) + "%");
+        solutionImplementation = new JLabel();
+//        solutionImplementation.setText("Solution Implementation: FIX ME");
+         solutionImplementation.setText("Solution Implementation: " + (int) (GameSystem.getImplementationPercent() * 100) + "%");
         solutionImplementation.setFont(new Font("Arial", Font.PLAIN, 16));
         solutionImplementation.setHorizontalAlignment(SwingConstants.RIGHT);
         solutionImplementation.setBounds(24, 13, 617, 30);
@@ -110,6 +111,8 @@ public class Journal extends JPanel {
     public void refresh() {
 
         int originalScrollValue = scrollPane.getVerticalScrollBar().getValue();
+        solutionImplementation.setText("Solution Implementation: " + (int) (GameSystem.getImplementationPercent() * 100) + "%");
+        System.out.println(GameSystem.getImplementationPercent());
 
         page.removeAll(); // Remove all existing components
         addCloseButton(page); // Re-add the close button
@@ -294,7 +297,8 @@ public class Journal extends JPanel {
             task.add(completeButton);
             
             completeButton.addActionListener(e -> {
-                t.completeStep();
+//                t.completeStep();
+                GameSystem.progressTask(t);
                 refresh();
             });
         }

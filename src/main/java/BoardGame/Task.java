@@ -1,5 +1,7 @@
 package BoardGame;
 
+import GameSystem.GameSystem;
+
 /**
  * @author Isaac Edmonds
  * @author Curtis McCartney (Supporting)

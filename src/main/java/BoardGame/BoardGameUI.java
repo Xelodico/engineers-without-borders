@@ -14,6 +14,7 @@ import Popup.Popup;
 import Popup.Shop;
 import Popup.Tutorial;
 import Popup.TransferPopup;
+import Popup.CostPopup;
 
 /**
  * The BoardGameUI class represents the user interface for the board game.
@@ -56,6 +57,7 @@ public class BoardGameUI extends JFrame {
         endGame = new EndGame();
         transferPopup = new TransferPopup("Transfer Task", "Description");
         tutorial = new Tutorial();
+        costPopup = new CostPopup("Cost", "Description", "Currency", 0);
 
         dimBackground = new JPanel();
         dimBackground.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -66,6 +68,7 @@ public class BoardGameUI extends JFrame {
         JLayeredPane layeredPane = getLayeredPane();
         layeredPane.add(startScreen, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(popup, JLayeredPane.POPUP_LAYER);
+        layeredPane.add(costPopup, JLayeredPane.POPUP_LAYER);
         layeredPane.add(tutorial, JLayeredPane.POPUP_LAYER);
         layeredPane.add(transferPopup, JLayeredPane.POPUP_LAYER);
         layeredPane.add(journal, JLayeredPane.POPUP_LAYER);
@@ -87,13 +90,24 @@ public class BoardGameUI extends JFrame {
         popup.setYesButtonAction(yesAction);
         popup.setNoButtonAction(noAction);
         popup.setVisible(true);
-        dimBackground.setVisible(true);
         toggleEnableButtons();
     }
 
     public void hidePopup() {
         popup.setVisible(false);
-        dimBackground.setVisible(false);
+        toggleEnableButtons();
+    }
+
+    public void showCostPopup(String title, String desc, String currency, int cost, ActionListener yesAction,
+            ActionListener noAction) {
+        costPopup.showPopup(title, desc, currency, cost);
+        costPopup.setYesButtonAction(yesAction);
+        costPopup.setNoButtonAction(noAction);
+        toggleEnableButtons();
+    }
+
+    public void hideCostPopup() {
+        costPopup.hidePopup();
         toggleEnableButtons();
     }
 
@@ -238,7 +252,14 @@ public class BoardGameUI extends JFrame {
 
         ImageIcon closeIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/quitGameButton.png")));
         createPopupButton(closeButton, closeIcon);
-        closeButton.addActionListener(e -> toggleEndGame(EndGame.Ending.BAD));
+        closeButton.addActionListener(e -> showPopup("Are you sure you want to quit?",
+                players.length > 1 ? "You will be letting down your teammates.\nThis will end the game for everyone." : "", "Yes", "No",
+                e1 -> {
+                    hidePopup();
+                    toggleEndGame(EndGame.Ending.BAD);
+                }, e1 -> {
+                    hidePopup();
+        }));
 
         setPopupButtonsPosition();
         sidePanelContainer.add(popupButtonContainer);
@@ -411,17 +432,18 @@ public class BoardGameUI extends JFrame {
     }
 
     private void toggleEnableButtons() {
-        arrowDown.setEnabled(!arrowDown.isEnabled());
-        arrowUp.setEnabled(!arrowUp.isEnabled());
-        arrowLeft.setEnabled(!arrowLeft.isEnabled());
-        arrowRight.setEnabled(!arrowRight.isEnabled());
-        rollDiceButton.setEnabled(!rollDiceButton.isEnabled());
-        movesLeftLabel.setEnabled(!movesLeftLabel.isEnabled());
-        endTurnButton.setEnabled(!endTurnButton.isEnabled());
-        helpButton.setEnabled(!helpButton.isEnabled());
-        journalButton.setEnabled(!journalButton.isEnabled());
-        shopButton.setEnabled(!shopButton.isEnabled());
-        closeButton.setEnabled(!closeButton.isEnabled());
+        boolean disableButtons = popup.isVisible() || costPopup.isVisible() || journal.isVisible() || shop.isVisible() || tutorial.isVisible()
+                || transferPopup.isVisible() || endGame.isVisible();
+
+        JButton[] buttons = { arrowDown, arrowUp, arrowLeft, arrowRight, rollDiceButton, endTurnButton,
+                helpButton, journalButton, shopButton, closeButton };
+
+        for (JButton button : buttons) {
+            button.setEnabled(!disableButtons);
+        }
+
+        movesLeftLabel.setEnabled(!disableButtons);
+        dimBackground.setVisible(disableButtons);
     }
 
     public void toggleJournal() {
@@ -429,13 +451,11 @@ public class BoardGameUI extends JFrame {
             journal.refresh();
         }
         journal.setVisible(!journal.isVisible());
-        dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
     }
 
     public void toggleShop() {
         shop.setVisible(!shop.isVisible());
-        dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
     }
 
@@ -446,13 +466,11 @@ public class BoardGameUI extends JFrame {
 
     public void toggleTutorial() {
         tutorial.setVisible(!tutorial.isVisible());
-        dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
     }
 
     public void toggleTransfer(Task task) {
         transferPopup.setVisible(!transferPopup.isVisible());
-        dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
         if (task != null) {
             transferPopup.setTask(task);
@@ -466,7 +484,6 @@ public class BoardGameUI extends JFrame {
 
     public void toggleEndGame(EndGame.Ending endingType) {
         endGame.setVisible(!endGame.isVisible());
-        dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
         if (endingType == null) {
             System.err.println("Ending type is null");
@@ -515,4 +532,5 @@ public class BoardGameUI extends JFrame {
     private JButton shopButton;
     private final Tutorial tutorial;
     private JButton closeButton;
+    private CostPopup costPopup;
 }

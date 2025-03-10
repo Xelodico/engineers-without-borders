@@ -57,7 +57,7 @@ public class TaskSquare extends Square {
                 // Take task logic
                 task.setOwnedBy(GameSystem.getPlayerAt());
                 System.out.println("Task claimed!");
-                GameSystem.hidePopup();
+                GameSystem.hideCostPopup();
             }
         };
 
@@ -65,9 +65,14 @@ public class TaskSquare extends Square {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Reject task logic
-                System.out.println("Show the task to other players");
-                GameSystem.hidePopup();
-                GameSystem.toggleTransfer(task);
+                if (GameSystem.getTurnOrder().length > 1) {
+                    System.out.println("Show the task to other players");
+                    GameSystem.hideCostPopup();
+                    GameSystem.toggleTransfer(task);
+                } else {
+                    System.out.println("No other players to show the task to");
+                    GameSystem.hideCostPopup();
+                }
             }
         };
 
@@ -96,7 +101,7 @@ public class TaskSquare extends Square {
 
         super.activateSquareEffect();
         if (task.getOwnedBy() == null) {
-            GameSystem.showPopup("Do you want to get this task?", task.getTitle(), "Yes", "No", takeTask, rejectTask);
+            GameSystem.showCostPopup("Do you want to get this task?", task.getTitle() + "\nDo you want to buy this task for ", task.getResourceType().toString(), task.getResourceCost(), takeTask, rejectTask);
         } else if (task.getOwnedBy() != GameSystem.getPlayerAt()) {
             GameSystem.showPopup("Do you want to help complete this task?", task.getTitle(), "Yes", "No",
                     beginHelping, ignoreHelping);
