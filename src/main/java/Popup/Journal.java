@@ -1,6 +1,10 @@
 package Popup;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import BoardGame.BoardGameUI;
 import BoardGame.Objective;
@@ -33,6 +37,7 @@ public class Journal extends JPanel {
     private final JScrollPane scrollPane;
 
     public JButton closeButton;
+    private JLabel solutionImplementation;
 
     /**
      * Constructs a new Journal panel with the following layout:
@@ -45,7 +50,7 @@ public class Journal extends JPanel {
 
         try {
             // Load background image
-            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/images/journalBackground.png")));
+            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/images/popups/journalBackground.png")));
         } catch (NullPointerException | IOException e) {
             System.err.println("Error: Journal background image not found!");
             System.exit(1);
@@ -53,16 +58,31 @@ public class Journal extends JPanel {
 
         setLayout(null);
         setBounds((BoardGameUI.WINDOW_WIDTH / 2 - WIDTH / 2), (650 / 2 - HEIGHT / 2) + 6, WIDTH, HEIGHT);
-        setBackground(new java.awt.Color(0, 0, 0, 0));
+        setBackground(new Color(0, 0, 0, 0));
         setVisible(false);
+
+        JPanel titleBar = new JPanel();
+        titleBar.setBounds(25, 0, WIDTH - 100, 50);
+        titleBar.setBackground(new Color(0, 0, 0, 0));
+        titleBar.setLayout(new BorderLayout());
+        titleBar.setOpaque(false);
 
         // Title Label for the objectives section
         JLabel title = new JLabel("Objectives");
         title.setFont(new Font("Arial", Font.BOLD, 20));
         title.setHorizontalAlignment(SwingConstants.LEFT);
         title.setBounds(24, 13, 617, 30);
+
+        solutionImplementation = new JLabel();
+//        solutionImplementation.setText("Solution Implementation: FIX ME");
+         solutionImplementation.setText("Solution Implementation: " + (int) (GameSystem.getImplementationPercent() * 100) + "%");
+        solutionImplementation.setFont(new Font("Arial", Font.PLAIN, 16));
+        solutionImplementation.setHorizontalAlignment(SwingConstants.RIGHT);
+        solutionImplementation.setBounds(24, 13, 617, 30);
         
-        add(title);
+        titleBar.add(title, BorderLayout.WEST);
+        titleBar.add(solutionImplementation, BorderLayout.EAST);
+        add(titleBar);
 
         // Set scroll bar width
         UIManager.put("ScrollBar.width", 10);
@@ -74,21 +94,9 @@ public class Journal extends JPanel {
         page = new JPanel();
         page.setLayout(new BoxLayout(page, BoxLayout.Y_AXIS));
         page.setOpaque(false);
+        page.setBackground(new Color(214, 183, 109));
 
         addCloseButton(page);
-
-        // Add objectives with their tasks
-        JPanel objective1 = createObjective(0);
-        page.add(objective1);
-
-        JPanel objective2 = createObjective(1);
-        page.add(objective2);
-
-        JPanel objective3 = createObjective(2);
-        page.add(objective3);
-
-        JPanel objective4 = createObjective(3);
-        page.add(objective4);
 
         // Add the page (which contains the objectives) to the scroll pane
         scrollPane.setViewportView(page);
@@ -101,18 +109,58 @@ public class Journal extends JPanel {
      * Additionally, it resets the vertical scroll position of the scroll pane to the top.
      */
     public void refresh() {
+
+        int originalScrollValue = scrollPane.getVerticalScrollBar().getValue();
+        solutionImplementation.setText("Solution Implementation: " + (int) (GameSystem.getImplementationPercent() * 100) + "%");
+        System.out.println(GameSystem.getImplementationPercent());
+
         page.removeAll(); // Remove all existing components
         addCloseButton(page); // Re-add the close button
 
-        // Re-add the objectives
-        page.add(createObjective(0));
-        page.add(createObjective(1));
-        page.add(createObjective(2));
-        page.add(createObjective(3));
+        // Add objectives
+        ArrayList<Objective> objectives = GameSystem.getObjectives();
+        objectives.forEach(objective -> {
+            final boolean[] showObjective = {false};
 
-        SwingUtilities.invokeLater(() -> {
-            scrollPane.getVerticalScrollBar().setValue(0);
+            objective.getTasks().forEach(task -> {
+                if (task.getOwnedBy() != null) {
+                    showObjective[0] = true;
+                }
+            });
+
+            if (showObjective[0]) {
+                page.add(createObjective(objectives.indexOf(objective)));
+            }
         });
+
+        // Check if only one objective has a task owned by someone
+        long count = objectives.stream()
+            .filter(objective -> objective.getTasks().stream().anyMatch(task -> task.getOwnedBy() != null))
+            .count();
+
+        if (count == 0) {
+            JPanel noObjectives = new JPanel();
+            noObjectives.setLayout(new BorderLayout());
+            noObjectives.setBackground(new Color(0, 0, 0, 0));
+            noObjectives.setBorder(BorderFactory.createEmptyBorder(150, 0, 0, 0)); // Padding around the objective
+            JLabel noObjectivesLabel = new JLabel("No objectives discovered yet!");
+            noObjectivesLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+            noObjectivesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            noObjectives.add(noObjectivesLabel, BorderLayout.NORTH);
+            page.add(noObjectives);
+        } else if (count == 1) {
+            page.add(Box.createVerticalStrut(150));
+        }
+
+        SwingUtilities.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(originalScrollValue));
+
+        revalidate();
+        repaint();
+
+        if (isVisible()) {
+            GameSystem.toggleJournal();
+            GameSystem.toggleJournal();
+        }
     }
 
     /**
@@ -126,13 +174,12 @@ public class Journal extends JPanel {
      * @return A JPanel representing the objective, including its title, tasks, and sub-tasks.
      */
     private JPanel createObjective(int objectiveIndex) {
-
         Objective objectiveObj = GameSystem.getObjectives().get(objectiveIndex);
         ArrayList<Task> tasksObj = objectiveObj.getTasks();
 
         JPanel objective = new JPanel();
         objective.setLayout(new BorderLayout());
-        objective.setBackground(new java.awt.Color(0, 0, 0, 0));
+        objective.setBackground(new Color(0, 0, 0, 0));
         objective.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding around the objective
         JLabel objectiveLabel = new JLabel(objectiveObj.getTitle());
         objectiveLabel.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -142,33 +189,47 @@ public class Journal extends JPanel {
         // Create a task panel with a vertical BoxLayout
         JPanel taskPanel = new JPanel();
         taskPanel.setLayout(new BoxLayout(taskPanel, BoxLayout.Y_AXIS));
-        taskPanel.setBackground(new java.awt.Color(0, 0, 0, 0));
+        taskPanel.setBackground(new Color(214, 183, 109));
         taskPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
+        boolean[] allTasksCompleted = {true};
+        
+
         tasksObj.forEach(task -> {
-            JPanel taskRow = new JPanel();
-            taskRow.setLayout(new BoxLayout(taskRow, BoxLayout.Y_AXIS));
-            taskRow.setBackground(new java.awt.Color(0, 0, 0, 0));
-            taskRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            if (!task.isCompleted()) {
+                allTasksCompleted[0] = false;
+            }
 
             if (task.getOwnedBy() != null) {
-                JLabel ownedByLabel = new JLabel("Owned by " + task.getOwnedBy().getName());
-                ownedByLabel.setFont(new Font("Arial", Font.ITALIC | Font.BOLD, 16));
-                ownedByLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-                taskPanel.add(ownedByLabel);
+                JPanel taskRow = new JPanel();
+                taskRow.setLayout(new BoxLayout(taskRow, BoxLayout.Y_AXIS));
+                taskRow.setBackground(new Color(0, 0, 0, 0));
+                taskRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+    
+                if (task.getOwnedBy() != null) {
+                    JLabel ownedByLabel = new JLabel("Owned by " + task.getOwnedBy().getName());
+                    ownedByLabel.setFont(new Font("Arial", Font.ITALIC | Font.BOLD, 16));
+                    ownedByLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+                    taskPanel.add(ownedByLabel);
+                }
+    
+                taskRow.add(createTask(task));
+                taskPanel.add(taskRow);
+    
+                SubTask[] subTasks = task.getSteps();
+                for (int i = 0; i < subTasks.length; i++) {
+                    taskPanel.add(createSubTask(subTasks[i], i < task.getCurrentStepNumber()));
+                    taskPanel.add(Box.createVerticalStrut(10));
+                }
+    
+                taskPanel.add(Box.createVerticalStrut(5)); // Space between tasks
             }
-
-            taskRow.add(createTask(task));
-            taskPanel.add(taskRow);
-
-            SubTask[] subTasks = task.getSteps();
-            for (SubTask subTask : subTasks) {
-                taskPanel.add(createSubTask(subTask));
-                taskPanel.add(Box.createVerticalStrut(10));
-            }
-
-            taskPanel.add(Box.createVerticalStrut(5)); // Space between tasks
         });
+
+        if (allTasksCompleted[0]) {
+            objectiveLabel.setText("<html><s>" + objectiveObj.getTitle() + "</s></html>");
+        }
 
         objective.add(taskPanel, BorderLayout.CENTER);
 
@@ -187,15 +248,20 @@ public class Journal extends JPanel {
         JPanel task = new JPanel();
         task.setLayout(new BoxLayout(task, BoxLayout.X_AXIS));
         task.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0)); // Indent tasks (left margin)
-        task.setBackground(new java.awt.Color(0, 0, 0, 0));
+        task.setBackground(new Color(0, 0, 0, 0));
 
         JLabel taskLabel = new JLabel(t.getTitle());
         taskLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+
+        if (t.isCompleted()) {
+            taskLabel.setText("<html><s>" + t.getTitle() + "</s></html>");
+        }
+
         task.add(taskLabel);
 
         task.add(Box.createHorizontalGlue());
 
-        if (GameSystem.getTurnOrder().length > 1) {
+        if (GameSystem.getTurnOrder().length > 1 && t.getOwnedBy() == GameSystem.getPlayerAt()) {
             ImageIcon transferIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/transferButton.png")));
             transferIcon.setImage(transferIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
             JButton transferButton = new JButton(transferIcon);
@@ -208,32 +274,34 @@ public class Journal extends JPanel {
             task.add(transferButton);
             task.add(Box.createHorizontalStrut(10));
 
-            transferButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    GameSystem.toggleTransfer(t);
-                }
-            });
+            transferButton.addActionListener(e -> GameSystem.toggleTransfer(t));
         }
 
-        ImageIcon completeIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/completeTaskButton.png")));
-        completeIcon.setImage(completeIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        JButton completeButton = new JButton(completeIcon);
-
-        completeButton.setBorder(null);
-        completeButton.setFocusPainted(false);
-        completeButton.setContentAreaFilled(false);
-        completeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        completeButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        task.add(completeButton);
-
-        completeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Complete button clicked for Task: " + t.getTitle());
-                GameSystem.progressTask(t);
+        boolean[] allTasksOwnedByPlayer = {true};
+        t.getBelongsTo().getTasks().forEach(ta -> {
+            if (ta.getOwnedBy() != GameSystem.getPlayerAt()) {
+                allTasksOwnedByPlayer[0] = false;
             }
         });
+
+        if (allTasksOwnedByPlayer[0] && !t.isCompleted()) {
+            ImageIcon completeIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/completeTaskButton.png")));
+            completeIcon.setImage(completeIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+            JButton completeButton = new JButton(completeIcon);
+    
+            completeButton.setBorder(null);
+            completeButton.setFocusPainted(false);
+            completeButton.setContentAreaFilled(false);
+            completeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            completeButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+            task.add(completeButton);
+            
+            completeButton.addActionListener(e -> {
+//                t.completeStep();
+                GameSystem.progressTask(t);
+                refresh();
+            });
+        }
 
         task.add(Box.createHorizontalStrut(50));
 
@@ -248,21 +316,34 @@ public class Journal extends JPanel {
      * @param t The SubTask object containing the details of the sub-task.
      * @return A JPanel representing the sub-task.
      */
-    private JPanel createSubTask(SubTask t) {
+    private JPanel createSubTask(SubTask t, boolean isComplete) {
         JPanel task = new JPanel();
         task.setLayout(new BoxLayout(task, BoxLayout.X_AXIS)); // BoxLayout for vertical stacking
         task.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 0)); // Indent subtasks (left margin)
-        task.setBackground(new java.awt.Color(0, 0, 0, 0));
+        task.setBackground(new Color(0, 0, 0, 0));
         task.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JTextArea taskLabel = new JTextArea(t.getTitle());
+        JTextPane taskLabel = new JTextPane();
         taskLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         taskLabel.setMaximumSize(new Dimension(350, 100));
-        taskLabel.setLineWrap(true);
-        taskLabel.setWrapStyleWord(true);
         taskLabel.setEditable(false);
-        taskLabel.setOpaque(false);
+        taskLabel.setBackground(new Color(214, 183, 109));
+        taskLabel.setHighlighter(null);
+        taskLabel.setCaretColor(new Color(0, 0, 0, 0));
         task.add(taskLabel);
+
+        if (isComplete) {
+            StyledDocument doc = taskLabel.getStyledDocument();
+            SimpleAttributeSet attributes = new SimpleAttributeSet();
+            StyleConstants.setStrikeThrough(attributes, true);
+            try {
+                doc.insertString(doc.getLength(), t.getTitle(), attributes);
+            } catch (BadLocationException e) {
+                System.err.println("Error inserting text into JTextPane: " + e.getMessage());
+            }
+        } else {
+            taskLabel.setText(t.getTitle());
+        }
 
         return task;
     }
@@ -281,7 +362,7 @@ public class Journal extends JPanel {
         scrollPane.setBorder(null);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
-        scrollPane.getVerticalScrollBar().setBackground(new java.awt.Color(0, 0, 0, 0));
+        scrollPane.getVerticalScrollBar().setBackground(new Color(0, 0, 0, 0));
         scrollPane.getVerticalScrollBar().setBorder(null);
         renderScrollBar(scrollPane);
 
@@ -312,6 +393,7 @@ public class Journal extends JPanel {
         JPanel closeButtonPanel = new JPanel(new BorderLayout());
         closeButtonPanel.setOpaque(false);
         closeButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+        closeButtonPanel.setMaximumSize(new Dimension(700, 30));
     
         closeButton = new JButton();
         closeButton.setIcon(closeIcon);
@@ -319,12 +401,7 @@ public class Journal extends JPanel {
         closeButton.setContentAreaFilled(false);
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
     
-        closeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.toggleJournal();
-            }
-        });
+        closeButton.addActionListener(e -> GameSystem.toggleJournal());
     
         closeButton.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {

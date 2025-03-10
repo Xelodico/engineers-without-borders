@@ -3,6 +3,8 @@ package BoardGame;
 import java.util.ArrayList;
 import java.util.Random;
 
+import GameSystem.GameSystem;
+
 /**
  * This class holds all of the data for each "Player" in the game.
  * The Player object stores the player's name, coordinates, resources,
@@ -52,7 +54,6 @@ public class Player {
         this.influence = 0;
         this.knowledge = 0;
         this.movesLeft = movesLeft;
-        this.timesHelped = timesHelped;
         this.tasks = new ArrayList<Task>();
     }
 
@@ -142,7 +143,6 @@ public class Player {
         this.coord = coord;
     }
     
-    
     /** 
      * Changes the score of the player by the given amount. Score cannot go below 0
      * 
@@ -171,6 +171,7 @@ public class Player {
      */
     public void setMoney(int money) {
         this.money = money;
+        GameSystem.refreshResources();
     }
 
     /**
@@ -217,6 +218,7 @@ public class Player {
      */
     public void setScore(int score) {
         this.score = score;
+        GameSystem.refreshResources();
     }
 
     /**
@@ -250,7 +252,6 @@ public class Player {
         }
         this.movesLeft = movesLeft;
     }
-
     
     /**
      * Gets the amount of the resource referenced by the inputed ResourceType
@@ -283,13 +284,17 @@ public class Player {
     	switch(resourceType) {
         case ASPHALT: 
         	this.asphalt = resource;
+            break;
         case VOLUNTEERS: 
         	this.volunteers = resource;
+            break;
         case INFLUENCE:
         	this.influence = resource;
+            break;
         case KNOWLEDGE:
         	this.knowledge = resource;
         }
+        GameSystem.refreshResources();
     }
     
     /**
@@ -306,18 +311,21 @@ public class Player {
             } else {
             	this.asphalt += changeAmount;
             } 
+            break;
         case VOLUNTEERS: 
         	if(this.volunteers + changeAmount < 0) {
             	this.volunteers = 0;
             } else {
             	this.volunteers += changeAmount;
             } 
+            break;
         case INFLUENCE:
         	if(this.influence + changeAmount < 0) {
             	this.influence = 0;
             } else {
             	this.influence += changeAmount;
             } 
+            break;
         case KNOWLEDGE:
         	if(this.knowledge + changeAmount < 0) {
             	this.knowledge = 0;
@@ -325,6 +333,7 @@ public class Player {
             	this.knowledge += changeAmount;
             }
         }
+        GameSystem.refreshResources();
     }
 
     public int getTimesHelped() {

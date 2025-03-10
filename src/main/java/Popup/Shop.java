@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import BoardGame.BoardGameUI;
+import BoardGame.ResourceType;
 import GameSystem.GameSystem;
 
 import java.awt.*;
@@ -11,6 +12,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 
 /**
  * Represents a shop component in the BoardGame UI.
@@ -24,6 +26,8 @@ import java.net.URL;
 public class Shop extends JPanel {
 
     private BufferedImage backgroundImage;
+    private String resourceCost = "30 Rand";
+    private JButton closeButton;
 
     /**
      * Default constructor for the Shop object.
@@ -34,9 +38,10 @@ public class Shop extends JPanel {
     public Shop() {
         try {
             // Load background image
-            backgroundImage = ImageIO.read(getClass().getResource("/images/shop.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
+            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/images/popups/shop.png")));
+        } catch (NullPointerException | IOException e) {
+            System.err.println("Error: Shop background image not found!");
+            System.exit(1);
         }
 
         setLayout(null);
@@ -55,40 +60,68 @@ public class Shop extends JPanel {
      * Each price is represented by a JLabel with a string value.
      */
     public void addShopItemsAndPrices() {
-        item1 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        item1.setBounds(428, 187, 41, 60);
+        JButton item1 = newShopItem(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resources/coldAsphalt.png"))));
+        item1.setBounds(412, 188, 70, 70);
+        item1.addActionListener(e -> {
+            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Cold Asphalt for ", "Rand", 30,
+                    e1 -> GameSystem.purchaseResource(ResourceType.ASPHALT),
+                    e1 -> {
+                        GameSystem.hideCostPopup();
+            });
+        });
         addHoverEffect(item1);
         add(item1);
 
-        price1 = newPrice("100");
-        price1.setBounds(396, 288, 100, 39);
+        JLabel price1 = newPrice(resourceCost);
+        price1.setBounds(396, 303, 100, 39);
         add(price1);
 
-        item2 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        item2.setBounds(617, 187, 41, 60);
+        JButton item2 = newShopItem(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resources/influence.png"))));
+        item2.setBounds(600, 188, 70, 70);
+        item2.addActionListener(e -> {
+            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Influence for ", "Rand", 30,
+                    e1 -> GameSystem.purchaseResource(ResourceType.INFLUENCE),
+                    e1 -> {
+                        GameSystem.hideCostPopup();
+            });
+        });
         addHoverEffect(item2);
         add(item2);
 
-        price2 = newPrice("200");
-        price2.setBounds(585, 288, 100, 39);
+        JLabel price2 = newPrice(resourceCost);
+        price2.setBounds(585, 303, 100, 39);
         add(price2);
 
-        item3 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        item3.setBounds(428, 351, 41, 60);
+        JButton item3 = newShopItem(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resources/knowledge.png"))));
+        item3.setBounds(412, 360, 70, 70);
+        item3.addActionListener(e -> {
+            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Knowledge for ", "Rand", 30,
+                    e1 -> GameSystem.purchaseResource(ResourceType.KNOWLEDGE),
+                    e1 -> {
+                        GameSystem.hideCostPopup();
+            });
+        });
         addHoverEffect(item3);
         add(item3);
 
-        price3 = newPrice("300");
-        price3.setBounds(396, 452, 100, 39);
+        JLabel price3 = newPrice(resourceCost);
+        price3.setBounds(396, 473, 100, 39);
         add(price3);
 
-        item4 = newShopItem(new ImageIcon(getClass().getResource("/images/questionMark.png")));
-        item4.setBounds(617, 351, 41, 60);
+        JButton item4 = newShopItem(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resources/volunteers.png"))));
+        item4.setBounds(600, 360, 70, 70);
+        item4.addActionListener(e -> {
+            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Volunteers for ", "Rand", 30,
+                    e1 -> GameSystem.purchaseResource(ResourceType.VOLUNTEERS),
+                    e1 -> {
+                        GameSystem.hideCostPopup();
+            });
+        });
         addHoverEffect(item4);
         add(item4);
 
-        price4 = newPrice("400");
-        price4.setBounds(585, 452, 100, 39);
+        JLabel price4 = newPrice(resourceCost);
+        price4.setBounds(585, 473, 100, 39);
         add(price4);
     }
 
@@ -96,6 +129,7 @@ public class Shop extends JPanel {
      * @return A new shop item button with the specified image icon.
      */
     public static JButton newShopItem(ImageIcon icon) {
+        icon = new ImageIcon(icon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
         JButton button = new JButton();
         button.setBorder(null);
         button.setContentAreaFilled(false);
@@ -204,15 +238,5 @@ public class Shop extends JPanel {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
     }
-
-    private JButton item1;
-    private JButton item2;
-    private JButton item3;
-    private JButton item4;
-    private JLabel price1;
-    private JLabel price2;
-    private JLabel price3;
-    private JLabel price4;
-    private JButton closeButton;
 
 }

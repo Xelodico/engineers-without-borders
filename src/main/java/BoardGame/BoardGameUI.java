@@ -1,8 +1,9 @@
 package BoardGame;
 
-import java.awt.Image;
-import java.awt.event.ActionEvent;
+import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.Objects;
 
 import javax.swing.*;
 
@@ -13,18 +14,15 @@ import Popup.Popup;
 import Popup.Shop;
 import Popup.Tutorial;
 import Popup.TransferPopup;
-import square.SquareType;
+import Popup.CostPopup;
 
 /**
  * The BoardGameUI class represents the user interface for the board game.
  * It extends JFrame and provides the main window for the game, including
  * the game board and side panel with player resources and controls.
- * 
  * The class includes methods for initializing the UI components, moving players
  * on the board, and handling user interactions such as button clicks.
- * 
- * @param players A list of Player objects representing the players in the game.
- * 
+ *
  * @author Nathan Watkins
  * @author Curtis McCartney
  */
@@ -33,9 +31,9 @@ public class BoardGameUI extends JFrame {
     Player[] players;
 
     public static final int WINDOW_WIDTH = 1075;
-    public static final int WINDOW_HEIGHT = 705;
-    private static final int BOARD_WIDTH = 650;
-    private static final int BOARD_HEIGHT = BOARD_WIDTH;
+    public static final int WINDOW_HEIGHT = 735;
+    private static final int BOARD_WIDTH = 650, BOARD_HEIGHT = 650;
+    private static final int SIDE_PANEL_WIDTH = 384;
 
     public StartScreen startScreen;
 
@@ -45,15 +43,12 @@ public class BoardGameUI extends JFrame {
 
     /**
      * Creates a new BoardGameUI instance with the specified list of players.
-     * 
-     * @param players A list of Player objects representing the players in the game.
      */
     public BoardGameUI(Board gameBoard) {
         this.players = GameSystem.getTurnOrder();
         this.gameBoard = gameBoard;
 
         startScreen = new StartScreen();
-        add(startScreen);
         startScreen.setVisible(true);
 
         popup = new Popup("", "", "", "", null, null);
@@ -62,6 +57,7 @@ public class BoardGameUI extends JFrame {
         endGame = new EndGame();
         transferPopup = new TransferPopup("Transfer Task", "Description");
         tutorial = new Tutorial();
+        costPopup = new CostPopup("Cost", "Description", "Currency", 0);
 
         dimBackground = new JPanel();
         dimBackground.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -70,7 +66,9 @@ public class BoardGameUI extends JFrame {
         add(dimBackground);
 
         JLayeredPane layeredPane = getLayeredPane();
+        layeredPane.add(startScreen, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(popup, JLayeredPane.POPUP_LAYER);
+        layeredPane.add(costPopup, JLayeredPane.POPUP_LAYER);
         layeredPane.add(tutorial, JLayeredPane.POPUP_LAYER);
         layeredPane.add(transferPopup, JLayeredPane.POPUP_LAYER);
         layeredPane.add(journal, JLayeredPane.POPUP_LAYER);
@@ -92,10 +90,25 @@ public class BoardGameUI extends JFrame {
         popup.setYesButtonAction(yesAction);
         popup.setNoButtonAction(noAction);
         popup.setVisible(true);
+        toggleEnableButtons();
     }
 
     public void hidePopup() {
         popup.setVisible(false);
+        toggleEnableButtons();
+    }
+
+    public void showCostPopup(String title, String desc, String currency, int cost, ActionListener yesAction,
+            ActionListener noAction) {
+        costPopup.showPopup(title, desc, currency, cost);
+        costPopup.setYesButtonAction(yesAction);
+        costPopup.setNoButtonAction(noAction);
+        toggleEnableButtons();
+    }
+
+    public void hideCostPopup() {
+        costPopup.hidePopup();
+        toggleEnableButtons();
     }
 
     /**
@@ -111,6 +124,29 @@ public class BoardGameUI extends JFrame {
         sidePanelContainer.setVisible(true);
     }
 
+    public void setResourceValues() {
+        for (int i = 0; i < players.length; i++) {
+            Player currentPlayer = players[i];
+            
+            // Ensure resource values are valid (non-negative)
+            int volunteers = currentPlayer.getResource(ResourceType.VOLUNTEERS);
+            int knowledge = currentPlayer.getResource(ResourceType.KNOWLEDGE);
+            int asphalt = currentPlayer.getResource(ResourceType.ASPHALT);
+            int influence = currentPlayer.getResource(ResourceType.INFLUENCE);
+            int money = currentPlayer.getMoney();
+            int score = currentPlayer.getScore();
+    
+            // Set text for player resource labels
+            playerSatisfactions[i].setText(volunteers >= 0 ? Integer.toString(volunteers) : "0");
+            playerKnowledges[i].setText(knowledge >= 0 ? Integer.toString(knowledge) : "0");
+            playerAsphalts[i].setText(asphalt >= 0 ? Integer.toString(asphalt) : "0");
+            playerInfluences[i].setText(influence >= 0 ? Integer.toString(influence) : "0");
+            playerMoneys[i].setText(money >= 0 ? Integer.toString(money) : "0");
+            playerScores[i].setText(score >= 0 ? Integer.toString(score) : "0");
+        }
+
+    }
+
     /**
      * Starts the game by hiding the start screen and showing the game board.
      */
@@ -120,7 +156,7 @@ public class BoardGameUI extends JFrame {
     }
 
     private void setupArrowButtons() {
-        arrowsContainer = new JPanel();
+        JPanel arrowsContainer = new JPanel();
         arrowDown = new JButton();
         arrowUp = new JButton();
         arrowLeft = new JButton();
@@ -129,14 +165,14 @@ public class BoardGameUI extends JFrame {
         arrowsContainer.setLayout(null);
 
         JButton[] arrowButtons = { arrowDown, arrowUp, arrowLeft, arrowRight };
-        String[] arrowIcons = { "/images/arrows/ArrowDown.png", "/images/arrows/ArrowUp.png",
-                "/images/arrows/ArrowLeft.png", "/images/arrows/ArrowRight.png" };
+        String[] arrowIcons = {"/images/arrows/downArrow.png", "/images/arrows/upArrow.png",
+                "/images/arrows/leftArrow.png", "/images/arrows/rightArrow.png"};
         for (int i = 0; i < arrowButtons.length; i++) {
-            arrowButtons[i].setIcon(new ImageIcon(getClass().getResource(arrowIcons[i])));
+            arrowButtons[i].setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource(arrowIcons[i]))));
             arrowButtons[i].setBorder(null);
             arrowButtons[i].setContentAreaFilled(false);
             arrowButtons[i].setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-            arrowButtons[i].setFocusPainted(false);
+            arrowButtons[i].setFocusable(false);
             arrowButtons[i].setRolloverEnabled(false);
 
             if (i == 0) { // Arrow Down
@@ -145,7 +181,7 @@ public class BoardGameUI extends JFrame {
                 arrowButtons[i].setBounds(45, 1, 46, 46);
             } else if (i == 2) { // Arrow Left
                 arrowButtons[i].setBounds(0, 46, 46, 46);
-            } else if (i == 3) { // Arrow Right
+            } else { // Arrow Right
                 arrowButtons[i].setBounds(90, 46, 46, 46);
             }
 
@@ -158,26 +194,17 @@ public class BoardGameUI extends JFrame {
         setupArrowButtonAction(arrowDown, Direction.DOWN);
 
         sidePanelContainer.add(arrowsContainer);
-        arrowsContainer.setBounds(10, BOARD_HEIGHT - 92, 138, 92);
+        arrowsContainer.setBounds(10, WINDOW_HEIGHT - 52 - 92, 138, 92);
     }
 
     private void setupArrowButtonAction(JButton button, Direction direction) {
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.movePlayer(direction);
-                if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
-                    movesLeftLabel.setVisible(false);
-                    endTurnButton.setVisible(true);
-                } else {
-                    movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
-                }
-                if (gameBoard.getSquareAt(GameSystem.getPlayerAt().getCoord())
-                        .getSquareType() == SquareType.SHOPSQUARE) {
-                    shopButton.setVisible(true);
-                } else {
-                    shopButton.setVisible(false);
-                }
+        button.addActionListener(e -> {
+            GameSystem.movePlayer(direction);
+            if (GameSystem.getPlayerAt().getMovesLeft() == 0) {
+                movesLeftLabel.setVisible(false);
+                endTurnButton.setVisible(true);
+            } else {
+                movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
             }
         });
     }
@@ -188,96 +215,82 @@ public class BoardGameUI extends JFrame {
         helpButton = new JButton();
         journalButton = new JButton();
         shopButton = new JButton();
+        closeButton = new JButton();
         rollDiceButton = new JButton();
         endTurnButton = new JButton();
         movesLeftLabel = new JLabel();
 
-        roundNumberGraphic.setFont(new java.awt.Font("Segoe UI", 0, 26)); // NOI18N
-        roundNumberGraphic.setIcon(new ImageIcon(getClass().getResource("/images/Round.png"))); // NOI18N
+        roundNumberGraphic.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
+        roundNumberGraphic.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/roundBackground.png"))));
         roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
         roundNumberGraphic.setHorizontalTextPosition(SwingConstants.CENTER);
         sidePanelContainer.add(roundNumberGraphic);
         roundNumberGraphic.setBounds(251, 0, 122, 57);
 
-        playerTurnGraphic.setFont(new java.awt.Font("Segoe UI", 0, 26)); // NOI18N
-        playerTurnGraphic.setIcon(new ImageIcon(getClass().getResource("/images/PlayerTurn.png"))); // NOI18N
+        playerTurnGraphic.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
+        playerTurnGraphic.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/PlayerTurn.png"))));
         playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
         playerTurnGraphic.setToolTipText("");
         playerTurnGraphic.setHorizontalTextPosition(SwingConstants.CENTER);
         sidePanelContainer.add(playerTurnGraphic);
         playerTurnGraphic.setBounds(0, 0, 241, 57);
 
-        ImageIcon helpIcon = new ImageIcon(getClass().getResource("/images/help.png"));
-        helpButton.setIcon(new ImageIcon(helpIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH))); // NOI18N
-        helpButton.setBorder(null);
-        helpButton.setContentAreaFilled(false);
-        helpButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        sidePanelContainer.add(helpButton);
-        helpButton.setRolloverEnabled(false);
-        helpButton.setBounds(330, BOARD_HEIGHT - 55 - 37, 37, 37);
-        helpButton.addActionListener(new ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                toggleTutorial();
-            }
-        });
+        popupButtonContainer = new JPanel();
+        popupButtonContainer.setLayout(new BoxLayout(popupButtonContainer, BoxLayout.X_AXIS));
 
-        ImageIcon journalIcon = new ImageIcon(getClass().getResource("/images/journalButton.png"));
-        journalButton.setIcon(new ImageIcon(journalIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH)));
-        journalButton.setBorder(null);
-        journalButton.setContentAreaFilled(false);
-        journalButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        sidePanelContainer.add(journalButton);
-        journalButton.setBounds(283, BOARD_HEIGHT - 55 - 37, 37, 37);
-        journalButton.addActionListener(new ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                toggleJournal();
-            }
-        });
+        ImageIcon shopIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/shopButton.png")));
+        createPopupButton(shopButton, shopIcon);
+        shopButton.addActionListener(e -> toggleShop());
 
-        ImageIcon shopIcon = new ImageIcon(getClass().getResource("/images/shopButton.png"));
-        shopButton.setIcon(new ImageIcon(shopIcon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH)));
-        shopButton.setBorder(null);
-        shopButton.setContentAreaFilled(false);
-        shopButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        sidePanelContainer.add(shopButton);
-        shopButton.setBounds(236, BOARD_HEIGHT - 55 - 37, 37, 37);
-        shopButton.addActionListener(new ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                toggleShop();
-            }
-        });
+        ImageIcon journalIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/journalButton.png")));
+        createPopupButton(journalButton, journalIcon);
+        journalButton.addActionListener(evt -> toggleJournal());
 
-        rollDiceButton.setIcon(new ImageIcon(getClass().getResource("/images/RollDiceButton.png"))); // NOI18N
+        ImageIcon helpIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/helpButton.png")));
+        createPopupButton(helpButton, helpIcon);
+        helpButton.addActionListener(evt -> toggleTutorial());
+
+        ImageIcon closeIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/quitGameButton.png")));
+        createPopupButton(closeButton, closeIcon);
+        closeButton.addActionListener(e -> showPopup("Are you sure you want to quit?",
+                players.length > 1 ? "You will be letting down your teammates.\nThis will end the game for everyone." : "", "Yes", "No",
+                e1 -> {
+                    hidePopup();
+                    toggleEndGame(EndGame.Ending.BAD);
+                }, e1 -> {
+                    hidePopup();
+        }));
+
+        setPopupButtonsPosition();
+        sidePanelContainer.add(popupButtonContainer);
+
+        rollDiceButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/rollDiceButton.png"))));
         rollDiceButton.setBorder(null);
         rollDiceButton.setContentAreaFilled(false);
         rollDiceButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        rollDiceButton.setFocusPainted(false);
-        sidePanelContainer.add(rollDiceButton);
-        rollDiceButton.setBounds(170, BOARD_HEIGHT - 47, 192, 47);
+        rollDiceButton.setFocusable(false);
+        rollDiceButton.setBounds(170, WINDOW_HEIGHT - 52 - 47, 192, 47);
         rollDiceButton.setRolloverEnabled(false);
-
-        rollDiceButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.getPlayerAt().rollDie();
-                rollDiceButton.setVisible(false);
-                movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
-                movesLeftLabel.setVisible(true);
-            }
+        rollDiceButton.addActionListener(e -> {
+            GameSystem.getPlayerAt().rollDie();
+            rollDiceButton.setVisible(false);
+            movesLeftLabel.setText("Moves Left: " + GameSystem.getPlayerAt().getMovesLeft());
+            movesLeftLabel.setVisible(true);
         });
+        sidePanelContainer.add(rollDiceButton);
 
-        movesLeftLabel.setIcon(new ImageIcon(getClass().getResource("/images/buttonBackground.png")));
-        movesLeftLabel.setBounds(170, BOARD_HEIGHT - 47, 192, 47);
+        movesLeftLabel.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/buttonBackground.png"))));
+        movesLeftLabel.setBounds(170, WINDOW_HEIGHT - 52 - 47, 192, 47);
         movesLeftLabel.setVisible(false);
         movesLeftLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-        movesLeftLabel.setFont(new java.awt.Font("Segoe UI", 0, 26));
+        movesLeftLabel.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
         sidePanelContainer.add(movesLeftLabel);
 
-        endTurnButton.setIcon(new ImageIcon(getClass().getResource("/images/buttonBackground.png")));
-        endTurnButton.setBounds(170, BOARD_HEIGHT - 47, 192, 47);
+        endTurnButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/buttonBackground.png"))));
+        endTurnButton.setBounds(170, WINDOW_HEIGHT - 52 - 47, 192, 47);
         endTurnButton.setVisible(false);
         endTurnButton.setText("End Turn");
-        endTurnButton.setFont(new java.awt.Font("Segoe UI", 0, 26));
+        endTurnButton.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
         endTurnButton.setHorizontalTextPosition(SwingConstants.CENTER);
         endTurnButton.setContentAreaFilled(false);
         endTurnButton.setBorder(null);
@@ -285,79 +298,92 @@ public class BoardGameUI extends JFrame {
         endTurnButton.setRolloverEnabled(false);
         sidePanelContainer.add(endTurnButton);
 
-        endTurnButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.nextTurn();
-                playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
-                roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
-                movesLeftLabel.setVisible(false);
-                endTurnButton.setVisible(false);
-                rollDiceButton.setVisible(true);
-            }
+        endTurnButton.addActionListener(e -> {
+            GameSystem.nextTurn();
+            playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
+            roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
+            movesLeftLabel.setVisible(false);
+            endTurnButton.setVisible(false);
+            rollDiceButton.setVisible(true);
         });
     }
 
-    private void setupPlayerPanels() {
-        Player1Resources = new JPanel();
-        player1ResourceTitle = new JLabel();
-        player1Satisfaction = new JLabel();
-        player1Knowledge = new JLabel();
-        player1Asphalt = new JLabel();
-        Player2Resources = new JPanel();
-        player2ResourceTitle = new JLabel();
-        player2Satisfaction = new JLabel();
-        player2Knowledge = new JLabel();
-        player2Asphalt = new JLabel();
-        Player3Resources = new JPanel();
-        player3ResourceTitle = new JLabel();
-        player3Satisfaction = new JLabel();
-        player3Knowledge = new JLabel();
-        player3Asphalt = new JLabel();
-        Player4Resources = new JPanel();
-        player4ResourceTitle = new JLabel();
-        player4Satisfaction = new JLabel();
-        player4Knowledge = new JLabel();
-        player4Asphalt = new JLabel();
+    private void setPopupButtonsPosition() {
+        int numberOfButtons = Arrays.stream(popupButtonContainer.getComponents()).filter(component -> component instanceof JButton && component.isVisible()).toArray().length;
+        popupButtonContainer.setSize(37*numberOfButtons + 15*(numberOfButtons-1), 37);
+        popupButtonContainer.setLocation(SIDE_PANEL_WIDTH - popupButtonContainer.getWidth() - 22, WINDOW_HEIGHT - 105 - 37);
+    }
 
+    private void createPopupButton(JButton button, ImageIcon icon) {
+        button.setIcon(new ImageIcon(icon.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH)));
+        button.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 15));
+        button.setContentAreaFilled(false);
+        button.setFocusable(false);
+        button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        popupButtonContainer.add(button);
+    }
+
+    private void setupPlayerPanels() {
         JPanel[] playerResources = { Player1Resources, Player2Resources, Player3Resources, Player4Resources };
         JLabel[] playerResourceTitles = { player1ResourceTitle, player2ResourceTitle, player3ResourceTitle,
                 player4ResourceTitle };
-        JLabel[] playerSatisfactions = { player1Satisfaction, player2Satisfaction, player3Satisfaction,
-                player4Satisfaction };
-        JLabel[] playerKnowledges = { player1Knowledge, player2Knowledge, player3Knowledge, player4Knowledge };
-        JLabel[] playerAsphalts = { player1Asphalt, player2Asphalt, player3Asphalt, player4Asphalt };
+
+        playerAsphalts = new JLabel[players.length];
+        playerKnowledges = new JLabel[players.length];
+        playerSatisfactions = new JLabel[players.length];
+        playerInfluences = new JLabel[players.length];
+        playerMoneys = new JLabel[players.length];
+        playerScores = new JLabel[players.length];
+        
+        ImageIcon backgroundIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resourcesPanel.png")));
+        backgroundIcon.setImage(backgroundIcon.getImage().getScaledInstance(373, 127, Image.SCALE_SMOOTH));
 
         for (int i = 0; i < players.length; i++) {
             Player currentPlayer = players[i];
 
+            playerResources[i] = new JPanel();
             playerResources[i].setLayout(null);
 
-            playerResourceTitles[i].setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-            playerResourceTitles[i].setText(currentPlayer.getName()); // Get name from the Player object
+            playerResourceTitles[i] = new JLabel(currentPlayer.getName());
+            playerResourceTitles[i].setFont(new java.awt.Font("Segue UI", Font.BOLD, 18));
             playerResourceTitles[i].setBounds(10, -3, 350, 30);
             playerResources[i].add(playerResourceTitles[i]);
-
-            playerSatisfactions[i].setBounds(310, 23, 60, 40);
-            playerSatisfactions[i].setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-            playerSatisfactions[i].setText("999");
-            playerResources[i].add(playerSatisfactions[i]);
-
-            playerKnowledges[i].setBounds(185, 23, 60, 40);
-            playerKnowledges[i].setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-            playerKnowledges[i].setText("999");
-            playerResources[i].add(playerKnowledges[i]);
-
+            
+            playerAsphalts[i] = new JLabel(Integer.toString(currentPlayer.getResource(ResourceType.ASPHALT)));
             playerAsphalts[i].setBounds(60, 23, 60, 40);
-            playerAsphalts[i].setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-            playerAsphalts[i].setText("999");
+            playerAsphalts[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
             playerResources[i].add(playerAsphalts[i]);
 
+            playerKnowledges[i] = new JLabel(Integer.toString(currentPlayer.getResource(ResourceType.KNOWLEDGE)));
+            playerKnowledges[i].setBounds(185, 23, 60, 40);
+            playerKnowledges[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerResources[i].add(playerKnowledges[i]);
+
+            playerSatisfactions[i] = new JLabel(Integer.toString(currentPlayer.getResource(ResourceType.VOLUNTEERS)));
+            playerSatisfactions[i].setBounds(310, 23, 60, 40);
+            playerSatisfactions[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerResources[i].add(playerSatisfactions[i]);
+
+            playerInfluences[i] = new JLabel(Integer.toString(currentPlayer.getResource(ResourceType.INFLUENCE)));
+            playerInfluences[i].setBounds(60, 75, 60, 40);
+            playerInfluences[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerResources[i].add(playerInfluences[i]);
+
+            playerMoneys[i] = new JLabel(Integer.toString(currentPlayer.getMoney()));
+            playerMoneys[i].setBounds(185, 75, 60, 40);
+            playerMoneys[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerResources[i].add(playerMoneys[i]);
+
+            playerScores[i] = new JLabel(Integer.toString(currentPlayer.getScore()));
+            playerScores[i].setBounds(310, 75, 60, 40);
+            playerScores[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerResources[i].add(playerScores[i]);
+
             JLabel background = new JLabel();
-            background.setIcon(new ImageIcon(getClass().getResource("/images/Resources.png")));
-            background.setBounds(0, 0, 373, 74);
+            background.setIcon(backgroundIcon);
+            background.setBounds(0, 0, 375, 127);
             playerResources[i].add(background);
-            playerResources[i].setBounds(0, 62 + (i * 79), 373, 74);
+            playerResources[i].setBounds(0, 62 + (i * 132), 373, 127);
             sidePanelContainer.add(playerResources[i]);
         }
     }
@@ -375,58 +401,49 @@ public class BoardGameUI extends JFrame {
         sidePanelContainer.setLayout(null);
         sidePanelContainer.setVisible(false);
 
+         GroupLayout layout = new GroupLayout(getContentPane());
+         getContentPane().setLayout(layout);
+         layout.setHorizontalGroup(
+                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                         .addGroup(layout.createSequentialGroup()
+                                 .addContainerGap()
+                                 .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, BOARD_WIDTH,
+                                         GroupLayout.PREFERRED_SIZE)
+                                 .addGap(10, 10, 10)
+                                 .addComponent(sidePanelContainer, GroupLayout.DEFAULT_SIZE, SIDE_PANEL_WIDTH,
+                                         Short.MAX_VALUE)
+                                 .addGap(0, 0, 0)));
+         layout.setVerticalGroup(
+                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                         .addGroup(layout.createSequentialGroup()
+                                 .addGap(6, 6, 6)
+                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                         .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, BOARD_HEIGHT,
+                                                 GroupLayout.PREFERRED_SIZE)
+                                         .addComponent(sidePanelContainer, GroupLayout.PREFERRED_SIZE, WINDOW_HEIGHT,
+                                                 GroupLayout.PREFERRED_SIZE))
+                                 .addGap(10, 10, 10)));
+
         setupArrowButtons();
         setupLabelsAndButtons();
         setupPlayerPanels();
 
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, BOARD_WIDTH,
-                                        GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(sidePanelContainer, GroupLayout.DEFAULT_SIZE, 384,
-                                        Short.MAX_VALUE)
-                                .addGap(0, 0, 0)));
-        layout.setVerticalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, BOARD_HEIGHT,
-                                                GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(sidePanelContainer, GroupLayout.PREFERRED_SIZE, BOARD_HEIGHT,
-                                                GroupLayout.PREFERRED_SIZE))
-                                .addGap(10, 10, 10)));
-
-        setSize(new java.awt.Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        setSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
     }
 
     private void toggleEnableButtons() {
-        if (helpButton.isEnabled()) {
-            arrowDown.setEnabled(false);
-            arrowUp.setEnabled(false);
-            arrowLeft.setEnabled(false);
-            arrowRight.setEnabled(false);
-            rollDiceButton.setEnabled(false);
-            endTurnButton.setEnabled(false);
-            helpButton.setEnabled(false);
-            journalButton.setEnabled(false);
-            shopButton.setEnabled(false);
-        } else {
-            arrowDown.setEnabled(true);
-            arrowUp.setEnabled(true);
-            arrowLeft.setEnabled(true);
-            arrowRight.setEnabled(true);
-            rollDiceButton.setEnabled(true);
-            endTurnButton.setEnabled(true);
-            helpButton.setEnabled(true);
-            journalButton.setEnabled(true);
-            shopButton.setEnabled(true);
+        boolean disableButtons = popup.isVisible() || costPopup.isVisible() || journal.isVisible() || shop.isVisible() || tutorial.isVisible()
+                || transferPopup.isVisible() || endGame.isVisible();
+
+        JButton[] buttons = { arrowDown, arrowUp, arrowLeft, arrowRight, rollDiceButton, endTurnButton,
+                helpButton, journalButton, shopButton, closeButton };
+
+        for (JButton button : buttons) {
+            button.setEnabled(!disableButtons);
         }
+
+        movesLeftLabel.setEnabled(!disableButtons);
+        dimBackground.setVisible(disableButtons);
     }
 
     public void toggleJournal() {
@@ -434,34 +451,39 @@ public class BoardGameUI extends JFrame {
             journal.refresh();
         }
         journal.setVisible(!journal.isVisible());
-        dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
     }
 
     public void toggleShop() {
         shop.setVisible(!shop.isVisible());
-        dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
     }
 
+    public void setShopButtonVisible(boolean state) {
+        shopButton.setVisible(state);
+        setPopupButtonsPosition();
+    }
+
     public void toggleTutorial() {
-         tutorial.setVisible(!tutorial.isVisible());
-         dimBackground.setVisible(!dimBackground.isVisible());
+        tutorial.setVisible(!tutorial.isVisible());
         toggleEnableButtons();
     }
 
     public void toggleTransfer(Task task) {
         transferPopup.setVisible(!transferPopup.isVisible());
-        journal.closeButton.setEnabled(!transferPopup.isVisible());
+        toggleEnableButtons();
         if (task != null) {
             transferPopup.setTask(task);
         }
         transferPopup.renderButtons(this.players);
     }
 
+    public void refreshJournal() {
+        journal.refresh();
+    }
+
     public void toggleEndGame(EndGame.Ending endingType) {
         endGame.setVisible(!endGame.isVisible());
-        dimBackground.setVisible(!dimBackground.isVisible());
         toggleEnableButtons();
         if (endingType == null) {
             System.err.println("Ending type is null");
@@ -482,34 +504,33 @@ public class BoardGameUI extends JFrame {
     private JButton arrowLeft;
     private JButton arrowRight;
     private JButton arrowUp;
-    private JPanel arrowsContainer;
     public Board gameBoard;
     private JButton helpButton;
-    private JLabel player1Asphalt;
-    private JLabel player1Knowledge;
+
+    private JLabel[] playerAsphalts;
+    private JLabel[] playerKnowledges;
+    private JLabel[] playerSatisfactions;
+    private JLabel[] playerInfluences;
+    private JLabel[] playerMoneys;
+    private JLabel[] playerScores;
+
     private JLabel player1ResourceTitle;
-    private JLabel player1Satisfaction;
-    private JLabel player2Asphalt;
-    private JLabel player2Knowledge;
     private JLabel player2ResourceTitle;
-    private JLabel player2Satisfaction;
-    private JLabel player3Asphalt;
-    private JLabel player3Knowledge;
     private JLabel player3ResourceTitle;
-    private JLabel player3Satisfaction;
-    private JLabel player4Asphalt;
-    private JLabel player4Knowledge;
     private JLabel player4ResourceTitle;
-    private JLabel player4Satisfaction;
+
     private JLabel playerTurnGraphic;
     private JButton rollDiceButton;
     private JLabel roundNumberGraphic;
     private JPanel sidePanelContainer;
-    private Popup popup;
+    private final Popup popup;
+    private JPanel popupButtonContainer;
     private JButton journalButton;
-    private Journal journal;
-    private JPanel dimBackground;
-    private Shop shop;
+    private final Journal journal;
+    private final JPanel dimBackground;
+    private final Shop shop;
     private JButton shopButton;
-    private Tutorial tutorial;
+    private final Tutorial tutorial;
+    private JButton closeButton;
+    private CostPopup costPopup;
 }
