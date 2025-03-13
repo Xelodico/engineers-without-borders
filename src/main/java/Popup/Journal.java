@@ -297,7 +297,6 @@ public class Journal extends JPanel {
             task.add(completeButton);
             
             completeButton.addActionListener(e -> {
-//                t.completeStep();
                 GameSystem.progressTask(t);
                 refresh();
             });

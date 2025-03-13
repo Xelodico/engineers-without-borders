@@ -18,6 +18,7 @@ import BoardGame.Player;
 import BoardGame.ResourceType;
 import BoardGame.SubTask;
 import BoardGame.Task;
+import square.MoneySquare;
 import square.ShopSquare;
 import square.Square;
 
@@ -58,7 +59,8 @@ public abstract class GameSystem {
 
     // Global variables for resource purchase price and scores for calculating the
     // solution implementation percentage
-    private final static int RESOURCE_PRICE = 100;
+    private final static int RESOURCE_PRICE = 20;
+    private final static int resourceRewardAmount = 30;
     private static int maxScore;
     private static int currentTotalAwardedScore;
 
@@ -88,7 +90,6 @@ public abstract class GameSystem {
 
             gameBoardUI.setVisible(true); // Make the game UI visible
             gameActive = true; // Mark the game as active
-
         }
     }
 
@@ -100,10 +101,12 @@ public abstract class GameSystem {
         gameBoardUI.startGame(); // Start the game through the UI
         gameBoardUI.refresh(); // Refresh the UI to reflect updated game state
         toggleTutorial();
-        getPlayerAt().setResource(500, ResourceType.ASPHALT);
-        getPlayerAt().setResource(500, ResourceType.INFLUENCE);
-        getPlayerAt().setResource(500, ResourceType.KNOWLEDGE);
-        getPlayerAt().setResource(500, ResourceType.VOLUNTEERS);
+
+        // Set initial resources for testing purposes
+        // getPlayerAt().setResource(500, ResourceType.ASPHALT);
+        // getPlayerAt().setResource(500, ResourceType.INFLUENCE);
+        // getPlayerAt().setResource(500, ResourceType.KNOWLEDGE);
+        // getPlayerAt().setResource(500, ResourceType.VOLUNTEERS);
     }
 
     /**
@@ -354,8 +357,58 @@ public abstract class GameSystem {
 
         // Subtract funds from player and add resources
         currentPlayer.changeMoney(-RESOURCE_PRICE);
-        currentPlayer.changeResource(25, resourceType);
+        currentPlayer.changeResource(resourceRewardAmount, resourceType);
 
+        return true;
+    }
+
+    public static boolean purchaseTask(Player player, ResourceType resourceType, Task task) {
+        // Get current player
+        Player currentPlayer = player;
+
+        // Check that player has enough resources to buy the task
+        if (currentPlayer.getResource(resourceType) < task.getResourceCost()) {
+            return false;
+        }
+
+        // Subtract resources from player and add task
+        currentPlayer.changeResource(-task.getResourceCost(), resourceType);
+        task.setOwnedBy(player);
+
+        return true;
+    }
+
+    public static int getResourcePrice() {
+        return RESOURCE_PRICE;
+    }
+
+    public static int getResourceAwardedAmount() {
+        return resourceRewardAmount;
+    }
+
+    public static boolean discountSubTask(Task taskToDiscount){
+        SubTask currentSubTask = taskToDiscount.getCurrentSubTask();
+        System.out.println(currentSubTask.getResourceCost());
+        if (currentSubTask.getTitle().equals("")){
+            return false;
+        }
+    
+        Player currentPlayer = getPlayerAt();
+        int playerResourceAmount = currentPlayer.getResource(currentSubTask.getResourceType());
+        if (playerResourceAmount < currentSubTask.getResourceCost()){
+            // You do not have enough money to discount this task
+            return false;
+        } else {
+            // Continue with discounting the task
+            currentPlayer.changeResource(currentSubTask.getResourceCost() / 2, currentSubTask.getResourceType());
+            currentPlayer.changeScoreBy(currentSubTask.getCompletionScore() / 2);
+            
+            if(!currentSubTask.discountSubTask()){
+                return false;
+            }
+        }
+
+        System.out.println(currentSubTask.getResourceCost());
         return true;
     }
 
@@ -567,6 +620,25 @@ public abstract class GameSystem {
                         SubTask subtask = new SubTask();
                         subtask.setTitle(subtasksArr.getString(i));
                         task.setBelongsTo(o1);
+                        switch (o1.getTitle()) {
+                            case "Repair Potholes (Cold Asphalt)":
+                                task.setResourceType(ResourceType.ASPHALT);
+                                subtask.setResourceType(ResourceType.ASPHALT);
+                                break;
+                            case "Secure Grant (Influence)":
+                                task.setResourceType(ResourceType.INFLUENCE);
+                                subtask.setResourceType(ResourceType.INFLUENCE);
+                                break;
+                            case "Train Volunteers (Teaching Material)":
+                                task.setResourceType(ResourceType.KNOWLEDGE);
+                                subtask.setResourceType(ResourceType.KNOWLEDGE);
+                                break;
+                            case "Secure Longevity (Volunteers)":
+                                task.setResourceType(ResourceType.VOLUNTEERS);
+                                subtask.setResourceType(ResourceType.VOLUNTEERS);
+                                break;
+                        }
+                        
                         task.addStep(subtask);
                     }
 
@@ -579,8 +651,8 @@ public abstract class GameSystem {
             System.exit(1);
         }
 
-        objectives.get(0).setUiColour(Color.RED);
-        objectives.get(1).setUiColour(Color.ORANGE);
+        objectives.get(0).setUiColour(Color.BLUE);
+        objectives.get(1).setUiColour(Color.RED);
         objectives.get(2).setUiColour(Color.MAGENTA);
         objectives.get(3).setUiColour(Color.CYAN);
 
@@ -609,6 +681,11 @@ public abstract class GameSystem {
 
         return scoreCalculation;
 
+    }
+
+    public static void replaceMoneySquare() {
+        gameBoard.setSquareAt(getPlayerAt().getCoord(), new Square());
+        gameBoard.generateNewSquares(1, new MoneySquare());
     }
 
     /**

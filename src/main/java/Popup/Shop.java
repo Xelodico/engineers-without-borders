@@ -26,7 +26,7 @@ import java.util.Objects;
 public class Shop extends JPanel {
 
     private BufferedImage backgroundImage;
-    private String resourceCost = "30 Rand";
+    private String resourceCost = Integer.toString(GameSystem.getResourcePrice()) + " Rand";
     private JButton closeButton;
 
     /**
@@ -60,11 +60,25 @@ public class Shop extends JPanel {
      * Each price is represented by a JLabel with a string value.
      */
     public void addShopItemsAndPrices() {
+        ActionListener acknowledgeActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GameSystem.hidePopup();
+            }
+        };
+
         JButton item1 = newShopItem(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resources/coldAsphalt.png"))));
         item1.setBounds(412, 188, 70, 70);
         item1.addActionListener(e -> {
-            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Cold Asphalt for ", "Rand", 30,
-                    e1 -> GameSystem.purchaseResource(ResourceType.ASPHALT),
+            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Cold Asphalt for ", "Rand", GameSystem.getResourcePrice(),
+                    e1 -> {
+                        if(GameSystem.purchaseResource(ResourceType.ASPHALT)) {
+                            GameSystem.showPopup("Success!", "You successfully bought " + GameSystem.getResourceAwardedAmount() + " Cold Asphalt Mix!", "OK", null, acknowledgeActionListener, null);
+                        } else {
+                            GameSystem.showPopup("You don't have enough money!", null, "OK", null, acknowledgeActionListener, null);
+                        }
+                        GameSystem.hideCostPopup();
+                    },
                     e1 -> {
                         GameSystem.hideCostPopup();
             });
@@ -79,8 +93,15 @@ public class Shop extends JPanel {
         JButton item2 = newShopItem(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resources/influence.png"))));
         item2.setBounds(600, 188, 70, 70);
         item2.addActionListener(e -> {
-            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Influence for ", "Rand", 30,
-                    e1 -> GameSystem.purchaseResource(ResourceType.INFLUENCE),
+            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Influence for ", "Rand", GameSystem.getResourcePrice(),
+                    e1 -> {
+                        if(GameSystem.purchaseResource(ResourceType.INFLUENCE)) {
+                        GameSystem.showPopup("Success!", "You successfully bought " + GameSystem.getResourceAwardedAmount() + " Influence!", "OK", null, acknowledgeActionListener, null);
+                    } else {
+                        GameSystem.showPopup("You don't have enough money!", null, "OK", null, acknowledgeActionListener, null);
+                    }
+                    GameSystem.hideCostPopup();
+                    },
                     e1 -> {
                         GameSystem.hideCostPopup();
             });
@@ -95,8 +116,15 @@ public class Shop extends JPanel {
         JButton item3 = newShopItem(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resources/knowledge.png"))));
         item3.setBounds(412, 360, 70, 70);
         item3.addActionListener(e -> {
-            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Knowledge for ", "Rand", 30,
-                    e1 -> GameSystem.purchaseResource(ResourceType.KNOWLEDGE),
+            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Knowledge for ", "Rand", GameSystem.getResourcePrice(),
+                    e1 -> {
+                        if(GameSystem.purchaseResource(ResourceType.KNOWLEDGE)) {
+                        GameSystem.showPopup("Success!", "You successfully bought " + GameSystem.getResourceAwardedAmount() + " Knowledge!", "OK", null, acknowledgeActionListener, null);
+                    } else {
+                        GameSystem.showPopup("You don't have enough money!", null, "OK", null, acknowledgeActionListener, null);
+                    }
+                    GameSystem.hideCostPopup();
+                    },
                     e1 -> {
                         GameSystem.hideCostPopup();
             });
@@ -111,8 +139,15 @@ public class Shop extends JPanel {
         JButton item4 = newShopItem(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resources/volunteers.png"))));
         item4.setBounds(600, 360, 70, 70);
         item4.addActionListener(e -> {
-            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Volunteers for ", "Rand", 30,
-                    e1 -> GameSystem.purchaseResource(ResourceType.VOLUNTEERS),
+            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Volunteers for ", "Rand", GameSystem.getResourcePrice(),
+                    e1 -> {
+                        if(GameSystem.purchaseResource(ResourceType.VOLUNTEERS)) {
+                        GameSystem.showPopup("Success!", "You successfully bought " + GameSystem.getResourceAwardedAmount() + " Volunteers!", "OK", null, acknowledgeActionListener, null);
+                    } else {
+                        GameSystem.showPopup("You don't have enough money!", null, "OK", null, acknowledgeActionListener, null);
+                    }
+                    GameSystem.hideCostPopup();
+                    },
                     e1 -> {
                         GameSystem.hideCostPopup();
             });
@@ -123,6 +158,8 @@ public class Shop extends JPanel {
         JLabel price4 = newPrice(resourceCost);
         price4.setBounds(585, 473, 100, 39);
         add(price4);
+
+        
     }
 
     /**

@@ -47,6 +47,7 @@ public class Board extends JPanel {
         for (int i = 0; i < 12; i++) {
             generateNewSquares(1, new TaskSquare(tasks.get(i)));
         }
+        generateNewSquares(2, new MoneySquare());
         renderBoard(squareArray);
     }
 
