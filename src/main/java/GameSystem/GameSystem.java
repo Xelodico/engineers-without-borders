@@ -21,6 +21,7 @@ import BoardGame.Task;
 import square.MoneySquare;
 import square.ShopSquare;
 import square.Square;
+import square.TaskSquare;
 
 /**
  * 
@@ -351,6 +352,12 @@ public abstract class GameSystem {
             // player
             if (selectedTask.isCompleted()) {
                 currentPlayer.changeScoreBy(selectedTask.getCompletionScore());
+
+                // Update the UI to reflect the task's progress
+                final int[] squarePosition = new int[1];
+                gameBoard.getSquareArray().stream().filter(square -> square instanceof TaskSquare && ((TaskSquare) square).getTask() == selectedTask)
+                        .forEach(square -> squarePosition[0] = gameBoard.getSquareArray().indexOf(square));
+                gameBoard.setSquareAt(squarePosition[0], new Square());
             }
         }
         return true;
