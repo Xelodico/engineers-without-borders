@@ -61,6 +61,7 @@ public abstract class GameSystem {
     // solution implementation percentage
     private final static int RESOURCE_PRICE = 20;
     private final static int resourceRewardAmount = 30;
+    private final static int moneyCostEachRound = 5;
     private static int maxScore;
     private static int currentTotalAwardedScore;
 
@@ -279,6 +280,14 @@ public abstract class GameSystem {
             turnNumber = 0; // Reset turn number to first player
             roundNumber++; // Start a new round
 
+            // Deduct money from each player at the end of the round
+            for(Player player : turnOrder){
+                player.changeMoney(-moneyCostEachRound);
+                if(player.getMoney() <= 0){
+                    endGame();
+                }
+            }
+            refreshResources();
         } else {
             // Otherwise, move to the next player's turn
             turnNumber++;
