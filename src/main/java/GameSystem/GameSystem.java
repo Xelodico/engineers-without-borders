@@ -264,27 +264,39 @@ public abstract class GameSystem {
     }
 
     /**
-     * Moves the turn to the next player.
-     * If all players have taken their turn, the game progresses to the next round.
+     * ActionListener that handles the event when the player runs out of money.
+     * This listener will hide the popup and end the game.
      */
-    public static void nextTurn() {
-        // Check if all Objectives have been completed.
-        if (checkWinCondition()) {
-            endGame();
-            return;
-        }
-
-        // If the last player in the turn order has finished their turn, reset to the
-        // first player
-        if (turnNumber >= turnOrder.length - 1) {
-            turnNumber = 0; // Reset turn number to first player
-            roundNumber++; // Start a new round
-
-            // Deduct money from each player at the end of the round
-            for(Player player : turnOrder){
-                player.changeMoney(-moneyCostEachRound);
-                if(player.getMoney() <= 0){
-                    endGame();
+    static ActionListener ranOutOfMoney = new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GameSystem.hidePopup();
+                endGame();
+            }
+    };
+    
+        /**
+         * Moves the turn to the next player.
+         * If all players have taken their turn, the game progresses to the next round.
+         */
+        public static void nextTurn() {
+            // Check if all Objectives have been completed.
+            if (checkWinCondition()) {
+                endGame();
+                return;
+            }
+    
+            // If the last player in the turn order has finished their turn, reset to the
+            // first player
+            if (turnNumber >= turnOrder.length - 1) {
+                turnNumber = 0; // Reset turn number to first player
+                roundNumber++; // Start a new round
+    
+                // Deduct money from each player at the end of the round
+                for(Player player : turnOrder){
+                    player.changeMoney(-moneyCostEachRound);
+                    if(player.getMoney() <= 0){
+                        showPopup("Game Finished!", getPlayerAt().getName() + " ran out of Money!", "End Game", null, ranOutOfMoney, null);
                 }
             }
             refreshResources();
@@ -692,6 +704,10 @@ public abstract class GameSystem {
 
     }
 
+    /**
+     * Replaces the current square of the player with a new generic square and generates a new MoneySquare
+     * at a random location on the game board.
+     */
     public static void replaceMoneySquare() {
         gameBoard.setSquareAt(getPlayerAt().getCoord(), new Square());
         gameBoard.generateNewSquares(1, new MoneySquare());
