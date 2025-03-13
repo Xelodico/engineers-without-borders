@@ -48,7 +48,7 @@ public class Player {
         this.name = name;
         this.coord = coord;
         this.score = 0;
-        this.money = 0;
+        this.money = 50;
         this.asphalt = 0;
         this.volunteers = 0;
         this.influence = 0;
@@ -70,7 +70,7 @@ public class Player {
         this.name = name;
         this.coord = coords;
         this.score = 0;
-        this.money = 0;
+        this.money = 50;
         this.asphalt = 0;
         this.volunteers = 0;
         this.influence = 0;
@@ -89,7 +89,7 @@ public class Player {
         this.name = "";
         this.coord = 0;
         this.score = 0;
-        this.money = 0;
+        this.money = 50;
         this.asphalt = 0;
         this.volunteers = 0;
         this.influence = 0;

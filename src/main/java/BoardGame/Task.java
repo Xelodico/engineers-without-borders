@@ -40,9 +40,9 @@ public class Task {
 		this.ownedBy = null;
 		this.steps = new SubTask[0];
 		this.currentStepNumber = 0;
-		this.completionScore = 0;
-		this.resourceCost = 0;
-		this.resourceType = ResourceType.ASPHALT;
+		this.completionScore = 10;
+		this.resourceCost = 30;
+		this.resourceType = null;
 	}
 
 	/**
