@@ -149,10 +149,10 @@ public class Player {
      * @param changeAmount - the amount to change the score by
      */
     public void changeScoreBy(int changeAmount) {
-        if(this.score + changeAmount < 0) {
-        	this.score = 0;
+        if (this.score + changeAmount < 0) {
+            this.score = 0;
         } else {
-        	this.score += changeAmount;
+            this.score += changeAmount;
         }
     }
 
@@ -260,24 +260,24 @@ public class Player {
      * @return the amount of the resource referenced by resourceType
      */
     public int getResource(ResourceType resourceType) {
-        switch(resourceType) {
-        case ASPHALT: 
-        	return asphalt;
-        case VOLUNTEERS: 
-        	return volunteers;
-        case INFLUENCE:
-        	return influence;
-        case KNOWLEDGE:
-        	return knowledge;
-        default: 
-        	return 0;
+        switch (resourceType) {
+            case ASPHALT:
+                return asphalt;
+            case VOLUNTEERS:
+                return volunteers;
+            case INFLUENCE:
+                return influence;
+            case KNOWLEDGE:
+                return knowledge;
+            default:
+                return 0;
         }
     }
 
     /**
      * Sets the amount of the resource referenced by the inputed ResourceType
      * 
-     * @param resource - The new amount of the resource
+     * @param resource     - The new amount of the resource
      * @param resourceType - The type of resource to set
      */
     public void setResource(int resource, ResourceType resourceType) {
@@ -296,9 +296,10 @@ public class Player {
         }
         GameSystem.refreshResources();
     }
-    
+
     /**
-     * changes the amount of the resource referenced by the inputed ResourceType by the amount inputed
+     * changes the amount of the resource referenced by the inputed ResourceType by
+     * the amount inputed
      * 
      * @param changeAmount - The amount to change resource by (can be negative)
      * @param resourceType - The type of resource to set
