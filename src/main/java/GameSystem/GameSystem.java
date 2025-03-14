@@ -31,7 +31,7 @@ import square.TaskSquare;
  * the board,
  * checking win conditions, and managing UI interactions.
  * 
- * @author Issac Edmonds
+ * @author Isaac Edmonds
  * @author Peter Robinson
  * @author Nathan Watkins (Supporting)
  * @author Curtis McCartney (Supporting)
