@@ -18,6 +18,7 @@ import BoardGame.Player;
 import BoardGame.ResourceType;
 import BoardGame.SubTask;
 import BoardGame.Task;
+import Popup.EndGame.Ending;
 import square.MoneySquare;
 import square.ShopSquare;
 import square.Square;
@@ -62,7 +63,7 @@ public abstract class GameSystem {
     // solution implementation percentage
     private final static int RESOURCE_PRICE = 20;
     private final static int resourceRewardAmount = 30;
-    private final static int moneyCostEachRound = 5;
+    private final static int maintenanceCostEachRound = 5;
     private static int maxScore;
     private static int currentTotalAwardedScore;
 
@@ -109,6 +110,10 @@ public abstract class GameSystem {
         // getPlayerAt().setResource(500, ResourceType.INFLUENCE);
         // getPlayerAt().setResource(500, ResourceType.KNOWLEDGE);
         // getPlayerAt().setResource(500, ResourceType.VOLUNTEERS);
+
+        tasks.forEach(task->{
+            task.setOwnedBy(getPlayerAt());
+        });
     }
 
     /**
@@ -281,12 +286,6 @@ public abstract class GameSystem {
          * If all players have taken their turn, the game progresses to the next round.
          */
         public static void nextTurn() {
-            // Check if all Objectives have been completed.
-            if (checkWinCondition()) {
-                endGame();
-                return;
-            }
-    
             // If the last player in the turn order has finished their turn, reset to the
             // first player
             if (turnNumber >= turnOrder.length - 1) {
@@ -295,7 +294,7 @@ public abstract class GameSystem {
     
                 // Deduct money from each player at the end of the round
                 for(Player player : turnOrder){
-                    player.changeMoney(-moneyCostEachRound);
+                    player.changeMoney(-maintenanceCostEachRound);
                     if(player.getMoney() <= 0){
                         showPopup("Game Finished!", getPlayerAt().getName() + " ran out of Money!", "End Game", null, ranOutOfMoney, null);
                 }
@@ -335,7 +334,11 @@ public abstract class GameSystem {
         SubTask currentStep = selectedTask.getCurrentSubTask();
         boolean resourceCheck = currentPlayer.getResource(resourceType) >= currentStep.getResourceCost();
 
-        if (!selectedTask.isCompleted() && resourceCheck) {
+        if(!resourceCheck) {
+            return false;
+        }
+
+        if (!selectedTask.isCompleted()) {
             // Subtract from current player's resources
             int newResourceAmount = currentPlayer.getResource(resourceType) - currentStep.getResourceCost();
             currentPlayer.setResource(newResourceAmount, resourceType);
@@ -347,11 +350,13 @@ public abstract class GameSystem {
 
             // Progress the task onto the next subtask
             selectedTask.completeStep();
+            
 
             // If the task is now fully complete, award the task's completion score to the
             // player
             if (selectedTask.isCompleted()) {
                 currentPlayer.changeScoreBy(selectedTask.getCompletionScore());
+                currentTotalAwardedScore += selectedTask.getCompletionScore();
 
                 // Update the UI to reflect the task's progress
                 final int[] squarePosition = new int[1];
@@ -450,6 +455,8 @@ public abstract class GameSystem {
      */
     public static double getImplementationPercent() {
         double percentUnrounded = (double) currentTotalAwardedScore / maxScore;
+        System.out.println("Current Awarded Score total is " + currentTotalAwardedScore);
+        System.out.println();
         return Math.round(percentUnrounded * 1000.0) / 1000.0;
     }
 
@@ -624,6 +631,10 @@ public abstract class GameSystem {
         gameBoardUI.refreshJournal();
     }
 
+    public static void toggleEndGame(Ending ending) {
+        gameBoardUI.toggleEndGame(ending);
+    }
+
     /**
      * Generates Objectives, Tasks, and Subtasks.
      */
@@ -706,7 +717,7 @@ public abstract class GameSystem {
                 scoreCalculation += currentSub.getCompletionScore();
             }
         }
-
+        System.out.println(scoreCalculation);
         return scoreCalculation;
 
     }
@@ -716,8 +727,8 @@ public abstract class GameSystem {
      * at a random location on the game board.
      */
     public static void replaceMoneySquare() {
-        gameBoard.setSquareAt(getPlayerAt().getCoord(), new Square());
         gameBoard.generateNewSquares(1, new MoneySquare());
+        gameBoard.setSquareAt(getPlayerAt().getCoord(), new Square());
     }
 
     /**

@@ -154,6 +154,7 @@ public class Player {
         } else {
             this.score += changeAmount;
         }
+        GameSystem.refreshResources();
     }
 
     /**
@@ -182,6 +183,7 @@ public class Player {
 
     public void changeMoney(int money) {
         this.money = this.money + money;
+        GameSystem.refreshResources();
     }
 
     /**

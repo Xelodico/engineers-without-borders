@@ -67,7 +67,6 @@ public class MoneySquare extends Square {
         super.activateSquareEffect(); // Calls the superclass method.
         GameSystem.getPlayerAt().changeMoney(this.money);
         GameSystem.showPopup("Extra Funds!", "You have been given " + money + " Rand!", "Ok", null, okSingleButton, null);
-        GameSystem.refreshResources();
         GameSystem.replaceMoneySquare();
         return true;
     }
