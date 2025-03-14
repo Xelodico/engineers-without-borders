@@ -51,13 +51,10 @@ public class TaskSquare extends Square {
     @Override
     public boolean activateSquareEffect() {
 
-        ActionListener takeTask = new ActionListener() {
+        ActionListener okSingleButton = new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // Take task logic
-                task.setOwnedBy(GameSystem.getPlayerAt());
-                System.out.println("Task claimed!");
-                GameSystem.hideCostPopup();
+                GameSystem.hidePopup();
             }
         };
 
@@ -72,6 +69,7 @@ public class TaskSquare extends Square {
                 } else {
                     System.out.println("No other players to show the task to");
                     GameSystem.hideCostPopup();
+                    GameSystem.showPopup("Task not claimed!", task.getTitle() + " was not claimed due to poor funding.", "Ok", null, okSingleButton, null);
                 }
             }
         };
@@ -81,6 +79,7 @@ public class TaskSquare extends Square {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Discounting task logic
                 System.out.println("Discounting the task!");
+                GameSystem.discountSubTask(task);
                 GameSystem.hidePopup();
             }
         };
@@ -92,10 +91,21 @@ public class TaskSquare extends Square {
             }
         };
 
-        ActionListener okSingleButton = new ActionListener() {
+        
+
+        ActionListener takeTask = new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GameSystem.hidePopup();
+                // Take task logic
+                if(GameSystem.purchaseTask(GameSystem.getPlayerAt(), task.getResourceType(), task)) {
+                    task.setOwnedBy(GameSystem.getPlayerAt());
+                } else {
+                    GameSystem.showPopup("Not enough resources!", "You do not have enough resources to claim this task.", "OK", null, okSingleButton, null);
+                    return;
+                }
+                
+                System.out.println("Task claimed!");
+                GameSystem.hideCostPopup();
             }
         };
 
@@ -106,7 +116,7 @@ public class TaskSquare extends Square {
             GameSystem.showPopup("Do you want to help complete this task?", task.getTitle(), "Yes", "No",
                     beginHelping, ignoreHelping);
         } else {
-            GameSystem.showPopup("You already own this task!", task.getTitle(), "Ok", null, okSingleButton, null);
+            GameSystem.showPopup("You already own this task!", task.getTitle(), "OK", null, okSingleButton, null);
         }
         return true;
     }

@@ -35,9 +35,9 @@ public class SubTask {
     public SubTask() {
         this.title = "";
         this.discounted = false;
-        this.completionScore = 0;
-        this.resourceCost = 0;
-        this.resourceType = ResourceType.ASPHALT;
+        this.completionScore = 5;
+        this.resourceCost = 20;
+        this.resourceType = null;
     }
 
     /**

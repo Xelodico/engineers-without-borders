@@ -11,6 +11,8 @@ import BoardGame.Objective;
 import BoardGame.SubTask;
 import BoardGame.Task;
 import GameSystem.GameSystem;
+import Popup.EndGame.Ending;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -236,6 +238,8 @@ public class Journal extends JPanel {
         return objective;
     }
 
+    
+
     /**
      * Creates a JPanel representation of a task. This panel contains the task's title
      * and buttons for transferring and completing the task. The appearance and layout
@@ -295,10 +299,40 @@ public class Journal extends JPanel {
             completeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
             completeButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
             task.add(completeButton);
+
+            ActionListener okSingleButton = new ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    GameSystem.hidePopup();
+                }
+            };
+
+            ActionListener progressTaskActionListener = new ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    GameSystem.hideCostPopup();
+                    if(GameSystem.progressTask(t)) {
+                        GameSystem.refreshJournal();
+                        GameSystem.showPopup("Task progressed successfuly!", t.getTitle() + " was progressed!", "Ok", null, okSingleButton, null);
+                    } else {
+                        GameSystem.showPopup("Task not progressed!", t.getTitle() + " was not progressed due to lack of resources!", "Ok", null, okSingleButton, null);
+                    }
+                }
+            };
+        
+            ActionListener rejectTaskActionListener = new ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    GameSystem.hideCostPopup();
+                }
+            };
             
             completeButton.addActionListener(e -> {
-//                t.completeStep();
-                GameSystem.progressTask(t);
+                GameSystem.showCostPopup("Do you wish to progress this Task?", "It will cost you ", t.getResourceType().toString(), t.getResourceCost(), progressTaskActionListener, rejectTaskActionListener);
+                if (GameSystem.checkWinCondition()) {
+                    GameSystem.toggleJournal();
+                    GameSystem.toggleEndGame(Ending.GOOD);
+                }
                 refresh();
             });
         }

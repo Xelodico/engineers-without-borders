@@ -9,8 +9,13 @@ import square.*;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
 public class Board extends JPanel {
 
@@ -43,10 +48,11 @@ public class Board extends JPanel {
         ));
         this.setLayout(new GridLayout(boardSideLength, boardSideLength));
 
-        squareArray = generateBoardSquares(tasks);
+        squareArray = generateBoardSquares();
         for (int i = 0; i < 12; i++) {
             generateNewSquares(1, new TaskSquare(tasks.get(i)));
         }
+        generateNewSquares(2, new MoneySquare());
         renderBoard(squareArray);
     }
 
@@ -57,7 +63,7 @@ public class Board extends JPanel {
      * 
      * @return A list of strings representing the type of each square on the board.
      */
-    private List<Square> generateBoardSquares(ArrayList<Task> tasks) {
+    private List<Square> generateBoardSquares() {
         int totalSquares = boardSideLength * boardSideLength;
         final int[] spawnLocations = GameSystem.getSpawnLocations();
         List<Square> squareArray = new ArrayList<>();
@@ -160,34 +166,87 @@ public class Board extends JPanel {
      */
     public void generateNewSquares(int amount, Square squareType) {
         if (amount > squareArray.size()) {
-            throw new IllegalArgumentException("Amount of potholes cannot exceed the number of squares on the board.");
+            throw new IllegalArgumentException("Amount of squares cannot exceed the number of squares on the board.");
         }
 
         if (amount < 0) {
-            throw new IllegalArgumentException("Amount of potholes cannot be negative.");
+            throw new IllegalArgumentException("Amount of squares cannot be negative.");
         }
 
-        long normalSquareCount = squareArray.stream()
-                .filter(square -> square.getSquareType() == SquareType.SQUARE)
-                .count();
+        // Collect all empty squares
+        List<Integer> availablePositions = new ArrayList<>();
+        Map<SquareType, Set<Integer>> existingSquares = new HashMap<>();
 
-        if (amount > normalSquareCount) {
-            throw new IllegalArgumentException("Not enough normal squares to generate " + amount + " pothole(s).");
+        for (SquareType type : SquareType.values()) {
+            existingSquares.put(type, new HashSet<>());
         }
 
-        for (int i = 0; i < amount; i++) {
-            boolean valid = false;
-            while (!valid) {
-                int randomIndex = (int) (Math.random() * squareArray.size());
-                if (squareArray.get(randomIndex).getSquareType() == SquareType.SQUARE) {
-                    squareArray.set(randomIndex, squareType);
-                    valid = true;
+        for (int i = 0; i < squareArray.size(); i++) {
+            SquareType type = squareArray.get(i).getSquareType();
+            existingSquares.get(type).add(i); // Track all existing square types
+
+            if (type == SquareType.SQUARE) {
+                availablePositions.add(i); // Collect blank squares
+            }
+        }
+
+        if (amount > availablePositions.size()) {
+            throw new IllegalArgumentException("Not enough normal squares to generate " + amount + " squares.");
+        }
+
+        Collections.shuffle(availablePositions); // Shuffle once for random placement
+
+        int placed = 0;
+        Iterator<Integer> iterator = availablePositions.iterator();
+
+        while (iterator.hasNext() && placed < amount) {
+            int index = iterator.next();
+
+            if (isWithinRadius(index, null, 1, existingSquares.get(SquareType.TASKSQUARE))) {
+                continue;
+            }
+
+            if (squareType instanceof TaskSquare taskSquare) {
+                if (isWithinRadius(index, taskSquare.getTask().getBelongsTo(), 3, existingSquares.get(SquareType.TASKSQUARE))) {
+                    continue;
+                }
+            } else if (squareType instanceof MoneySquare) {
+                if (isWithinRadius(index, null, 3, existingSquares.get(SquareType.MONEYSQUARE))) {
+                    continue;
                 }
             }
+
+            squareArray.set(index, squareType);
+            existingSquares.get(squareType.getSquareType()).add(index); // Track the new placement
+            placed++;
         }
 
         refresh();
     }
+
+    private boolean isWithinRadius(int index, Objective objective, int radius, Set<Integer> existingPositions) {
+        int row = index / boardSideLength;
+        int col = index % boardSideLength;
+
+        for (int i = -radius; i <= radius; i++) {
+            for (int j = -radius; j <= radius; j++) {
+                int newRow = row + i;
+                int newCol = col + j;
+                int newIndex = newRow * boardSideLength + newCol;
+
+                if (newRow >= 0 && newRow < boardSideLength && newCol >= 0 && newCol < boardSideLength) {
+                    if (existingPositions.contains(newIndex)) {
+                        if (objective == null || ((TaskSquare) squareArray.get(newIndex)).getTask().getBelongsTo() == objective) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
 
     /**
      * Renders the players on the board.

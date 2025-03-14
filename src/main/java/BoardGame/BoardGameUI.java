@@ -264,7 +264,8 @@ public class BoardGameUI extends JFrame {
         setPopupButtonsPosition();
         sidePanelContainer.add(popupButtonContainer);
 
-        rollDiceButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/rollDiceButton.png"))));
+        ImageIcon rollDiceIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/rollDiceButton.png")));
+        rollDiceButton.setIcon(new ImageIcon(rollDiceIcon.getImage().getScaledInstance(192, 47, Image.SCALE_SMOOTH)));
         rollDiceButton.setBorder(null);
         rollDiceButton.setContentAreaFilled(false);
         rollDiceButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
