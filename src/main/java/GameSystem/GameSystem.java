@@ -104,16 +104,6 @@ public abstract class GameSystem {
         gameBoardUI.startGame(); // Start the game through the UI
         gameBoardUI.refresh(); // Refresh the UI to reflect updated game state
         toggleTutorial();
-
-        // Set initial resources for testing purposes
-        // getPlayerAt().setResource(500, ResourceType.ASPHALT);
-        // getPlayerAt().setResource(500, ResourceType.INFLUENCE);
-        // getPlayerAt().setResource(500, ResourceType.KNOWLEDGE);
-        // getPlayerAt().setResource(500, ResourceType.VOLUNTEERS);
-
-        tasks.forEach(task->{
-            task.setOwnedBy(getPlayerAt());
-        });
     }
 
     /**
