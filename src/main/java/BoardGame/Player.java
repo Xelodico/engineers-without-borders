@@ -28,7 +28,7 @@ public class Player {
     private int moneySpent;
     private int movesTravelled;
     private int timesHelped;
-    private ArrayList<String> achievements;
+    private String achievement;
     private ArrayList<Task> tasks;
 
     /**
@@ -58,7 +58,7 @@ public class Player {
         this.movesLeft = movesLeft;
         this.timesHelped = 0;
         this.tasks = new ArrayList<Task>();
-        this.achievements = new ArrayList<String>();
+        this.achievement = "";
     }
 
     /**
@@ -82,7 +82,7 @@ public class Player {
         this.movesLeft = 0;
         this.timesHelped = 0;
         this.tasks = new ArrayList<Task>();
-        this.achievements = new ArrayList<String>();
+        this.achievement = "";
     }
 
     /**
@@ -102,7 +102,7 @@ public class Player {
         this.movesLeft = 0;
         this.timesHelped = 0;
         this.tasks = new ArrayList<Task>();
-        this.achievements = new ArrayList<String>();
+        this.achievement = "";
     }
 
     /**
@@ -289,18 +289,18 @@ public class Player {
      * @param resourceType - The type of resource to set
      */
     public void setResource(int resource, ResourceType resourceType) {
-    	switch(resourceType) {
-        case ASPHALT: 
-        	this.asphalt = resource;
-            break;
-        case VOLUNTEERS: 
-        	this.volunteers = resource;
-            break;
-        case INFLUENCE:
-        	this.influence = resource;
-            break;
-        case KNOWLEDGE:
-        	this.knowledge = resource;
+        switch (resourceType) {
+            case ASPHALT:
+                this.asphalt = resource;
+                break;
+            case VOLUNTEERS:
+                this.volunteers = resource;
+                break;
+            case INFLUENCE:
+                this.influence = resource;
+                break;
+            case KNOWLEDGE:
+                this.knowledge = resource;
         }
         GameSystem.refreshResources();
     }
@@ -313,34 +313,34 @@ public class Player {
      * @param resourceType - The type of resource to set
      */
     public void changeResource(int changeAmount, ResourceType resourceType) {
-    	switch(resourceType) {
-        case ASPHALT: 
-        	if(this.asphalt + changeAmount < 0) {
-            	this.asphalt = 0;
-            } else {
-            	this.asphalt += changeAmount;
-            } 
-            break;
-        case VOLUNTEERS: 
-        	if(this.volunteers + changeAmount < 0) {
-            	this.volunteers = 0;
-            } else {
-            	this.volunteers += changeAmount;
-            } 
-            break;
-        case INFLUENCE:
-        	if(this.influence + changeAmount < 0) {
-            	this.influence = 0;
-            } else {
-            	this.influence += changeAmount;
-            } 
-            break;
-        case KNOWLEDGE:
-        	if(this.knowledge + changeAmount < 0) {
-            	this.knowledge = 0;
-            } else {
-            	this.knowledge += changeAmount;
-            }
+        switch (resourceType) {
+            case ASPHALT:
+                if (this.asphalt + changeAmount < 0) {
+                    this.asphalt = 0;
+                } else {
+                    this.asphalt += changeAmount;
+                }
+                break;
+            case VOLUNTEERS:
+                if (this.volunteers + changeAmount < 0) {
+                    this.volunteers = 0;
+                } else {
+                    this.volunteers += changeAmount;
+                }
+                break;
+            case INFLUENCE:
+                if (this.influence + changeAmount < 0) {
+                    this.influence = 0;
+                } else {
+                    this.influence += changeAmount;
+                }
+                break;
+            case KNOWLEDGE:
+                if (this.knowledge + changeAmount < 0) {
+                    this.knowledge = 0;
+                } else {
+                    this.knowledge += changeAmount;
+                }
         }
         GameSystem.refreshResources();
     }
@@ -378,12 +378,12 @@ public class Player {
         return null;
     }
 
-    public ArrayList<String> getAchievements() {
-        return achievements;
+    public String getAchievement() {
+        return this.achievement;
     }
 
-    public void addAchievement(String achievement) {
-        this.achievements.add(achievement);
+    public void setAchievement(String achievement) {
+        this.achievement = achievement;
     }
 
     /**
@@ -452,7 +452,7 @@ public class Player {
                 this.setMovesLeft(this.getMovesLeft() - 1); // Decrease moves after moving
                 this.movesTravelled++;
                 System.out.println(this.getName() + " moved to position " + newCoord);
-                System.out.println("Moves travelled: " + this.movesTravelled);
+                System.out.println("Moves travelled: " + this.getMovesTravelled());
             }
         } else {
             System.out.println(this.getName() + " has no moves left this turn.");

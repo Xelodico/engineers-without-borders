@@ -294,21 +294,19 @@ public class EndGame extends JPanel {
         playerCard.add(playerName);
         playerCard.add(Box.createVerticalStrut(21));
 
-        if (!player.getAchievements().isEmpty()) {
-            for (String achievement : player.getAchievements()) {
-                JLabel playerTitle = new JLabel(achievement);
-                playerTitle.setFont(new Font("Segue UI", Font.PLAIN, 16));
-                playerTitle.setForeground(Color.WHITE);
-                playerTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-                playerCard.add(playerTitle);
-                playerCard.add(Box.createVerticalStrut(20));
-            }
+        if (!player.getAchievement().isEmpty()) {
+            JLabel playerTitle = new JLabel(player.getAchievement());
+            playerTitle.setFont(new Font("Segue UI", Font.PLAIN, 16));
+            playerTitle.setForeground(Color.WHITE);
+            playerTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+            playerCard.add(playerTitle);
+            playerCard.add(Box.createVerticalStrut(20));
         }
 
         JPanel totalScore = createStat("Score: ", String.valueOf(player.getScore()));
         playerCard.add(totalScore);
 
-        JPanel movesTaken = createStat("Moves Taken: ", String.valueOf(player.getMovesLeft()));
+        JPanel movesTaken = createStat("Moves Taken: ", String.valueOf(player.getMovesTravelled()));
         playerCard.add(movesTaken);
 
         JPanel currentMoney = createStat("Current Money: ", String.valueOf(player.getMoney()));
@@ -424,11 +422,11 @@ public class EndGame extends JPanel {
             }
 
         }
-        
-        GameSystem.getPlayerAt(highestScorerIndex).addAchievement("Highest Scorer");
-        GameSystem.getPlayerAt(lowestSpenderIndex).addAchievement("Cheapskate");
-        GameSystem.getPlayerAt(teamPlayerIndex).addAchievement("Team Player");
-        GameSystem.getPlayerAt(travellerIndex).addAchievement("Traveller");
+
+        GameSystem.getPlayerAt(highestScorerIndex).setAchievement("Highest Scorer");
+        GameSystem.getPlayerAt(lowestSpenderIndex).setAchievement("Cheapskate");
+        GameSystem.getPlayerAt(teamPlayerIndex).setAchievement("Team Player");
+        GameSystem.getPlayerAt(travellerIndex).setAchievement("Traveller");
 
     }
 
