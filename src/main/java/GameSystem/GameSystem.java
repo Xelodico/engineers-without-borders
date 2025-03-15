@@ -382,6 +382,7 @@ public abstract class GameSystem {
         // Subtract funds from player and add resources
         currentPlayer.changeMoney(-RESOURCE_PRICE);
         currentPlayer.changeResource(resourceRewardAmount, resourceType);
+        currentPlayer.increaseMoneySpent(RESOURCE_PRICE);
 
         return true;
     }
@@ -426,6 +427,7 @@ public abstract class GameSystem {
             // Continue with discounting the task
             currentPlayer.changeResource(currentSubTask.getResourceCost() / 2, currentSubTask.getResourceType());
             currentPlayer.changeScoreBy(currentSubTask.getCompletionScore() / 2);
+            currentPlayer.changeTimesHelped(1);
 
             if (!currentSubTask.discountSubTask()) {
                 return false;
