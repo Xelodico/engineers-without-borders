@@ -264,29 +264,30 @@ public abstract class GameSystem {
      * This listener will hide the popup and end the game.
      */
     static ActionListener ranOutOfMoney = new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GameSystem.hidePopup();
-                endGame();
-            }
+        @Override
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            GameSystem.hidePopup();
+            toggleEndGame(Ending.BAD);
+        }
     };
-    
-        /**
-         * Moves the turn to the next player.
-         * If all players have taken their turn, the game progresses to the next round.
-         */
-        public static void nextTurn() {
-            // If the last player in the turn order has finished their turn, reset to the
-            // first player
-            if (turnNumber >= turnOrder.length - 1) {
-                turnNumber = 0; // Reset turn number to first player
-                roundNumber++; // Start a new round
-    
-                // Deduct money from each player at the end of the round
-                for(Player player : turnOrder){
-                    player.changeMoney(-maintenanceCostEachRound);
-                    if(player.getMoney() <= 0){
-                        showPopup("Game Finished!", getPlayerAt().getName() + " ran out of Money!", "End Game", null, ranOutOfMoney, null);
+
+    /**
+     * Moves the turn to the next player.
+     * If all players have taken their turn, the game progresses to the next round.
+     */
+    public static void nextTurn() {
+        // If the last player in the turn order has finished their turn, reset to the
+        // first player
+        if (turnNumber >= turnOrder.length - 1) {
+            turnNumber = 0; // Reset turn number to first player
+            roundNumber++; // Start a new round
+
+            // Deduct money from each player at the end of the round
+            for (Player player : turnOrder) {
+                player.changeMoney(-maintenanceCostEachRound);
+                if (player.getMoney() <= 0) {
+                    showPopup("Game Finished!", getPlayerAt().getName() + " ran out of Money!", "End Game", null,
+                            ranOutOfMoney, null);
                 }
             }
             refreshResources();
@@ -324,7 +325,7 @@ public abstract class GameSystem {
         SubTask currentStep = selectedTask.getCurrentSubTask();
         boolean resourceCheck = currentPlayer.getResource(resourceType) >= currentStep.getResourceCost();
 
-        if(!resourceCheck) {
+        if (!resourceCheck) {
             return false;
         }
 
@@ -340,7 +341,6 @@ public abstract class GameSystem {
 
             // Progress the task onto the next subtask
             selectedTask.completeStep();
-            
 
             // If the task is now fully complete, award the task's completion score to the
             // player
@@ -350,7 +350,8 @@ public abstract class GameSystem {
 
                 // Update the UI to reflect the task's progress
                 final int[] squarePosition = new int[1];
-                gameBoard.getSquareArray().stream().filter(square -> square instanceof TaskSquare && ((TaskSquare) square).getTask() == selectedTask)
+                gameBoard.getSquareArray().stream().filter(
+                        square -> square instanceof TaskSquare && ((TaskSquare) square).getTask() == selectedTask)
                         .forEach(square -> squarePosition[0] = gameBoard.getSquareArray().indexOf(square));
                 gameBoard.setSquareAt(squarePosition[0], new Square());
             }
@@ -409,24 +410,24 @@ public abstract class GameSystem {
         return resourceRewardAmount;
     }
 
-    public static boolean discountSubTask(Task taskToDiscount){
+    public static boolean discountSubTask(Task taskToDiscount) {
         SubTask currentSubTask = taskToDiscount.getCurrentSubTask();
         System.out.println(currentSubTask.getResourceCost());
-        if (currentSubTask.getTitle().equals("")){
+        if (currentSubTask.getTitle().equals("")) {
             return false;
         }
-    
+
         Player currentPlayer = getPlayerAt();
         int playerResourceAmount = currentPlayer.getResource(currentSubTask.getResourceType());
-        if (playerResourceAmount < currentSubTask.getResourceCost()){
+        if (playerResourceAmount < currentSubTask.getResourceCost()) {
             // You do not have enough money to discount this task
             return false;
         } else {
             // Continue with discounting the task
             currentPlayer.changeResource(currentSubTask.getResourceCost() / 2, currentSubTask.getResourceType());
             currentPlayer.changeScoreBy(currentSubTask.getCompletionScore() / 2);
-            
-            if(!currentSubTask.discountSubTask()){
+
+            if (!currentSubTask.discountSubTask()) {
                 return false;
             }
         }
@@ -585,7 +586,7 @@ public abstract class GameSystem {
                                 subtask.setResourceType(ResourceType.VOLUNTEERS);
                                 break;
                         }
-                        
+
                         task.addStep(subtask);
                     }
 
@@ -631,7 +632,8 @@ public abstract class GameSystem {
     }
 
     /**
-     * Replaces the current square of the player with a new generic square and generates a new MoneySquare
+     * Replaces the current square of the player with a new generic square and
+     * generates a new MoneySquare
      * at a random location on the game board.
      */
     public static void replaceMoneySquare() {
