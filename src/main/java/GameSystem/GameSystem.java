@@ -62,8 +62,8 @@ public abstract class GameSystem {
     // Global variables for resource purchase price and scores for calculating the
     // solution implementation percentage
     private final static int RESOURCE_PRICE = 20;
-    private final static int resourceRewardAmount = 30;
-    private final static int maintenanceCostEachRound = 5;
+    private final static int RESOURCE_REWARD_AMOUNT = 30;
+    private final static int MAINTENANCE_COST_EACH_ROUND = 5;
     private static int maxScore;
     private static int currentTotalAwardedScore;
 
@@ -284,7 +284,7 @@ public abstract class GameSystem {
 
             // Deduct money from each player at the end of the round
             for (Player player : turnOrder) {
-                player.changeMoney(-maintenanceCostEachRound);
+                player.changeMoney(-MAINTENANCE_COST_EACH_ROUND);
                 if (player.getMoney() <= 0) {
                     showPopup("Game Finished!", getPlayerAt().getName() + " ran out of Money!", "End Game", null,
                             ranOutOfMoney, null);
@@ -381,7 +381,7 @@ public abstract class GameSystem {
 
         // Subtract funds from player and add resources
         currentPlayer.changeMoney(-RESOURCE_PRICE);
-        currentPlayer.changeResource(resourceRewardAmount, resourceType);
+        currentPlayer.changeResource(RESOURCE_REWARD_AMOUNT, resourceType);
         currentPlayer.increaseMoneySpent(RESOURCE_PRICE);
 
         return true;
@@ -408,7 +408,7 @@ public abstract class GameSystem {
     }
 
     public static int getResourceAwardedAmount() {
-        return resourceRewardAmount;
+        return RESOURCE_REWARD_AMOUNT;
     }
 
     public static boolean discountSubTask(Task taskToDiscount) {
