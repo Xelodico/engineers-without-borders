@@ -294,14 +294,12 @@ public class EndGame extends JPanel {
         playerCard.add(playerName);
         playerCard.add(Box.createVerticalStrut(21));
 
-        if (!player.getAchievement().isEmpty()) {
-            JLabel playerTitle = new JLabel(player.getAchievement());
-            playerTitle.setFont(new Font("Segue UI", Font.PLAIN, 16));
-            playerTitle.setForeground(Color.WHITE);
-            playerTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-            playerCard.add(playerTitle);
-            playerCard.add(Box.createVerticalStrut(20));
-        }
+        JLabel playerTitle = new JLabel(player.getAchievement());
+        playerTitle.setFont(new Font("Segue UI", Font.PLAIN, 16));
+        playerTitle.setForeground(Color.WHITE);
+        playerTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        playerCard.add(playerTitle);
+        playerCard.add(Box.createVerticalStrut(20));
 
         JPanel totalScore = createStat("Score: ", String.valueOf(player.getScore()));
         playerCard.add(totalScore);
@@ -381,24 +379,62 @@ public class EndGame extends JPanel {
         cardLayout.show(cardPanel, "stats");
     }
 
+    /**
+     * Determines and assigns unique achievements to each player based on their
+     * performance.
+     * <p>
+     * Achievements are calculated using various performance metrics:
+     * <ul>
+     * <li>"Highest Scorer" for the player with the highest score.</li>
+     * <li>"Cheapskate" for the player who spent the least money.</li>
+     * <li>"Team Player" for the player who helped others the most.</li>
+     * <li>"Traveller" for the player who moved the most.</li>
+     * <li>"Big Spender" for the player who spent the most money.</li>
+     * <li>"Money Maker" for the player with the highest current money.</li>
+     * <li>"Efficiency Expert" for the player with the best score-to-moves
+     * ratio.</li>
+     * <li>"Risk Taker" for the player with the highest ratio of money spent to
+     * current money.</li>
+     * </ul>
+     * In case of ties, a random tiebreaker is used.
+     * <p>
+     * Finally, any player who does not receive an achievement based on these
+     * criteria
+     * is given the default "Participation Award".
+     */
     private void determineAchievements() {
+        // Get the current turn order of players
         Player[] players = GameSystem.getTurnOrder();
 
+        // Clear previous achievements for all players to ensure uniqueness
+        for (Player player : players) {
+            player.setAchievement(null);
+        }
+
+        // Create a Random object for tie-breaking decisions
         Random rand = new Random();
+
+        // Initialize indices for each achievement category to the first player (index
+        // 0)
         int highestScorerIndex = 0;
         int lowestSpenderIndex = 0;
         int teamPlayerIndex = 0;
         int travellerIndex = 0;
+        int highestSpenderIndex = 0;
+        int moneyMakerIndex = 0;
+        int efficiencyIndex = 0;
+        int riskTakerIndex = 0;
 
+        // Loop through players starting from index 1 to compare performance metrics
         for (int i = 1; i < players.length; i++) {
-            // For highest score
+            // Determine the player with the highest score
             if (players[i].getScore() > players[highestScorerIndex].getScore()) {
                 highestScorerIndex = i;
             } else if (players[i].getScore() == players[highestScorerIndex].getScore() && rand.nextBoolean()) {
                 highestScorerIndex = i;
             }
 
-            // For lowest money spent
+            // Determine the player with the lowest money spent
             if (players[i].getMoneySpent() < players[lowestSpenderIndex].getMoneySpent()) {
                 lowestSpenderIndex = i;
             } else if (players[i].getMoneySpent() == players[lowestSpenderIndex].getMoneySpent()
@@ -406,14 +442,14 @@ public class EndGame extends JPanel {
                 lowestSpenderIndex = i;
             }
 
-            // For most times helped
+            // Determine the player who helped others the most
             if (players[i].getTimesHelped() > players[teamPlayerIndex].getTimesHelped()) {
                 teamPlayerIndex = i;
             } else if (players[i].getTimesHelped() == players[teamPlayerIndex].getTimesHelped() && rand.nextBoolean()) {
                 teamPlayerIndex = i;
             }
 
-            // For most moves travelled
+            // Determine the player who travelled the most moves
             if (players[i].getMovesTravelled() > players[travellerIndex].getMovesTravelled()) {
                 travellerIndex = i;
             } else if (players[i].getMovesTravelled() == players[travellerIndex].getMovesTravelled()
@@ -421,13 +457,78 @@ public class EndGame extends JPanel {
                 travellerIndex = i;
             }
 
+            // Determine the player with the highest money spent
+            if (players[i].getMoneySpent() > players[highestSpenderIndex].getMoneySpent()) {
+                highestSpenderIndex = i;
+            } else if (players[i].getMoneySpent() == players[highestSpenderIndex].getMoneySpent()
+                    && rand.nextBoolean()) {
+                highestSpenderIndex = i;
+            }
+
+            // Determine the player with the highest current money
+            if (players[i].getMoney() > players[moneyMakerIndex].getMoney()) {
+                moneyMakerIndex = i;
+            } else if (players[i].getMoney() == players[moneyMakerIndex].getMoney() && rand.nextBoolean()) {
+                moneyMakerIndex = i;
+            }
+
+            // Calculate efficiency as score divided by moves travelled, handling division
+            // by zero
+            double efficiency = players[i].getMovesTravelled() != 0
+                    ? players[i].getScore() / (double) players[i].getMovesTravelled()
+                    : 0;
+            double maxEfficiency = players[efficiencyIndex].getMovesTravelled() != 0
+                    ? players[efficiencyIndex].getScore() / (double) players[efficiencyIndex].getMovesTravelled()
+                    : 0;
+            // Determine the player with the highest efficiency
+            if (efficiency > maxEfficiency) {
+                efficiencyIndex = i;
+            } else if (efficiency == maxEfficiency && rand.nextBoolean()) {
+                efficiencyIndex = i;
+            }
+
+            // Calculate risk factor as money spent divided by current money, handling
+            // division by zero
+            double riskTaker = players[i].getMoney() != 0
+                    ? players[i].getMoneySpent() / (double) players[i].getMoney()
+                    : 0;
+            double maxRiskTaker = players[riskTakerIndex].getMoney() != 0
+                    ? players[riskTakerIndex].getMoneySpent() / (double) players[riskTakerIndex].getMoney()
+                    : 0;
+            // Determine the player who is the biggest risk taker
+            if (riskTaker > maxRiskTaker) {
+                riskTakerIndex = i;
+            } else if (riskTaker == maxRiskTaker && rand.nextBoolean()) {
+                riskTakerIndex = i;
+            }
         }
 
-        GameSystem.getPlayerAt(highestScorerIndex).setAchievement("Highest Scorer");
-        GameSystem.getPlayerAt(lowestSpenderIndex).setAchievement("Cheapskate");
-        GameSystem.getPlayerAt(teamPlayerIndex).setAchievement("Team Player");
-        GameSystem.getPlayerAt(travellerIndex).setAchievement("Traveller");
+        // Award achievements only if the player does not already have one assigned
+        if (players[highestScorerIndex].getAchievement() == null)
+            players[highestScorerIndex].setAchievement("Highest Scorer");
+        if (players[lowestSpenderIndex].getAchievement() == null)
+            players[lowestSpenderIndex].setAchievement("Cheapskate");
+        if (players[teamPlayerIndex].getAchievement() == null)
+            players[teamPlayerIndex].setAchievement("Team Player");
+        if (players[travellerIndex].getAchievement() == null)
+            players[travellerIndex].setAchievement("Traveller");
+        if (players[highestSpenderIndex].getAchievement() == null)
+            players[highestSpenderIndex].setAchievement("Big Spender");
+        if (players[moneyMakerIndex].getAchievement() == null)
+            players[moneyMakerIndex].setAchievement("Money Maker");
+        if (players[efficiencyIndex].getAchievement() == null)
+            players[efficiencyIndex].setAchievement("Efficiency Expert");
+        if (players[riskTakerIndex].getAchievement() == null)
+            players[riskTakerIndex].setAchievement("Risk Taker");
 
+        // If any player still hasn't received an achievement, assign the default
+        // "Participation Award"
+        String defaultAchievement = "Participation Award";
+        for (Player player : players) {
+            if (player.getAchievement() == null) {
+                player.setAchievement(defaultAchievement);
+            }
+        }
     }
 
     /**
