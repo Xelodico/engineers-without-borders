@@ -10,6 +10,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 /**
  * @author Nathan Watkins
@@ -60,8 +61,16 @@ public class TransferPopup extends JPanel {
         add(buttonContainer);
         add(Box.createVerticalStrut(10));
 
+        ActionListener okSingleButton = new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GameSystem.hidePopup();
+            }
+        };
+
         JButton cancelButton = createButton("Cancel");
-        cancelButton.addActionListener(e -> GameSystem.toggleTransfer(null));
+        cancelButton.addActionListener(e -> {GameSystem.toggleTransfer(null);
+        GameSystem.showPopup("Task not claimed!", task.getTitle() + " was not claimed due to poor funding.", "Ok", null, okSingleButton, null);});
         cancelButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(cancelButton);
         add(Box.createVerticalStrut(10));
@@ -92,16 +101,61 @@ public class TransferPopup extends JPanel {
      * @param players An array of Player objects representing the players.
      */
     public void renderButtons(Player[] players) {
+
+        
+
         buttonContainer.removeAll();
         for (Player player : players) {
             if (player != null) {
                 JButton button = createButton(player.getName());
+
+                ActionListener okSingleButton = new ActionListener() {
+                    @Override
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        GameSystem.hidePopup();
+                    }
+                };
+        
+                ActionListener takeTask = new ActionListener() {
+                    @Override
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        // Take task logic
+                        if(GameSystem.purchaseTask(player, task.getResourceType(), task)) {
+                            task.setOwnedBy(player);
+                        } else {
+                            GameSystem.showPopup(player.getName() + ", you do not enough resources!", "You do not have enough resources to claim this task.", "OK", null, okSingleButton, null);
+                            return;
+                        }
+                        
+                        System.out.println("Task claimed!");
+                        GameSystem.hideCostPopup();
+                    }
+                };
+        
+                ActionListener rejectTask = new ActionListener() {
+                    @Override
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        // Reject task logic
+                        if (GameSystem.getTurnOrder().length > 1) {
+                            System.out.println("Show the task to other players");
+                            GameSystem.hideCostPopup();
+                            GameSystem.toggleTransfer(task);
+                        } else {
+                            System.out.println("No other players to show the task to");
+                            GameSystem.hideCostPopup();
+                        }
+                    }
+                };
+
                 if (GameSystem.getPlayerAt() == player) {
                     button.setEnabled(false);
                 } else {
                     button.addActionListener(e -> {
-                        task.setOwnedBy(player);
+                        GameSystem.showCostPopup(player.getName() + ", do you want to get this task?", task.getTitle() + "\nDo you want to buy this task for ", task.getResourceType().toString(), task.getResourceCost(), takeTask, rejectTask);
+                        // GameSystem.purchaseTask(player, task.getResourceType(), task);
+                        // task.setOwnedBy(player);
                         GameSystem.toggleTransfer(null);
+                        GameSystem.refreshJournal();
                     });
                 }
                 buttonContainer.add(button);

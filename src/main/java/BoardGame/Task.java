@@ -1,5 +1,7 @@
 package BoardGame;
 
+import GameSystem.GameSystem;
+
 /**
  * @author Isaac Edmonds
  * @author Curtis McCartney (Supporting)
@@ -16,10 +18,10 @@ public class Task {
 	private SubTask[] steps;
 	private int currentStepNumber;
 	private int completionScore;
+	private boolean isCompleted = false;
 	private int resourceCost;
 	private ResourceType resourceType;
 
-	
 	// METHODS //
 	public Task(String title, Objective belongsTo, SubTask[] steps, int completionScore, int resourceCost, ResourceType resourceType) {
 		this.title = title;
@@ -38,9 +40,9 @@ public class Task {
 		this.ownedBy = null;
 		this.steps = new SubTask[0];
 		this.currentStepNumber = 0;
-		this.completionScore = 0;
-		this.resourceCost = 0;
-		this.resourceType = ResourceType.ASPHALT;
+		this.completionScore = 10;
+		this.resourceCost = 30;
+		this.resourceType = null;
 	}
 
 	/**
@@ -52,8 +54,13 @@ public class Task {
 	public boolean completeStep() {
 		if (currentStepNumber < steps.length) {
 			currentStepNumber++;
+
+			if (currentStepNumber >= steps.length) {
+				setCompleted(true);
+			}
 			return true;
 		}
+		
 		return false;
 	}
 
@@ -63,7 +70,14 @@ public class Task {
 	 * @return true if the task is completed, false if not
 	 */
 	public boolean isCompleted() {
-		return currentStepNumber >= steps.length;
+		return isCompleted;
+	}
+
+	/**
+	 * Sets the task as completed
+	 */
+	public void setCompleted(boolean status) {
+		this.isCompleted = status;
 	}
 
 	// GETTERS & SETTERS //

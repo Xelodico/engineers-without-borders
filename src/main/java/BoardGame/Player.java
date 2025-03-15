@@ -4,6 +4,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
+import GameSystem.GameSystem;
+
 /**
  * This class holds all of the data for each "Player" in the game.
  * The Player object stores the player's name, coordinates, resources,
@@ -48,7 +50,7 @@ public class Player {
         this.name = name;
         this.coord = coord;
         this.score = 0;
-        this.money = 0;
+        this.money = 50;
         this.asphalt = 0;
         this.volunteers = 0;
         this.influence = 0;
@@ -72,7 +74,7 @@ public class Player {
         this.name = name;
         this.coord = coords;
         this.score = 0;
-        this.money = 0;
+        this.money = 50;
         this.asphalt = 0;
         this.volunteers = 0;
         this.influence = 0;
@@ -92,7 +94,7 @@ public class Player {
         this.name = "";
         this.coord = 0;
         this.score = 0;
-        this.money = 0;
+        this.money = 50;
         this.asphalt = 0;
         this.volunteers = 0;
         this.influence = 0;
@@ -158,6 +160,7 @@ public class Player {
         } else {
             this.score += changeAmount;
         }
+        GameSystem.refreshResources();
     }
 
     /**
@@ -175,6 +178,7 @@ public class Player {
      */
     public void setMoney(int money) {
         this.money = money;
+        GameSystem.refreshResources();
     }
 
     /**
@@ -185,6 +189,7 @@ public class Player {
 
     public void changeMoney(int money) {
         this.money = this.money + money;
+        GameSystem.refreshResources();
     }
 
     /**
@@ -221,6 +226,7 @@ public class Player {
      */
     public void setScore(int score) {
         this.score = score;
+        GameSystem.refreshResources();
     }
 
     /**
@@ -283,16 +289,20 @@ public class Player {
      * @param resourceType - The type of resource to set
      */
     public void setResource(int resource, ResourceType resourceType) {
-        switch (resourceType) {
-            case ASPHALT:
-                this.asphalt = resource;
-            case VOLUNTEERS:
-                this.volunteers = resource;
-            case INFLUENCE:
-                this.influence = resource;
-            case KNOWLEDGE:
-                this.knowledge = resource;
+    	switch(resourceType) {
+        case ASPHALT: 
+        	this.asphalt = resource;
+            break;
+        case VOLUNTEERS: 
+        	this.volunteers = resource;
+            break;
+        case INFLUENCE:
+        	this.influence = resource;
+            break;
+        case KNOWLEDGE:
+        	this.knowledge = resource;
         }
+        GameSystem.refreshResources();
     }
 
     /**
@@ -303,32 +313,36 @@ public class Player {
      * @param resourceType - The type of resource to set
      */
     public void changeResource(int changeAmount, ResourceType resourceType) {
-        switch (resourceType) {
-            case ASPHALT:
-                if (this.asphalt + changeAmount < 0) {
-                    this.asphalt = 0;
-                } else {
-                    this.asphalt += changeAmount;
-                }
-            case VOLUNTEERS:
-                if (this.volunteers + changeAmount < 0) {
-                    this.volunteers = 0;
-                } else {
-                    this.volunteers += changeAmount;
-                }
-            case INFLUENCE:
-                if (this.influence + changeAmount < 0) {
-                    this.influence = 0;
-                } else {
-                    this.influence += changeAmount;
-                }
-            case KNOWLEDGE:
-                if (this.knowledge + changeAmount < 0) {
-                    this.knowledge = 0;
-                } else {
-                    this.knowledge += changeAmount;
-                }
+    	switch(resourceType) {
+        case ASPHALT: 
+        	if(this.asphalt + changeAmount < 0) {
+            	this.asphalt = 0;
+            } else {
+            	this.asphalt += changeAmount;
+            } 
+            break;
+        case VOLUNTEERS: 
+        	if(this.volunteers + changeAmount < 0) {
+            	this.volunteers = 0;
+            } else {
+            	this.volunteers += changeAmount;
+            } 
+            break;
+        case INFLUENCE:
+        	if(this.influence + changeAmount < 0) {
+            	this.influence = 0;
+            } else {
+            	this.influence += changeAmount;
+            } 
+            break;
+        case KNOWLEDGE:
+        	if(this.knowledge + changeAmount < 0) {
+            	this.knowledge = 0;
+            } else {
+            	this.knowledge += changeAmount;
+            }
         }
+        GameSystem.refreshResources();
     }
 
     public int getTimesHelped() {

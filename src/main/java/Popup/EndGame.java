@@ -364,7 +364,7 @@ public class EndGame extends JPanel {
     public void showStats() {
 
         try {
-            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/images/statsPanel.png")));
+            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/images/popups/statsPanel.png")));
         } catch (NullPointerException | IOException e) {
             System.err.println("Error: Stats Panel background image not found!");
             System.exit(1);

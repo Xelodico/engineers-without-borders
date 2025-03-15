@@ -3,6 +3,7 @@ package square;
 import java.util.Random;
 import GameSystem.*;
 import java.awt.Color;
+import java.awt.event.ActionListener;
 
 public class MoneySquare extends Square {
     private int money; // Stores the money value for this square.
@@ -16,8 +17,26 @@ public class MoneySquare extends Square {
      */
     public MoneySquare() {
         super(); // Calls the parent class constructor.
-        Random rand = new Random();
-        this.money = rand.nextInt(400) + 800; // Generates a random value between 800 and 1200.
+
+        // Creating a random number between 0 and 4.
+        int index = new Random().nextInt(5);
+        switch (index) {
+            case 0:
+                this.money = 15;
+                break;
+            case 1:
+                this.money = 20;
+                break;
+            case 2:
+                this.money = 20;
+                break;
+            case 3:
+                this.money = 25;
+                break;
+            case 4:
+                this.money = 30;
+                break;
+        }
     }
 
     /**
@@ -30,6 +49,13 @@ public class MoneySquare extends Square {
         this.money = money;
     }
 
+    ActionListener okSingleButton = new ActionListener() {
+        @Override
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            GameSystem.hidePopup();
+        }
+    };
+
     /**
      * Activates the effect of landing on a MoneySquare.
      * Calls the parent class method and returns true.
@@ -40,6 +66,8 @@ public class MoneySquare extends Square {
     public boolean activateSquareEffect() {
         super.activateSquareEffect(); // Calls the superclass method.
         GameSystem.getPlayerAt().changeMoney(this.money);
+        GameSystem.showPopup("Extra Funds!", "You have been given " + money + " Rand!", "Ok", null, okSingleButton, null);
+        GameSystem.replaceMoneySquare();
         return true;
     }
 
