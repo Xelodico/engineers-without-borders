@@ -24,14 +24,19 @@ You can move freely on the board by clicking the arrow buttons. When no moves ar
 There are special squares on the board, these are:
 - Money (Yellow): Receive South African Rand in a specific amount.
 - Shop (Green): Where items are purchased.
-- Task (Different depending on the objective): An opportunity to claim a task and complete it, or help another player fulfil the task.
+- Task: An opportunity to claim a task and complete it, or help another player fulfil the task.
+    - The colour of the task depends on the objective:
+        - Blue -> Secure Grant
+        - Red -> Repair Potholes
+        - Magenta -> Train Volunteers
+        - Cyan -> Secure Longevity
 
 #Objectives, tasks and subtasks
 There are 4 Objectives, each with their own tasks and subtasks:
-1. Secure Grant (Influence)
-2. Repair Potholes (Cold Asphalt)
-3. Train Volunteers (Teaching Material)
-4. Secure Longevity (Volunteers)
+1. Secure Grant (using your Influence)
+2. Repair Potholes (with Cold Asphalt)
+3. Train Volunteers (with Teaching Material)
+4. Secure Longevity (using Volunteers from the community)
 Each player is assigned an objective at the start of the game. Tasks can be collected by landing on a task square.
 Objectives, tasks and subtasks can be viewed anytime by clicking the Journal icon.
 If you have enough resources to fulfil a task or subtask, you can complete it in the Journal.
@@ -47,4 +52,5 @@ A list of options will be displayed. Select the name of the player you want to g
 
 #Winning/Losing Criteria
 Your team must work together to fulfil all Objectives.
-You can quit at any time, but in doing so, you will be letting your teammates and the Makers Valley community down.
+All players help support the goal with a mandatory maintenance charge (5 rand) that is applied after each round. Be careful, running out of money will make your solution unviable, so ensure to make meaningful and safe purchases. If you're running low on funds, travel to a money square.
+You can also quit at any time, but in doing so, you will be letting your teammates and the Makers Valley community down.
