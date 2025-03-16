@@ -1,12 +1,10 @@
 package BoardGame;
 
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Font;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import GameSystem.GameSystem;
 
@@ -59,7 +57,7 @@ public class StartScreen extends JPanel {
         title.setBounds(0, 0, WIDTH, (int) (HEIGHT * 0.15));
         title.setHorizontalAlignment(JLabel.CENTER);
         title.setVerticalAlignment(JLabel.BOTTOM);
-        title.setFont(new java.awt.Font("Segoe UI", 0, 26));
+        title.setFont(new Font("Segoe UI", 0, 26));
         add(title);
     }
 
@@ -110,14 +108,14 @@ public class StartScreen extends JPanel {
     private void addNewPlayerButton(int i) {
         playerButtons[i].setIcon(addPlayerIcon);
         playerButtons[i].setVisible(false);
-        playerButtons[i].setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        playerButtons[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         playerTextFields[i].setText("Player " + (i + 1));
 
         final int index = i;
         playerButtons[i].addActionListener(e -> {
             playerButtons[index].setIcon(playerBackgroundIcon);
-            playerButtons[index].setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            playerButtons[index].setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             if (index < MAX_PLAYERS - 1) {
                 playerButtons[index + 1].setVisible(true);
             }
@@ -135,7 +133,7 @@ public class StartScreen extends JPanel {
         JTextField textField = new JTextField();
         textField.setBounds(0, 0, 240, 55);
         textField.setHorizontalAlignment(JTextField.CENTER);
-        textField.setFont(new java.awt.Font("Segoe UI", 0, 16));
+        textField.setFont(new Font("Segoe UI", 0, 16));
         textField.setBorder(null);
         textField.setOpaque(false);
         return textField;
@@ -147,8 +145,8 @@ public class StartScreen extends JPanel {
     private void addStartButton() {
         JButton startButton = new JButton("Start Game");
         startButton.setBounds((WIDTH - BUTTON_WIDTH) / 2, (int) (HEIGHT * 0.8), BUTTON_WIDTH, BUTTON_HEIGHT);
-        startButton.setFont(new java.awt.Font("Segoe UI", 0, 16));
-        startButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        startButton.setFont(new Font("Segoe UI", 0, 16));
+        startButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         startButton.addActionListener(e -> {
             GameSystem.setTurnOrder(getPlayers());
             GameSystem.startGame();

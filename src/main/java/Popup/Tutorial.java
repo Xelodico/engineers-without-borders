@@ -1,10 +1,7 @@
 package Popup;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
+import javax.swing.text.*;
 
 import BoardGame.BoardGameUI;
 import GameSystem.GameSystem;
@@ -35,18 +32,18 @@ public class Tutorial extends JPanel {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBounds(BoardGameUI.WINDOW_WIDTH / 2 - WIDTH / 2, BoardGameUI.WINDOW_HEIGHT / 2 - HEIGHT / 2, WIDTH, HEIGHT);
-        setBackground(new java.awt.Color(240, 240, 240));
-        setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        setBackground(new Color(240, 240, 240));
+        setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 2));
         setVisible(false);
 
         addCloseButtonAndTitle();
 
         JTextPane textPane = new JTextPane();
         textPane.setEditable(false);
-        textPane.setFont(new java.awt.Font("Arial", Font.PLAIN, 18));
-        textPane.setCaretColor(new java.awt.Color(0, 0, 0, 0));
+        textPane.setFont(new Font("Arial", Font.PLAIN, 18));
+        textPane.setCaretColor(new Color(0, 0, 0, 0));
         textPane.setHighlighter(null);
-        textPane.setBackground(new java.awt.Color(240, 240, 240));
+        textPane.setBackground(new Color(240, 240, 240));
 
         StyledDocument doc = textPane.getStyledDocument();
         SimpleAttributeSet boldAttr = new SimpleAttributeSet();

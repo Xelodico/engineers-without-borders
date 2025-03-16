@@ -1,15 +1,9 @@
 package Popup;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
+import javax.swing.text.*;
 
-import BoardGame.BoardGameUI;
-import BoardGame.Objective;
-import BoardGame.SubTask;
-import BoardGame.Task;
+import BoardGame.*;
 import GameSystem.GameSystem;
 import Popup.EndGame.Ending;
 

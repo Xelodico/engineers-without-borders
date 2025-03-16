@@ -8,13 +8,8 @@ import java.util.Objects;
 import javax.swing.*;
 
 import GameSystem.GameSystem;
-import Popup.EndGame;
-import Popup.Journal;
 import Popup.Popup;
-import Popup.Shop;
-import Popup.Tutorial;
-import Popup.TransferPopup;
-import Popup.CostPopup;
+import Popup.*;
 
 /**
  * The BoardGameUI class represents the user interface for the board game.
@@ -62,7 +57,7 @@ public class BoardGameUI extends JFrame {
 
         dimBackground = new JPanel();
         dimBackground.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-        dimBackground.setBackground(new java.awt.Color(0, 0, 0, 150));
+        dimBackground.setBackground(new Color(0, 0, 0, 150));
         dimBackground.setVisible(false);
         add(dimBackground);
 
@@ -172,7 +167,7 @@ public class BoardGameUI extends JFrame {
             arrowButtons[i].setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource(arrowIcons[i]))));
             arrowButtons[i].setBorder(null);
             arrowButtons[i].setContentAreaFilled(false);
-            arrowButtons[i].setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            arrowButtons[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
             arrowButtons[i].setFocusable(false);
             arrowButtons[i].setRolloverEnabled(false);
 
@@ -221,7 +216,7 @@ public class BoardGameUI extends JFrame {
         endTurnButton = new JButton();
         movesLeftLabel = new JLabel();
 
-        roundNumberGraphic.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
+        roundNumberGraphic.setFont(new Font("Segue UI", Font.PLAIN, 26));
         roundNumberGraphic
                 .setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/roundBackground.png"))));
         roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
@@ -229,7 +224,7 @@ public class BoardGameUI extends JFrame {
         sidePanelContainer.add(roundNumberGraphic);
         roundNumberGraphic.setBounds(251, 0, 122, 57);
 
-        playerTurnGraphic.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
+        playerTurnGraphic.setFont(new Font("Segue UI", Font.PLAIN, 26));
         playerTurnGraphic
                 .setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/PlayerTurn.png"))));
         playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
@@ -276,7 +271,7 @@ public class BoardGameUI extends JFrame {
         rollDiceButton.setIcon(new ImageIcon(rollDiceIcon.getImage().getScaledInstance(192, 47, Image.SCALE_SMOOTH)));
         rollDiceButton.setBorder(null);
         rollDiceButton.setContentAreaFilled(false);
-        rollDiceButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        rollDiceButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         rollDiceButton.setFocusable(false);
         rollDiceButton.setBounds(170, WINDOW_HEIGHT - 52 - 47, 192, 47);
         rollDiceButton.setRolloverEnabled(false);
@@ -293,7 +288,7 @@ public class BoardGameUI extends JFrame {
         movesLeftLabel.setBounds(170, WINDOW_HEIGHT - 52 - 47, 192, 47);
         movesLeftLabel.setVisible(false);
         movesLeftLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-        movesLeftLabel.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
+        movesLeftLabel.setFont(new Font("Segue UI", Font.PLAIN, 26));
         sidePanelContainer.add(movesLeftLabel);
 
         endTurnButton
@@ -301,11 +296,11 @@ public class BoardGameUI extends JFrame {
         endTurnButton.setBounds(170, WINDOW_HEIGHT - 52 - 47, 192, 47);
         endTurnButton.setVisible(false);
         endTurnButton.setText("End Turn");
-        endTurnButton.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
+        endTurnButton.setFont(new Font("Segue UI", Font.PLAIN, 26));
         endTurnButton.setHorizontalTextPosition(SwingConstants.CENTER);
         endTurnButton.setContentAreaFilled(false);
         endTurnButton.setBorder(null);
-        endTurnButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        endTurnButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         endTurnButton.setRolloverEnabled(false);
         sidePanelContainer.add(endTurnButton);
 
@@ -332,7 +327,7 @@ public class BoardGameUI extends JFrame {
         button.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 15));
         button.setContentAreaFilled(false);
         button.setFocusable(false);
-        button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         popupButtonContainer.add(button);
     }
 
@@ -359,38 +354,38 @@ public class BoardGameUI extends JFrame {
             playerResources[i].setLayout(null);
 
             playerResourceTitles[i] = new JLabel(currentPlayer.getName());
-            playerResourceTitles[i].setFont(new java.awt.Font("Segue UI", Font.BOLD, 18));
+            playerResourceTitles[i].setFont(new Font("Segue UI", Font.BOLD, 18));
             playerResourceTitles[i].setBounds(10, -3, 350, 30);
             playerResources[i].add(playerResourceTitles[i]);
 
             playerAsphalts[i] = new JLabel(Integer.toString(currentPlayer.getResource(ResourceType.ASPHALT)));
             playerAsphalts[i].setBounds(60, 23, 60, 40);
-            playerAsphalts[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerAsphalts[i].setFont(new Font("Segue UI", Font.PLAIN, 30));
             playerResources[i].add(playerAsphalts[i]);
 
             playerKnowledges[i] = new JLabel(Integer.toString(currentPlayer.getResource(ResourceType.KNOWLEDGE)));
             playerKnowledges[i].setBounds(185, 23, 60, 40);
-            playerKnowledges[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerKnowledges[i].setFont(new Font("Segue UI", Font.PLAIN, 30));
             playerResources[i].add(playerKnowledges[i]);
 
             playerSatisfactions[i] = new JLabel(Integer.toString(currentPlayer.getResource(ResourceType.VOLUNTEERS)));
             playerSatisfactions[i].setBounds(310, 23, 60, 40);
-            playerSatisfactions[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerSatisfactions[i].setFont(new Font("Segue UI", Font.PLAIN, 30));
             playerResources[i].add(playerSatisfactions[i]);
 
             playerInfluences[i] = new JLabel(Integer.toString(currentPlayer.getResource(ResourceType.INFLUENCE)));
             playerInfluences[i].setBounds(60, 75, 60, 40);
-            playerInfluences[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerInfluences[i].setFont(new Font("Segue UI", Font.PLAIN, 30));
             playerResources[i].add(playerInfluences[i]);
 
             playerMoneys[i] = new JLabel(Integer.toString(currentPlayer.getMoney()));
             playerMoneys[i].setBounds(185, 75, 60, 40);
-            playerMoneys[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerMoneys[i].setFont(new Font("Segue UI", Font.PLAIN, 30));
             playerResources[i].add(playerMoneys[i]);
 
             playerScores[i] = new JLabel(Integer.toString(currentPlayer.getScore()));
             playerScores[i].setBounds(310, 75, 60, 40);
-            playerScores[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
+            playerScores[i].setFont(new Font("Segue UI", Font.PLAIN, 30));
             playerResources[i].add(playerScores[i]);
 
             JLabel background = new JLabel();

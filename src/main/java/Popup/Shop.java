@@ -3,8 +3,7 @@ package Popup;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import BoardGame.BoardGameUI;
-import BoardGame.ResourceType;
+import BoardGame.*;
 import GameSystem.GameSystem;
 
 import java.awt.*;
@@ -46,7 +45,7 @@ public class Shop extends JPanel {
 
         setLayout(null);
         setBounds(0, 0, BoardGameUI.WINDOW_WIDTH, BoardGameUI.WINDOW_HEIGHT);
-        setBackground(new java.awt.Color(0, 0, 0, 0));
+        setBackground(new Color(0, 0, 0, 0));
         setVisible(false);
         setOpaque(false);
 

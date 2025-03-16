@@ -1,14 +1,10 @@
 package Popup;
 
-import BoardGame.BoardGameUI;
-import BoardGame.Player;
-import BoardGame.Task;
+import BoardGame.*;
 import GameSystem.GameSystem;
 
 import javax.swing.*;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -38,14 +34,14 @@ public class TransferPopup extends JPanel {
         int HEIGHT = 500;
         int WIDTH = 500;
         setBounds(BoardGameUI.WINDOW_WIDTH / 2 - WIDTH / 2, BoardGameUI.WINDOW_HEIGHT / 2 - HEIGHT / 2, WIDTH, HEIGHT);
-        setBackground(new java.awt.Color(240, 240, 240));
-        setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        setBackground(new Color(240, 240, 240));
+        setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 2));
         setVisible(false);
 
         add(Box.createVerticalStrut(20));
 
         popupTitle = new JLabel(title);
-        popupTitle.setFont(new java.awt.Font("Segue UI", Font.BOLD, 24));
+        popupTitle.setFont(new Font("Segue UI", Font.BOLD, 24));
         popupTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(popupTitle);
 
@@ -53,7 +49,7 @@ public class TransferPopup extends JPanel {
 
         popupDesc = new JTextPane();
         popupDesc.setText(desc);
-        popupDesc.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 18));
+        popupDesc.setFont(new Font("Segue UI", Font.PLAIN, 18));
         popupDesc.setOpaque(false);
         popupDesc.setEditable(false);
         popupDesc.setHighlighter(null);
@@ -101,8 +97,8 @@ public class TransferPopup extends JPanel {
      */
     private JButton createButton(String text) {
         JButton button = new JButton(text);
-        button.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 18));
-        button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button.setFont(new Font("Segue UI", Font.PLAIN, 18));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.setFocusPainted(false);
         button.setContentAreaFilled(false);
         return button;

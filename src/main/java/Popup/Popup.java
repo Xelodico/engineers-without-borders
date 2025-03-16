@@ -58,14 +58,14 @@ public class Popup extends JPanel {
             ActionListener noAction) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBounds(BoardGameUI.WINDOW_WIDTH / 2 - WIDTH / 2, BoardGameUI.WINDOW_HEIGHT / 2 - HEIGHT / 2, WIDTH, HEIGHT);
-        setBackground(new java.awt.Color(240, 240, 240));
-        setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        setBackground(new Color(240, 240, 240));
+        setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 2));
         setVisible(false);
 
         add(Box.createVerticalStrut(20));
 
         popupTitle = new JLabel(title);
-        popupTitle.setFont(new java.awt.Font("Segue UI", Font.BOLD, 24));
+        popupTitle.setFont(new Font("Segue UI", Font.BOLD, 24));
         popupTitle.setHorizontalAlignment(SwingConstants.CENTER);
         popupTitle.setText("<html>" + title + "</html>");
         popupTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -75,9 +75,9 @@ public class Popup extends JPanel {
 
         popupDesc = new JTextPane();
         popupDesc.setText(desc);
-        popupDesc.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 18));
+        popupDesc.setFont(new Font("Segue UI", Font.PLAIN, 18));
         popupDesc.setEditable(false);
-        popupDesc.setBackground(new java.awt.Color(240, 240, 240));
+        popupDesc.setBackground(new Color(240, 240, 240));
         popupDesc.setBorder(null);
         popupDesc.setEnabled(false);
         popupDesc.setDisabledTextColor(Color.BLACK);
@@ -108,11 +108,11 @@ public class Popup extends JPanel {
 
     private JButton createButton(String text, ActionListener action) {
         JButton button = new JButton(text);
-        button.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 18));
-        button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button.setFont(new Font("Segue UI", Font.PLAIN, 18));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.setFocusPainted(false);
         button.setContentAreaFilled(false);
-        button.setBorder(BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        button.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 2));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(action);
 
