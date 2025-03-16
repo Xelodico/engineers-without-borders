@@ -1,16 +1,15 @@
 package BoardGame;
 
-import GameSystem.GameSystem;
-
 /**
+ * A Task object represents a subtask for its corresponding role that the player
+ * responsible for that role must complete
+ * to progress the game.
+ *
  * @author Isaac Edmonds
  * @author Curtis McCartney (Supporting)
- * 
- * A Task object represents a subtask for its corresponding role that the player responsible for that role must complete
- * to progress the game. 
  */
 public class Task {
-	
+
 	// ATTRIBUTES //
 	private String title;
 	private Objective belongsTo;
@@ -23,7 +22,8 @@ public class Task {
 	private ResourceType resourceType;
 
 	// METHODS //
-	public Task(String title, Objective belongsTo, SubTask[] steps, int completionScore, int resourceCost, ResourceType resourceType) {
+	public Task(String title, Objective belongsTo, SubTask[] steps, int completionScore, int resourceCost,
+			ResourceType resourceType) {
 		this.title = title;
 		this.belongsTo = belongsTo;
 		this.ownedBy = null;
@@ -46,10 +46,12 @@ public class Task {
 	}
 
 	/**
-	 * Progresses the task onto the next step, incrementing its currentStepNumber by 1 (if all subtasks 
+	 * Progresses the task onto the next step, incrementing its currentStepNumber by
+	 * 1 (if all subtasks
 	 * aren't already completed
 	 * 
-	 * @return true if currentStepNumber was incremented, false if it was already completed
+	 * @return true if currentStepNumber was incremented, false if it was already
+	 *         completed
 	 */
 	public boolean completeStep() {
 		if (currentStepNumber < steps.length) {
@@ -60,7 +62,7 @@ public class Task {
 			}
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -156,16 +158,17 @@ public class Task {
 	/**
 	 * Gets the current SubTask object that is being pointed to by currentStepNumber
 	 * 
-	 * @return The current SubTask referenced by currentStepNumber, or an 'empty' SubTask if the Task is completed
+	 * @return The current SubTask referenced by currentStepNumber, or an 'empty'
+	 *         SubTask if the Task is completed
 	 */
 	public SubTask getCurrentSubTask() {
-		if(this.currentStepNumber < steps.length) {
+		if (this.currentStepNumber < steps.length) {
 			return steps[currentStepNumber];
 		} else {
 			return new SubTask();
 		}
 	}
-	
+
 	/**
 	 * Replaces the SubTask referenced by currentStepNumber with the inputed SubTask
 	 * Only replaces if the Task is not completed
@@ -173,21 +176,20 @@ public class Task {
 	 * @param newStep - The new SubTask to replace the current one with
 	 */
 	public void setCurrentSubTask(SubTask newStep) {
-		if(this.currentStepNumber < steps.length) {
+		if (this.currentStepNumber < steps.length) {
 			this.steps[currentStepNumber] = newStep;
 		}
 	}
-	
+
 	public void addStep(SubTask step) {
 		SubTask[] newSteps = new SubTask[steps.length + 1];
-		for(int i = 0; i < steps.length; i++) {
+		for (int i = 0; i < steps.length; i++) {
 			newSteps[i] = steps[i];
 		}
 		newSteps[steps.length] = step;
 		steps = newSteps;
 	}
 
-	
 	/**
 	 * Gets the index of the current step this task is on
 	 * 
@@ -204,7 +206,7 @@ public class Task {
 	 * @param currentStep - The index of the new task to mark as the current task
 	 */
 	public void setCurrentStepNumber(int currentStep) {
-		if(currentStep >= 0) {
+		if (currentStep >= 0) {
 			this.currentStepNumber = currentStep;
 		}
 	}
@@ -221,7 +223,8 @@ public class Task {
 	/**
 	 * Sets a new value to the score to be awarded on completion of the task
 	 * 
-	 * @param completionScore - The new score to be given when this task is completed
+	 * @param completionScore - The new score to be given when this task is
+	 *                        completed
 	 */
 	public void setCompletionScore(int completionScore) {
 		this.completionScore = completionScore;
@@ -239,14 +242,16 @@ public class Task {
 	/**
 	 * Sets a new value for the resource cost of taking responsibility for this task
 	 * 
-	 * @param resourceCost - The new resource cost of taking responsibility of the task
+	 * @param resourceCost - The new resource cost of taking responsibility of the
+	 *                     task
 	 */
 	public void setResourceCost(int resourceCost) {
 		this.resourceCost = resourceCost;
 	}
-	
+
 	/**
-	 * Gets the type of resource used to interact with this task (e.g. ASPHALT, VOLUNTEERS, etc)
+	 * Gets the type of resource used to interact with this task (e.g. ASPHALT,
+	 * VOLUNTEERS, etc)
 	 * 
 	 * @return the type of resource that is used to interact with this task
 	 */
@@ -255,12 +260,14 @@ public class Task {
 	}
 
 	/**
-	 * Sets a new type of resource to be used to interact with this task (e.g. ASPHALT, VOLUNTEERS, etc)
+	 * Sets a new type of resource to be used to interact with this task (e.g.
+	 * ASPHALT, VOLUNTEERS, etc)
 	 * 
-	 * @param resourceType - The new type of resource to be used to interact with this task
+	 * @param resourceType - The new type of resource to be used to interact with
+	 *                     this task
 	 */
 	public void setResourceType(ResourceType resourceType) {
 		this.resourceType = resourceType;
 	}
-	
+
 }

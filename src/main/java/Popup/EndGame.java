@@ -36,7 +36,6 @@ import javax.swing.text.StyledDocument;
 import BoardGame.BoardGameUI;
 import BoardGame.Player;
 import GameSystem.GameSystem;
-import Popup.EndGame.Ending;
 
 /**
  * The EndGame class represents a JPanel that displays the end game screen

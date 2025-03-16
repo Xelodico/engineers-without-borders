@@ -17,6 +17,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+/**
+ * The Board class represents the game board. It is responsible
+ * for rendering the squares on the board, managing player positions, and
+ * generating new squares.
+ *
+ * @author Nathan Watkins
+ * @author Curtis McCartney (Supporting)
+ */
 public class Board extends JPanel {
 
     /**
@@ -44,8 +52,7 @@ public class Board extends JPanel {
 
         this.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(30, 0, 0, 0),
-                BorderFactory.createBevelBorder(BevelBorder.LOWERED)
-        ));
+                BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
         this.setLayout(new GridLayout(boardSideLength, boardSideLength));
 
         squareArray = generateBoardSquares();
@@ -140,7 +147,7 @@ public class Board extends JPanel {
     /**
      * Sets the square at a given index on the board.
      * 
-     * @param index      The index of the square to set.
+     * @param index  The index of the square to set.
      * @param square The square to set at the given index.
      */
     public void setSquareAt(int index, Square square) {
@@ -180,13 +187,14 @@ public class Board extends JPanel {
         for (SquareType type : SquareType.values()) {
             existingSquares.put(type, new HashSet<>());
         }
-        
+
         for (int i = 0; i < squareArray.size(); i++) {
             SquareType type = squareArray.get(i).getSquareType();
             existingSquares.get(type).add(i); // Track all existing square types
 
             if (type == SquareType.SQUARE) {
-                // If the game has started, don't place the moneySquare on a coordinate that a Player is standing on
+                // If the game has started, don't place the moneySquare on a coordinate that a
+                // Player is standing on
                 if (players != null) {
                     boolean playerOnSquare = false;
                     for (Player player : players) {
@@ -220,7 +228,8 @@ public class Board extends JPanel {
             }
 
             if (squareType instanceof TaskSquare taskSquare) {
-                if (isWithinRadius(index, taskSquare.getTask().getBelongsTo(), 3, existingSquares.get(SquareType.TASKSQUARE))) {
+                if (isWithinRadius(index, taskSquare.getTask().getBelongsTo(), 3,
+                        existingSquares.get(SquareType.TASKSQUARE))) {
                     continue;
                 }
             } else if (squareType instanceof MoneySquare) {
@@ -228,8 +237,6 @@ public class Board extends JPanel {
                     continue;
                 }
             }
-
-            
 
             squareArray.set(index, squareType);
             existingSquares.get(squareType.getSquareType()).add(index); // Track the new placement
@@ -251,7 +258,8 @@ public class Board extends JPanel {
 
                 if (newRow >= 0 && newRow < boardSideLength && newCol >= 0 && newCol < boardSideLength) {
                     if (existingPositions.contains(newIndex)) {
-                        if (objective == null || ((TaskSquare) squareArray.get(newIndex)).getTask().getBelongsTo() == objective) {
+                        if (objective == null
+                                || ((TaskSquare) squareArray.get(newIndex)).getTask().getBelongsTo() == objective) {
                             return true;
                         }
                     }
@@ -261,7 +269,6 @@ public class Board extends JPanel {
 
         return false;
     }
-
 
     /**
      * Renders the players on the board.

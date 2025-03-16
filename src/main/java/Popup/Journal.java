@@ -52,7 +52,8 @@ public class Journal extends JPanel {
 
         try {
             // Load background image
-            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/images/popups/journalBackground.png")));
+            backgroundImage = ImageIO
+                    .read(Objects.requireNonNull(getClass().getResource("/images/popups/journalBackground.png")));
         } catch (NullPointerException | IOException e) {
             System.err.println("Error: Journal background image not found!");
             System.exit(1);
@@ -76,12 +77,13 @@ public class Journal extends JPanel {
         title.setBounds(24, 13, 617, 30);
 
         solutionImplementation = new JLabel();
-//        solutionImplementation.setText("Solution Implementation: FIX ME");
-         solutionImplementation.setText("Solution Implementation: " + (int) (GameSystem.getImplementationPercent() * 100) + "%");
+        // solutionImplementation.setText("Solution Implementation: FIX ME");
+        solutionImplementation
+                .setText("Solution Implementation: " + (int) (GameSystem.getImplementationPercent() * 100) + "%");
         solutionImplementation.setFont(new Font("Arial", Font.PLAIN, 16));
         solutionImplementation.setHorizontalAlignment(SwingConstants.RIGHT);
         solutionImplementation.setBounds(24, 13, 617, 30);
-        
+
         titleBar.add(title, BorderLayout.WEST);
         titleBar.add(solutionImplementation, BorderLayout.EAST);
         add(titleBar);
@@ -106,14 +108,18 @@ public class Journal extends JPanel {
 
     /**
      * Refreshes the current layout and content of the journal panel.
-     * This method clears any existing components on the page, re-adds the close button,
-     * and dynamically populates the page with updated objectives and their associated tasks.
-     * Additionally, it resets the vertical scroll position of the scroll pane to the top.
+     * This method clears any existing components on the page, re-adds the close
+     * button,
+     * and dynamically populates the page with updated objectives and their
+     * associated tasks.
+     * Additionally, it resets the vertical scroll position of the scroll pane to
+     * the top.
      */
     public void refresh() {
 
         int originalScrollValue = scrollPane.getVerticalScrollBar().getValue();
-        solutionImplementation.setText("Solution Implementation: " + (int) (GameSystem.getImplementationPercent() * 100) + "%");
+        solutionImplementation
+                .setText("Solution Implementation: " + (int) (GameSystem.getImplementationPercent() * 100) + "%");
         System.out.println(GameSystem.getImplementationPercent());
 
         page.removeAll(); // Remove all existing components
@@ -122,7 +128,7 @@ public class Journal extends JPanel {
         // Add objectives
         ArrayList<Objective> objectives = GameSystem.getObjectives();
         objectives.forEach(objective -> {
-            final boolean[] showObjective = {false};
+            final boolean[] showObjective = { false };
 
             objective.getTasks().forEach(task -> {
                 if (task.getOwnedBy() != null) {
@@ -137,8 +143,8 @@ public class Journal extends JPanel {
 
         // Check if only one objective has a task owned by someone
         long count = objectives.stream()
-            .filter(objective -> objective.getTasks().stream().anyMatch(task -> task.getOwnedBy() != null))
-            .count();
+                .filter(objective -> objective.getTasks().stream().anyMatch(task -> task.getOwnedBy() != null))
+                .count();
 
         if (count == 0) {
             JPanel noObjectives = new JPanel();
@@ -166,14 +172,19 @@ public class Journal extends JPanel {
     }
 
     /**
-     * Creates a JPanel representation of an objective, which includes the objective's title
-     * and a list of associated tasks and sub-tasks. Tasks and sub-tasks are displayed in a
-     * vertically stacked layout within the panel. Each component of the panel is styled and
+     * Creates a JPanel representation of an objective, which includes the
+     * objective's title
+     * and a list of associated tasks and sub-tasks. Tasks and sub-tasks are
+     * displayed in a
+     * vertically stacked layout within the panel. Each component of the panel is
+     * styled and
      * aligned to blend seamlessly into the overall UI.
      *
-     * @param objectiveIndex The index of the objective in the list of objectives maintained
+     * @param objectiveIndex The index of the objective in the list of objectives
+     *                       maintained
      *                       by the game system.
-     * @return A JPanel representing the objective, including its title, tasks, and sub-tasks.
+     * @return A JPanel representing the objective, including its title, tasks, and
+     *         sub-tasks.
      */
     private JPanel createObjective(int objectiveIndex) {
         Objective objectiveObj = GameSystem.getObjectives().get(objectiveIndex);
@@ -194,8 +205,7 @@ public class Journal extends JPanel {
         taskPanel.setBackground(new Color(214, 183, 109));
         taskPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-        boolean[] allTasksCompleted = {true};
-        
+        boolean[] allTasksCompleted = { true };
 
         tasksObj.forEach(task -> {
 
@@ -208,23 +218,23 @@ public class Journal extends JPanel {
                 taskRow.setLayout(new BoxLayout(taskRow, BoxLayout.Y_AXIS));
                 taskRow.setBackground(new Color(0, 0, 0, 0));
                 taskRow.setAlignmentX(Component.LEFT_ALIGNMENT);
-    
+
                 if (task.getOwnedBy() != null) {
                     JLabel ownedByLabel = new JLabel("Owned by " + task.getOwnedBy().getName());
                     ownedByLabel.setFont(new Font("Arial", Font.ITALIC | Font.BOLD, 16));
                     ownedByLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
                     taskPanel.add(ownedByLabel);
                 }
-    
+
                 taskRow.add(createTask(task));
                 taskPanel.add(taskRow);
-    
+
                 SubTask[] subTasks = task.getSteps();
                 for (int i = 0; i < subTasks.length; i++) {
                     taskPanel.add(createSubTask(subTasks[i], i < task.getCurrentStepNumber()));
                     taskPanel.add(Box.createVerticalStrut(10));
                 }
-    
+
                 taskPanel.add(Box.createVerticalStrut(5)); // Space between tasks
             }
         });
@@ -238,15 +248,16 @@ public class Journal extends JPanel {
         return objective;
     }
 
-    
-
     /**
-     * Creates a JPanel representation of a task. This panel contains the task's title
-     * and buttons for transferring and completing the task. The appearance and layout
+     * Creates a JPanel representation of a task. This panel contains the task's
+     * title
+     * and buttons for transferring and completing the task. The appearance and
+     * layout
      * of the panel are styled for seamless integration into the UI.
      *
      * @param t The Task object containing the details of the task to be created.
-     * @return A JPanel representing the task, complete with its title and action buttons.
+     * @return A JPanel representing the task, complete with its title and action
+     *         buttons.
      */
     private JPanel createTask(Task t) {
         JPanel task = new JPanel();
@@ -266,7 +277,8 @@ public class Journal extends JPanel {
         task.add(Box.createHorizontalGlue());
 
         if (GameSystem.getTurnOrder().length > 1 && t.getOwnedBy() == GameSystem.getPlayerAt()) {
-            ImageIcon transferIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/transferButton.png")));
+            ImageIcon transferIcon = new ImageIcon(
+                    Objects.requireNonNull(getClass().getResource("/images/transferButton.png")));
             transferIcon.setImage(transferIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
             JButton transferButton = new JButton(transferIcon);
 
@@ -281,7 +293,7 @@ public class Journal extends JPanel {
             transferButton.addActionListener(e -> GameSystem.toggleTransfer(t));
         }
 
-        boolean[] allTasksOwnedByPlayer = {true};
+        boolean[] allTasksOwnedByPlayer = { true };
         t.getBelongsTo().getTasks().forEach(ta -> {
             if (ta.getOwnedBy() != GameSystem.getPlayerAt()) {
                 allTasksOwnedByPlayer[0] = false;
@@ -289,10 +301,11 @@ public class Journal extends JPanel {
         });
 
         if (allTasksOwnedByPlayer[0] && !t.isCompleted()) {
-            ImageIcon completeIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/completeTaskButton.png")));
+            ImageIcon completeIcon = new ImageIcon(
+                    Objects.requireNonNull(getClass().getResource("/images/completeTaskButton.png")));
             completeIcon.setImage(completeIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
             JButton completeButton = new JButton(completeIcon);
-    
+
             completeButton.setBorder(null);
             completeButton.setFocusPainted(false);
             completeButton.setContentAreaFilled(false);
@@ -311,24 +324,29 @@ public class Journal extends JPanel {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     GameSystem.hideCostPopup();
-                    if(GameSystem.progressTask(t)) {
+                    if (GameSystem.progressTask(t)) {
                         GameSystem.refreshJournal();
-                        GameSystem.showPopup("Task progressed successfuly!", t.getTitle() + " was progressed!", "Ok", null, okSingleButton, null);
+                        GameSystem.showPopup("Task progressed successfuly!", t.getTitle() + " was progressed!", "Ok",
+                                null, okSingleButton, null);
                     } else {
-                        GameSystem.showPopup("Task not progressed!", t.getTitle() + " was not progressed due to lack of resources!", "Ok", null, okSingleButton, null);
+                        GameSystem.showPopup("Task not progressed!",
+                                t.getTitle() + " was not progressed due to lack of resources!", "Ok", null,
+                                okSingleButton, null);
                     }
                 }
             };
-        
+
             ActionListener rejectTaskActionListener = new ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     GameSystem.hideCostPopup();
                 }
             };
-            
+
             completeButton.addActionListener(e -> {
-                GameSystem.showCostPopup("Do you wish to progress this Task?", "It will cost you ", t.getResourceType().toString(), t.getCurrentSubTask().getResourceCost(), progressTaskActionListener, rejectTaskActionListener);
+                GameSystem.showCostPopup("Do you wish to progress this Task?", "It will cost you ",
+                        t.getResourceType().toString(), t.getCurrentSubTask().getResourceCost(),
+                        progressTaskActionListener, rejectTaskActionListener);
                 if (GameSystem.checkWinCondition()) {
                     GameSystem.toggleJournal();
                     GameSystem.toggleEndGame(Ending.GOOD);
@@ -411,37 +429,35 @@ public class Journal extends JPanel {
     private void addCloseButton(JPanel page) {
         URL closeIconUrl = getClass().getResource("/images/closeJournal.png");
         URL closeIconRedUrl = getClass().getResource("/images/closeRed.png");
-    
+
         if (closeIconUrl == null || closeIconRedUrl == null) {
             System.err.println("Error: Close button image(s) not found for Journal!");
             return;
         }
-    
+
         ImageIcon closeIcon = new ImageIcon(
-            new ImageIcon(closeIconUrl).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)
-        );
+                new ImageIcon(closeIconUrl).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
         ImageIcon closeIconRed = new ImageIcon(
-            new ImageIcon(closeIconRedUrl).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)
-        );
-    
+                new ImageIcon(closeIconRedUrl).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+
         JPanel closeButtonPanel = new JPanel(new BorderLayout());
         closeButtonPanel.setOpaque(false);
         closeButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
         closeButtonPanel.setMaximumSize(new Dimension(700, 30));
-    
+
         closeButton = new JButton();
         closeButton.setIcon(closeIcon);
         closeButton.setBorder(null);
         closeButton.setContentAreaFilled(false);
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-    
+
         closeButton.addActionListener(e -> GameSystem.toggleJournal());
-    
+
         closeButton.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {
                 closeButton.setIcon(closeIconRed);
             }
-    
+
             public void mouseExited(MouseEvent evt) {
                 closeButton.setIcon(closeIcon);
             }
@@ -450,7 +466,6 @@ public class Journal extends JPanel {
         closeButtonPanel.add(closeButton, BorderLayout.EAST);
         page.add(closeButtonPanel);
     }
-    
 
     /**
      * Renders a custom vertical scroll bar with translucent black thumb and no

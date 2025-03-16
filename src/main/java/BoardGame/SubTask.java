@@ -2,7 +2,9 @@ package BoardGame;
 
 /**
  * Represents a sub-task within a board game.
- * Each sub-task has a title, completion status, discount status, completion score, and resource costs.
+ * Each sub-task has a title, completion status, discount status, completion
+ * score, and resource costs.
+ * 
  * @author Curtis McCartney
  * @author Isaac Edmonds (Supporting)
  */
@@ -12,14 +14,17 @@ public class SubTask {
     private int completionScore;
     private int resourceCost;
     private ResourceType resourceType;
-    
+
     /**
-     * Constructs a new SubTask with the specified title, completion score, and resource costs.
+     * Constructs a new SubTask with the specified title, completion score, and
+     * resource costs.
      *
-     * @param title the title of the subtask
+     * @param title           the title of the subtask
      * @param completionScore the score awarded upon completion of the subtask
-     * @param resourceCost the cost of the resource to be used in the completion of the subtask
-     * @param resourceType the type of resource to be used in the completion of the subtask
+     * @param resourceCost    the cost of the resource to be used in the completion
+     *                        of the subtask
+     * @param resourceType    the type of resource to be used in the completion of
+     *                        the subtask
      */
     public SubTask(String title, int completionScore, int resourceCost, ResourceType resourceType) {
         this.title = title;
@@ -41,18 +46,21 @@ public class SubTask {
     }
 
     /**
-     * 'Discounts' the SubTask by halving its resource cost and then setting the isDiscounted flag to true. 
+     * 'Discounts' the SubTask by halving its resource cost and then setting the
+     * isDiscounted flag to true.
      * A SubTask can only be discounted once.
-     * In the event of an odd value for the completion score before discount, the number will be rounded up
+     * In the event of an odd value for the completion score before discount, the
+     * number will be rounded up
      * 
-     * @return true if the SubTask was discounted, false if the SubTask was already discounted
+     * @return true if the SubTask was discounted, false if the SubTask was already
+     *         discounted
      */
     public boolean discountSubTask() {
-        if(!isDiscounted()) {
-        	setResourceCost(this.resourceCost / 2 + this.resourceCost % 2);
-        	setCompletionScore(this.completionScore / 2 + this.completionScore % 2);
-        	setDiscounted(true);
-        	return true;
+        if (!isDiscounted()) {
+            setResourceCost(this.resourceCost / 2 + this.resourceCost % 2);
+            setCompletionScore(this.completionScore / 2 + this.completionScore % 2);
+            setDiscounted(true);
+            return true;
         }
         return false;
     }
@@ -146,7 +154,5 @@ public class SubTask {
     public void setResourceType(ResourceType resourceType) {
         this.resourceType = resourceType;
     }
-
-    
 
 }

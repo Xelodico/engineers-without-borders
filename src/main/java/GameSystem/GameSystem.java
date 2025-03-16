@@ -270,23 +270,24 @@ public abstract class GameSystem {
             toggleEndGame(Ending.BAD);
         }
     };
-    
-        /**
-         * Moves the turn to the next player.
-         * If all players have taken their turn, the game progresses to the next round.
-         */
-        public static void nextTurn() {
-            // If the last player in the turn order has finished their turn, reset to the
-            // first player
-            if (turnNumber >= turnOrder.length - 1) {
-                turnNumber = 0; // Reset turn number to first player
-                roundNumber++; // Start a new round
-    
-                // Deduct money from each player at the end of the round
-                for(Player player : turnOrder){
-                    player.changeMoney(-MAINTENANCE_COST_EACH_ROUND);
-                    if(player.getMoney() <= 0){
-                        showPopup("Game Finished!", player.getName() + " ran out of Money!", "End Game", null, ranOutOfMoney, null);
+
+    /**
+     * Moves the turn to the next player.
+     * If all players have taken their turn, the game progresses to the next round.
+     */
+    public static void nextTurn() {
+        // If the last player in the turn order has finished their turn, reset to the
+        // first player
+        if (turnNumber >= turnOrder.length - 1) {
+            turnNumber = 0; // Reset turn number to first player
+            roundNumber++; // Start a new round
+
+            // Deduct money from each player at the end of the round
+            for (Player player : turnOrder) {
+                player.changeMoney(-MAINTENANCE_COST_EACH_ROUND);
+                if (player.getMoney() <= 0) {
+                    showPopup("Game Finished!", player.getName() + " ran out of Money!", "End Game", null,
+                            ranOutOfMoney, null);
                 }
             }
             refreshResources();
@@ -416,7 +417,6 @@ public abstract class GameSystem {
         if (currentSubTask.getTitle().equals("")) {
             return false;
         }
-
 
         Player currentPlayer = getPlayerAt();
         int playerResourceAmount = currentPlayer.getResource(currentSubTask.getResourceType());

@@ -102,11 +102,9 @@ public class Tutorial extends JPanel {
         }
 
         ImageIcon closeIcon = new ImageIcon(
-                new ImageIcon(closeIconUrl).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)
-        );
+                new ImageIcon(closeIconUrl).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
         ImageIcon closeIconRed = new ImageIcon(
-                new ImageIcon(closeIconRedUrl).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)
-        );
+                new ImageIcon(closeIconRedUrl).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
 
         JButton closeButton = new JButton(closeIcon);
         closeButton.setBorderPainted(false);

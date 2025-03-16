@@ -13,6 +13,11 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
+ * The TransferPopup class represents a popup window for transferring tasks
+ * between players.
+ * It extends JPanel and provides methods to display and handle task transfer
+ * actions.
+ *
  * @author Nathan Watkins
  */
 public class TransferPopup extends JPanel {
@@ -22,6 +27,12 @@ public class TransferPopup extends JPanel {
     private final JPanel buttonContainer;
     private Task task;
 
+    /**
+     * Constructs a TransferPopup with the specified title and description.
+     *
+     * @param title the title of the popup
+     * @param desc  the description to be displayed in the popup
+     */
     public TransferPopup(String title, String desc) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         int HEIGHT = 500;
@@ -71,13 +82,14 @@ public class TransferPopup extends JPanel {
         JButton cancelButton = createButton("Cancel");
         cancelButton.addActionListener(e -> {
             GameSystem.toggleTransfer(null);
-            if(task.getOwnedBy() == null) {
-                GameSystem.showPopup("Task not claimed!", task.getTitle() + " was not claimed due to poor funding.", "Ok", null, okSingleButton, null);
+            if (task.getOwnedBy() == null) {
+                GameSystem.showPopup("Task not claimed!", task.getTitle() + " was not claimed due to poor funding.",
+                        "Ok", null, okSingleButton, null);
             } else {
-                GameSystem.showPopup("Task not transferred!", task.getTitle() + " was not transferred to another player.", "Ok", null, okSingleButton, null);
+                GameSystem.showPopup("Task not transferred!",
+                        task.getTitle() + " was not transferred to another player.", "Ok", null, okSingleButton, null);
             }
-            
-            
+
         });
         cancelButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(cancelButton);
@@ -120,18 +132,20 @@ public class TransferPopup extends JPanel {
                         GameSystem.hidePopup();
                     }
                 };
-        
+
                 ActionListener takeTask = new ActionListener() {
                     @Override
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         // Take task logic
-                        if(GameSystem.purchaseTask(player, task.getResourceType(), task)) {
+                        if (GameSystem.purchaseTask(player, task.getResourceType(), task)) {
                             task.setOwnedBy(player);
                         } else {
-                            GameSystem.showPopup(player.getName() + ", you do not enough resources!", "You do not have enough resources to claim this task.", "OK", null, okSingleButton, null);
+                            GameSystem.showPopup(player.getName() + ", you do not enough resources!",
+                                    "You do not have enough resources to claim this task.", "OK", null, okSingleButton,
+                                    null);
                             return;
                         }
-                        
+
                         System.out.println("Task claimed!");
                         GameSystem.hideCostPopup();
                         GameSystem.refreshJournal();
@@ -147,7 +161,7 @@ public class TransferPopup extends JPanel {
                         GameSystem.refreshJournal();
                     }
                 };
-        
+
                 ActionListener rejectTask = new ActionListener() {
                     @Override
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -169,14 +183,20 @@ public class TransferPopup extends JPanel {
                     button.setEnabled(false);
                 } else {
                     button.addActionListener(e -> {
-                        if(task.getOwnedBy() == null) {
-                            // If the task is not owned by anyone, give the ability to buy this task to others.
-                            GameSystem.showCostPopup(player.getName() + ", do you want to get this task?", task.getTitle() + "\nDo you want to buy this task for ", task.getResourceType().toString(), task.getResourceCost(), takeTask, rejectTask);
+                        if (task.getOwnedBy() == null) {
+                            // If the task is not owned by anyone, give the ability to buy this task to
+                            // others.
+                            GameSystem.showCostPopup(player.getName() + ", do you want to get this task?",
+                                    task.getTitle() + "\nDo you want to buy this task for ",
+                                    task.getResourceType().toString(), task.getResourceCost(), takeTask, rejectTask);
                         } else {
-                            // If the task is owned by someone, give the ability to transfer this task to others for free.
-                            GameSystem.showPopup("Do you want to accept this Task?", "Do you wish to accept the Task: " + task.getTitle(), "Yes", "No", takeTaskForFree, rejectTask);
+                            // If the task is owned by someone, give the ability to transfer this task to
+                            // others for free.
+                            GameSystem.showPopup("Do you want to accept this Task?",
+                                    "Do you wish to accept the Task: " + task.getTitle(), "Yes", "No", takeTaskForFree,
+                                    rejectTask);
                         }
-                        
+
                         // GameSystem.purchaseTask(player, task.getResourceType(), task);
                         // task.setOwnedBy(player);
                         GameSystem.toggleTransfer(null);
@@ -210,6 +230,11 @@ public class TransferPopup extends JPanel {
         popupDesc.setText(text);
     }
 
+    /**
+     * Sets the task to be transferred.
+     *
+     * @param task The task to be transferred.
+     */
     public void setTask(Task task) {
         this.task = task;
     }

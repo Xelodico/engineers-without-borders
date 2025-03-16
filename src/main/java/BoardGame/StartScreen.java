@@ -18,7 +18,7 @@ import GameSystem.GameSystem;
  * It extends JPanel and provides a user interface for players to enter their
  * names
  * and start the game.
- * 
+ *
  * @author Nathan Watkins
  */
 public class StartScreen extends JPanel {
@@ -40,6 +40,9 @@ public class StartScreen extends JPanel {
     private JTextField[] playerTextFields = new JTextField[MAX_PLAYERS]; // Array to hold text fields for player names
     private int numOfPlayers = 1;
 
+    /**
+     * Constructs a StartScreen object and initializes the UI components.
+     */
     public StartScreen() {
         setLayout(null);
         setBackground(new Color(240, 240, 240));
@@ -50,6 +53,9 @@ public class StartScreen extends JPanel {
         addStartButton();
     }
 
+    /**
+     * Adds the title label to the start screen.
+     */
     private void addTitle() {
         JLabel title = new JLabel("Welcome to Pavers Valley!");
         title.setBounds(0, 0, WIDTH, (int) (HEIGHT * 0.15));
@@ -59,6 +65,9 @@ public class StartScreen extends JPanel {
         add(title);
     }
 
+    /**
+     * Initializes the player input fields and buttons.
+     */
     private void initializePlayerInputs() {
         for (int i = 0; i < playerButtons.length; i++) {
             playerButtons[i] = createPlayerButton(i);
@@ -78,6 +87,12 @@ public class StartScreen extends JPanel {
         playerButtons[1].setVisible(true);
     }
 
+    /**
+     * Creates a player button with the specified index.
+     *
+     * @param index the index of the player button
+     * @return the created JButton
+     */
     private JButton createPlayerButton(int index) {
         JButton button = new JButton();
         button.setBorderPainted(false);
@@ -89,6 +104,11 @@ public class StartScreen extends JPanel {
         return button;
     }
 
+    /**
+     * Adds a new player button to the start screen.
+     *
+     * @param i the index of the player button
+     */
     private void addNewPlayerButton(int i) {
         playerButtons[i].setIcon(addPlayerIcon);
         playerButtons[i].setVisible(false);
@@ -111,6 +131,11 @@ public class StartScreen extends JPanel {
         });
     }
 
+    /**
+     * Creates a player text field.
+     *
+     * @return the created JTextField
+     */
     private JTextField createPlayerTextField() {
         JTextField textField = new JTextField();
         textField.setBounds(0, 0, 240, 55);
@@ -121,6 +146,9 @@ public class StartScreen extends JPanel {
         return textField;
     }
 
+    /**
+     * Adds the start button to the start screen.
+     */
     private void addStartButton() {
         JButton startButton = new JButton("Start Game");
         startButton.setBounds((WIDTH - BUTTON_WIDTH) / 2, (int) (HEIGHT * 0.8), BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -140,7 +168,7 @@ public class StartScreen extends JPanel {
     /**
      * Gets the players from the text fields on the start screen and initializes
      * them.
-     * 
+     *
      * @return An array of Player objects representing the players.
      */
     public Player[] getPlayers() {

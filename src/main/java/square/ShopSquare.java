@@ -4,14 +4,17 @@ import java.awt.Color;
 
 /**
  * Represents a shop square on the game board where players can purchase items.
+ *
+ * @author Kal Worthington
+ * @author Antons Bogdanovs
  */
 public class ShopSquare extends Square {
-    
+
     /**
      * The type of this square, indicating it is a ShopSquare.
      */
     private final SquareType sType = SquareType.SHOPSQUARE;
-    
+
     /**
      * The color representation of this square.
      */

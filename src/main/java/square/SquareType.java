@@ -2,6 +2,9 @@ package square;
 
 /**
  * Enum representing the different types of squares on the game board.
+ *
+ * @author Kal Worthington
+ * @author Antons Bogdanovs
  */
 public enum SquareType {
 

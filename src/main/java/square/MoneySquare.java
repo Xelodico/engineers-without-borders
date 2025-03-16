@@ -5,6 +5,14 @@ import GameSystem.*;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 
+/**
+ * The MoneySquare class represents a square on the game board that provides a
+ * monetary benefit to the player.
+ * The square gives a random amount of money to the player when they land on it.
+ *
+ * @author Kal Worthington
+ * @author Antons Bogdanovs
+ */
 public class MoneySquare extends Square {
     private int money; // Stores the money value for this square.
 
@@ -13,7 +21,8 @@ public class MoneySquare extends Square {
     private final SquareType sType = SquareType.MONEYSQUARE;
 
     /**
-     * Default constructor that assigns a random amount of money between 800 and 1200.
+     * Default constructor that assigns a random amount of money between 800 and
+     * 1200.
      */
     public MoneySquare() {
         super(); // Calls the parent class constructor.
@@ -66,7 +75,8 @@ public class MoneySquare extends Square {
     public boolean activateSquareEffect() {
         super.activateSquareEffect(); // Calls the superclass method.
         GameSystem.getPlayerAt().changeMoney(this.money);
-        GameSystem.showPopup("Extra Funds!", "You have been given " + money + " Rand!", "Ok", null, okSingleButton, null);
+        GameSystem.showPopup("Extra Funds!", "You have been given " + money + " Rand!", "Ok", null, okSingleButton,
+                null);
         GameSystem.replaceMoneySquare();
         return true;
     }

@@ -4,26 +4,29 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 /**
- * The Objective class represents a goal or objective that one Player can take for the game.
- * Each objective has a title, a responsible player, a list of tasks, and a UI color.
+ * The Objective class represents a goal or objective that one Player can take
+ * for the game.
+ * Each objective has a title, a responsible player, a list of tasks, and a UI
+ * color.
  * 
  * @author Curtis McCartney
  * 
  */
 public class Objective {
-    
+
     private String title;
     private Player responsiblePlayer;
     private ArrayList<Task> tasks;
     private Color uiColour;
 
     /**
-     * Constructs a new Objective with the specified title, responsible player, tasks, and UI color.
+     * Constructs a new Objective with the specified title, responsible player,
+     * tasks, and UI color.
      *
-     * @param title the title of the objective
+     * @param title             the title of the objective
      * @param responsiblePlayer the player responsible for the objective
-     * @param tasks the list of tasks associated with the objective
-     * @param uiColour the UI color associated with the objective
+     * @param tasks             the list of tasks associated with the objective
+     * @param uiColour          the UI color associated with the objective
      */
     public Objective(String title, Player responsiblePlayer, ArrayList<Task> tasks, Color uiColour) {
         this.title = title;
@@ -70,8 +73,8 @@ public class Objective {
      * @return true if all tasks are owned by the specified player, false otherwise
      */
     public boolean allTasksOwnedBy(Player player) {
-        for(Task task : tasks) {
-            if(task.getOwnedBy() != player) {
+        for (Task task : tasks) {
+            if (task.getOwnedBy() != player) {
                 return false;
             }
         }

@@ -9,13 +9,18 @@ import javax.swing.*;
 import javax.swing.text.*;
 
 /**
- * Popup is a custom JPanel that displays a popup window with a title, description,
- * and two buttons (Yes and No). The popup can be customized with specific text for
+ * Popup is a custom JPanel that displays a popup window with a title,
+ * description,
+ * and two buttons (Yes and No). The popup can be customized with specific text
+ * for
  * the title, description, and buttons.
  * <p>
- * This class extends JPanel and uses various Swing components to create the popup
- * window. It includes a JLabel for the title, a JTextArea for the description, and
- * two JButtons for the Yes and No actions. The layout and appearance of the popup
+ * This class extends JPanel and uses various Swing components to create the
+ * popup
+ * window. It includes a JLabel for the title, a JTextArea for the description,
+ * and
+ * two JButtons for the Yes and No actions. The layout and appearance of the
+ * popup
  * are set within the constructor.
  * <p>
  * When either button is clicked, the popup is removed from its parent container
@@ -41,14 +46,16 @@ public class Popup extends JPanel {
 
     /**
      *
-     * @param title The title text to be displayed at the top of the popup.
-     * @param desc The description text to be displayed in the body of the popup.
+     * @param title         The title text to be displayed at the top of the popup.
+     * @param desc          The description text to be displayed in the body of the
+     *                      popup.
      * @param yesButtonText The text to be displayed on the Yes button.
-     * @param noButtonText The text to be displayed on the No button.
-     * @param yesAction The action to perform on when the Yes button is clicked.
-     * @param noAction The action to perform when the No button is clicked.
+     * @param noButtonText  The text to be displayed on the No button.
+     * @param yesAction     The action to perform on when the Yes button is clicked.
+     * @param noAction      The action to perform when the No button is clicked.
      */
-    public Popup(String title, String desc, String yesButtonText, String noButtonText, ActionListener yesAction, ActionListener noAction) {
+    public Popup(String title, String desc, String yesButtonText, String noButtonText, ActionListener yesAction,
+            ActionListener noAction) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBounds(BoardGameUI.WINDOW_WIDTH / 2 - WIDTH / 2, BoardGameUI.WINDOW_HEIGHT / 2 - HEIGHT / 2, WIDTH, HEIGHT);
         setBackground(new java.awt.Color(240, 240, 240));
@@ -89,9 +96,9 @@ public class Popup extends JPanel {
 
         yesButtonComponent = createButton(yesButtonText, yesAction);
         buttonPanel.add(yesButtonComponent);
-        
+
         buttonPanel.add(Box.createHorizontalStrut(20));
-        
+
         noButtonComponent = createButton(noButtonText, noAction);
         buttonPanel.add(noButtonComponent);
 

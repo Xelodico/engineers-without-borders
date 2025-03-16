@@ -5,6 +5,14 @@ import java.awt.event.ActionListener;
 import BoardGame.*;
 import GameSystem.*;
 
+/**
+ * The TaskSquare class represents a square on the game board that contains a
+ * task.
+ * Players can attempt to complete the task when they land on this square.
+ *
+ * @author Kal Worthington
+ * @author Antons Bogdanovs
+ */
 public class TaskSquare extends Square {
 
     /**
@@ -32,7 +40,7 @@ public class TaskSquare extends Square {
     public TaskSquare(Task ts) {
         super();
         this.task = ts;
-        if(ts.getBelongsTo() != null) {
+        if (ts.getBelongsTo() != null) {
             this.squareColor = ts.getBelongsTo().getUiColour();
         }
     }
@@ -69,7 +77,8 @@ public class TaskSquare extends Square {
                 } else {
                     System.out.println("No other players to show the task to");
                     GameSystem.hideCostPopup();
-                    GameSystem.showPopup("Task not claimed!", task.getTitle() + " was not claimed due to poor funding.", "Ok", null, okSingleButton, null);
+                    GameSystem.showPopup("Task not claimed!", task.getTitle() + " was not claimed due to poor funding.",
+                            "Ok", null, okSingleButton, null);
                 }
             }
         };
@@ -78,10 +87,14 @@ public class TaskSquare extends Square {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Discounting task logic
-                if(GameSystem.discountSubTask(task)) {
-                    GameSystem.showPopup("Task discounted!", "The current Subtask \"" + task.getCurrentSubTask().getTitle() + "\" has been discounted!\nGood luck!", "OK", null, okSingleButton, null);
+                if (GameSystem.discountSubTask(task)) {
+                    GameSystem.showPopup("Task discounted!", "The current Subtask \""
+                            + task.getCurrentSubTask().getTitle() + "\" has been discounted!\nGood luck!", "OK", null,
+                            okSingleButton, null);
                 } else {
-                    GameSystem.showPopup("Not enough resources!", "You do not have enough resources to help with this task.", "OK", null, okSingleButton, null);
+                    GameSystem.showPopup("Not enough resources!",
+                            "You do not have enough resources to help with this task.", "OK", null, okSingleButton,
+                            null);
                 }
                 GameSystem.hideCostPopup();
             }
@@ -94,19 +107,18 @@ public class TaskSquare extends Square {
             }
         };
 
-        
-
         ActionListener takeTask = new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Take task logic
-                if(GameSystem.purchaseTask(GameSystem.getPlayerAt(), task.getResourceType(), task)) {
+                if (GameSystem.purchaseTask(GameSystem.getPlayerAt(), task.getResourceType(), task)) {
                     task.setOwnedBy(GameSystem.getPlayerAt());
                 } else {
-                    GameSystem.showPopup("Not enough resources!", "You do not have enough resources to claim this task.", "OK", null, okSingleButton, null);
+                    GameSystem.showPopup("Not enough resources!",
+                            "You do not have enough resources to claim this task.", "OK", null, okSingleButton, null);
                     return;
                 }
-                
+
                 System.out.println("Task claimed!");
                 GameSystem.hideCostPopup();
             }
@@ -114,12 +126,21 @@ public class TaskSquare extends Square {
 
         super.activateSquareEffect();
         if (task.getOwnedBy() == null) {
-            GameSystem.showCostPopup("Do you want to get this task?", task.getTitle() + "\nDo you want to buy this task for ", task.getResourceType().toString(), task.getResourceCost(), takeTask, rejectTask);
+            GameSystem.showCostPopup("Do you want to get this task?",
+                    task.getTitle() + "\nDo you want to buy this task for ", task.getResourceType().toString(),
+                    task.getResourceCost(), takeTask, rejectTask);
         } else if (task.getOwnedBy() != GameSystem.getPlayerAt()) {
-            if(task.getCurrentSubTask().isDiscounted()) {
-                GameSystem.showPopup("Task already discounted!", "The current Subtask \"" + task.getCurrentSubTask().getTitle() + "\" has already been discounted!\nCome back again later!", "OK", null, okSingleButton, null);
+            if (task.getCurrentSubTask().isDiscounted()) {
+                GameSystem.showPopup("Task already discounted!",
+                        "The current Subtask \"" + task.getCurrentSubTask().getTitle()
+                                + "\" has already been discounted!\nCome back again later!",
+                        "OK", null, okSingleButton, null);
             } else {
-                GameSystem.showCostPopup("Do you want to help with this task?", "The current Subtask is \"" + task.getCurrentSubTask().getTitle() + "\".\nWould you like to help out by spending ", task.getCurrentSubTask().getResourceType().toString(), task.getCurrentSubTask().getResourceCost() / 2, beginHelping, ignoreHelping);
+                GameSystem.showCostPopup("Do you want to help with this task?",
+                        "The current Subtask is \"" + task.getCurrentSubTask().getTitle()
+                                + "\".\nWould you like to help out by spending ",
+                        task.getCurrentSubTask().getResourceType().toString(),
+                        task.getCurrentSubTask().getResourceCost() / 2, beginHelping, ignoreHelping);
             }
         } else {
             GameSystem.showPopup("You already own this task!", task.getTitle(), "OK", null, okSingleButton, null);

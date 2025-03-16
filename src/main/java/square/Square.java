@@ -4,6 +4,9 @@ import java.awt.Color;
 
 /**
  * Represents a square on a game board that can be occupied by a player.
+ *
+ * @author Kal Worthington
+ * @author Antons Bogdanovs
  */
 public class Square {
 

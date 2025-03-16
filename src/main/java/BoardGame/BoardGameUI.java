@@ -24,7 +24,8 @@ import Popup.CostPopup;
  * on the board, and handling user interactions such as button clicks.
  *
  * @author Nathan Watkins
- * @author Curtis McCartney
+ * @author Curtis McCartney (Supporting)
+ * @author Peter Robinson (Supporting)
  */
 public class BoardGameUI extends JFrame {
 
@@ -127,7 +128,7 @@ public class BoardGameUI extends JFrame {
     public void setResourceValues() {
         for (int i = 0; i < players.length; i++) {
             Player currentPlayer = players[i];
-            
+
             // Ensure resource values are valid (non-negative)
             int volunteers = currentPlayer.getResource(ResourceType.VOLUNTEERS);
             int knowledge = currentPlayer.getResource(ResourceType.KNOWLEDGE);
@@ -135,7 +136,7 @@ public class BoardGameUI extends JFrame {
             int influence = currentPlayer.getResource(ResourceType.INFLUENCE);
             int money = currentPlayer.getMoney();
             int score = currentPlayer.getScore();
-    
+
             // Set text for player resource labels
             playerSatisfactions[i].setText(volunteers >= 0 ? Integer.toString(volunteers) : "0");
             playerKnowledges[i].setText(knowledge >= 0 ? Integer.toString(knowledge) : "0");
@@ -165,8 +166,8 @@ public class BoardGameUI extends JFrame {
         arrowsContainer.setLayout(null);
 
         JButton[] arrowButtons = { arrowDown, arrowUp, arrowLeft, arrowRight };
-        String[] arrowIcons = {"/images/arrows/downArrow.png", "/images/arrows/upArrow.png",
-                "/images/arrows/leftArrow.png", "/images/arrows/rightArrow.png"};
+        String[] arrowIcons = { "/images/arrows/downArrow.png", "/images/arrows/upArrow.png",
+                "/images/arrows/leftArrow.png", "/images/arrows/rightArrow.png" };
         for (int i = 0; i < arrowButtons.length; i++) {
             arrowButtons[i].setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource(arrowIcons[i]))));
             arrowButtons[i].setBorder(null);
@@ -221,14 +222,16 @@ public class BoardGameUI extends JFrame {
         movesLeftLabel = new JLabel();
 
         roundNumberGraphic.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
-        roundNumberGraphic.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/roundBackground.png"))));
+        roundNumberGraphic
+                .setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/roundBackground.png"))));
         roundNumberGraphic.setText("Round " + GameSystem.getRoundNumber());
         roundNumberGraphic.setHorizontalTextPosition(SwingConstants.CENTER);
         sidePanelContainer.add(roundNumberGraphic);
         roundNumberGraphic.setBounds(251, 0, 122, 57);
 
         playerTurnGraphic.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
-        playerTurnGraphic.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/PlayerTurn.png"))));
+        playerTurnGraphic
+                .setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/PlayerTurn.png"))));
         playerTurnGraphic.setText("     " + GameSystem.getPlayerAt().getName() + "'s Turn");
         playerTurnGraphic.setToolTipText("");
         playerTurnGraphic.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -242,7 +245,8 @@ public class BoardGameUI extends JFrame {
         createPopupButton(shopButton, shopIcon);
         shopButton.addActionListener(e -> toggleShop());
 
-        ImageIcon journalIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/journalButton.png")));
+        ImageIcon journalIcon = new ImageIcon(
+                Objects.requireNonNull(getClass().getResource("/images/journalButton.png")));
         createPopupButton(journalButton, journalIcon);
         journalButton.addActionListener(evt -> toggleJournal());
 
@@ -250,21 +254,25 @@ public class BoardGameUI extends JFrame {
         createPopupButton(helpButton, helpIcon);
         helpButton.addActionListener(evt -> toggleTutorial());
 
-        ImageIcon closeIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/quitGameButton.png")));
+        ImageIcon closeIcon = new ImageIcon(
+                Objects.requireNonNull(getClass().getResource("/images/quitGameButton.png")));
         createPopupButton(closeButton, closeIcon);
         closeButton.addActionListener(e -> showPopup("Are you sure you want to quit?",
-                players.length > 1 ? "You will be letting down your teammates.\nThis will end the game for everyone." : "", "Yes", "No",
+                players.length > 1 ? "You will be letting down your teammates.\nThis will end the game for everyone."
+                        : "",
+                "Yes", "No",
                 e1 -> {
                     hidePopup();
                     toggleEndGame(EndGame.Ending.BAD);
                 }, e1 -> {
                     hidePopup();
-        }));
+                }));
 
         setPopupButtonsPosition();
         sidePanelContainer.add(popupButtonContainer);
 
-        ImageIcon rollDiceIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/rollDiceButton.png")));
+        ImageIcon rollDiceIcon = new ImageIcon(
+                Objects.requireNonNull(getClass().getResource("/images/rollDiceButton.png")));
         rollDiceButton.setIcon(new ImageIcon(rollDiceIcon.getImage().getScaledInstance(192, 47, Image.SCALE_SMOOTH)));
         rollDiceButton.setBorder(null);
         rollDiceButton.setContentAreaFilled(false);
@@ -280,14 +288,16 @@ public class BoardGameUI extends JFrame {
         });
         sidePanelContainer.add(rollDiceButton);
 
-        movesLeftLabel.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/buttonBackground.png"))));
+        movesLeftLabel
+                .setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/buttonBackground.png"))));
         movesLeftLabel.setBounds(170, WINDOW_HEIGHT - 52 - 47, 192, 47);
         movesLeftLabel.setVisible(false);
         movesLeftLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         movesLeftLabel.setFont(new java.awt.Font("Segue UI", Font.PLAIN, 26));
         sidePanelContainer.add(movesLeftLabel);
 
-        endTurnButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/buttonBackground.png"))));
+        endTurnButton
+                .setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/buttonBackground.png"))));
         endTurnButton.setBounds(170, WINDOW_HEIGHT - 52 - 47, 192, 47);
         endTurnButton.setVisible(false);
         endTurnButton.setText("End Turn");
@@ -310,9 +320,11 @@ public class BoardGameUI extends JFrame {
     }
 
     private void setPopupButtonsPosition() {
-        int numberOfButtons = Arrays.stream(popupButtonContainer.getComponents()).filter(component -> component instanceof JButton && component.isVisible()).toArray().length;
-        popupButtonContainer.setSize(37*numberOfButtons + 15*(numberOfButtons-1), 37);
-        popupButtonContainer.setLocation(SIDE_PANEL_WIDTH - popupButtonContainer.getWidth() - 22, WINDOW_HEIGHT - 105 - 37);
+        int numberOfButtons = Arrays.stream(popupButtonContainer.getComponents())
+                .filter(component -> component instanceof JButton && component.isVisible()).toArray().length;
+        popupButtonContainer.setSize(37 * numberOfButtons + 15 * (numberOfButtons - 1), 37);
+        popupButtonContainer.setLocation(SIDE_PANEL_WIDTH - popupButtonContainer.getWidth() - 22,
+                WINDOW_HEIGHT - 105 - 37);
     }
 
     private void createPopupButton(JButton button, ImageIcon icon) {
@@ -335,8 +347,9 @@ public class BoardGameUI extends JFrame {
         playerInfluences = new JLabel[players.length];
         playerMoneys = new JLabel[players.length];
         playerScores = new JLabel[players.length];
-        
-        ImageIcon backgroundIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resourcesPanel.png")));
+
+        ImageIcon backgroundIcon = new ImageIcon(
+                Objects.requireNonNull(getClass().getResource("/images/resourcesPanel.png")));
         backgroundIcon.setImage(backgroundIcon.getImage().getScaledInstance(373, 127, Image.SCALE_SMOOTH));
 
         for (int i = 0; i < players.length; i++) {
@@ -349,7 +362,7 @@ public class BoardGameUI extends JFrame {
             playerResourceTitles[i].setFont(new java.awt.Font("Segue UI", Font.BOLD, 18));
             playerResourceTitles[i].setBounds(10, -3, 350, 30);
             playerResources[i].add(playerResourceTitles[i]);
-            
+
             playerAsphalts[i] = new JLabel(Integer.toString(currentPlayer.getResource(ResourceType.ASPHALT)));
             playerAsphalts[i].setBounds(60, 23, 60, 40);
             playerAsphalts[i].setFont(new java.awt.Font("Segue UI", Font.PLAIN, 30));
@@ -402,28 +415,28 @@ public class BoardGameUI extends JFrame {
         sidePanelContainer.setLayout(null);
         sidePanelContainer.setVisible(false);
 
-         GroupLayout layout = new GroupLayout(getContentPane());
-         getContentPane().setLayout(layout);
-         layout.setHorizontalGroup(
-                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                         .addGroup(layout.createSequentialGroup()
-                                 .addContainerGap()
-                                 .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, BOARD_WIDTH,
-                                         GroupLayout.PREFERRED_SIZE)
-                                 .addGap(10, 10, 10)
-                                 .addComponent(sidePanelContainer, GroupLayout.DEFAULT_SIZE, SIDE_PANEL_WIDTH,
-                                         Short.MAX_VALUE)
-                                 .addGap(0, 0, 0)));
-         layout.setVerticalGroup(
-                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                         .addGroup(layout.createSequentialGroup()
-                                 .addGap(6, 6, 6)
-                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                         .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, BOARD_HEIGHT,
-                                                 GroupLayout.PREFERRED_SIZE)
-                                         .addComponent(sidePanelContainer, GroupLayout.PREFERRED_SIZE, WINDOW_HEIGHT,
-                                                 GroupLayout.PREFERRED_SIZE))
-                                 .addGap(10, 10, 10)));
+        GroupLayout layout = new GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, BOARD_WIDTH,
+                                        GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10)
+                                .addComponent(sidePanelContainer, GroupLayout.DEFAULT_SIZE, SIDE_PANEL_WIDTH,
+                                        Short.MAX_VALUE)
+                                .addGap(0, 0, 0)));
+        layout.setVerticalGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(gameBoard, GroupLayout.PREFERRED_SIZE, BOARD_HEIGHT,
+                                                GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(sidePanelContainer, GroupLayout.PREFERRED_SIZE, WINDOW_HEIGHT,
+                                                GroupLayout.PREFERRED_SIZE))
+                                .addGap(10, 10, 10)));
 
         setupArrowButtons();
         setupLabelsAndButtons();
@@ -433,7 +446,8 @@ public class BoardGameUI extends JFrame {
     }
 
     private void toggleEnableButtons() {
-        boolean disableButtons = popup.isVisible() || costPopup.isVisible() || journal.isVisible() || shop.isVisible() || tutorial.isVisible()
+        boolean disableButtons = popup.isVisible() || costPopup.isVisible() || journal.isVisible() || shop.isVisible()
+                || tutorial.isVisible()
                 || transferPopup.isVisible() || endGame.isVisible();
 
         JButton[] buttons = { arrowDown, arrowUp, arrowLeft, arrowRight, rollDiceButton, endTurnButton,
