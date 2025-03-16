@@ -263,12 +263,9 @@ public abstract class GameSystem {
      * ActionListener that handles the event when the player runs out of money.
      * This listener will hide the popup and end the game.
      */
-    static ActionListener ranOutOfMoney = new ActionListener() {
-        @Override
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            GameSystem.hidePopup();
-            toggleEndGame(Ending.BAD);
-        }
+    static ActionListener ranOutOfMoney = e -> {
+        GameSystem.hidePopup();
+        toggleEndGame(Ending.BAD);
     };
 
     /**

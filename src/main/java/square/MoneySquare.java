@@ -58,12 +58,7 @@ public class MoneySquare extends Square {
         this.money = money;
     }
 
-    ActionListener okSingleButton = new ActionListener() {
-        @Override
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            GameSystem.hidePopup();
-        }
-    };
+    ActionListener okSingleButton = e -> GameSystem.hidePopup();
 
     /**
      * Activates the effect of landing on a MoneySquare.

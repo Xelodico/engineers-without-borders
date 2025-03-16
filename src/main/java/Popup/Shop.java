@@ -60,12 +60,7 @@ public class Shop extends JPanel {
      * Each price is represented by a JLabel with a string value.
      */
     public void addShopItemsAndPrices() {
-        ActionListener acknowledgeActionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GameSystem.hidePopup();
-            }
-        };
+        ActionListener acknowledgeActionListener = e -> GameSystem.hidePopup();
 
         JButton item1 = newShopItem(
                 new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resources/coldAsphalt.png"))));
@@ -266,12 +261,7 @@ public class Shop extends JPanel {
         closeButton.setContentAreaFilled(false);
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        closeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.toggleShop();
-            }
-        });
+        closeButton.addActionListener(e -> GameSystem.toggleShop());
 
         closeButton.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {

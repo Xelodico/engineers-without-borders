@@ -72,12 +72,7 @@ public class TransferPopup extends JPanel {
         add(buttonContainer);
         add(Box.createVerticalStrut(10));
 
-        ActionListener okSingleButton = new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GameSystem.hidePopup();
-            }
-        };
+        ActionListener okSingleButton = e -> GameSystem.hidePopup();
 
         JButton cancelButton = createButton("Cancel");
         cancelButton.addActionListener(e -> {
@@ -126,56 +121,42 @@ public class TransferPopup extends JPanel {
             if (player != null) {
                 JButton button = createButton(player.getName());
 
-                ActionListener okSingleButton = new ActionListener() {
-                    @Override
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        GameSystem.hidePopup();
-                    }
-                };
+                ActionListener okSingleButton = e -> GameSystem.hidePopup();
 
-                ActionListener takeTask = new ActionListener() {
-                    @Override
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        // Take task logic
-                        if (GameSystem.purchaseTask(player, task.getResourceType(), task)) {
-                            task.setOwnedBy(player);
-                        } else {
-                            GameSystem.showPopup(player.getName() + ", you do not enough resources!",
-                                    "You do not have enough resources to claim this task.", "OK", null, okSingleButton,
-                                    null);
-                            return;
-                        }
-
-                        System.out.println("Task claimed!");
-                        GameSystem.hideCostPopup();
-                        GameSystem.refreshJournal();
-                    }
-                };
-
-                ActionListener takeTaskForFree = new ActionListener() {
-                    @Override
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ActionListener takeTask = e -> {
+                    // Take task logic
+                    if (GameSystem.purchaseTask(player, task.getResourceType(), task)) {
                         task.setOwnedBy(player);
-                        System.out.println("Task claimed!");
-                        GameSystem.hidePopup();
-                        GameSystem.refreshJournal();
+                    } else {
+                        GameSystem.showPopup(player.getName() + ", you do not enough resources!",
+                                "You do not have enough resources to claim this task.", "OK", null, okSingleButton,
+                                null);
+                        return;
                     }
+
+                    System.out.println("Task claimed!");
+                    GameSystem.hideCostPopup();
+                    GameSystem.refreshJournal();
                 };
 
-                ActionListener rejectTask = new ActionListener() {
-                    @Override
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        // Reject task logic
-                        if (GameSystem.getTurnOrder().length > 1) {
-                            System.out.println("Show the task to other players");
-                            GameSystem.hideCostPopup();
-                            GameSystem.hidePopup();
-                            GameSystem.toggleTransfer(task);
-                        } else {
-                            System.out.println("No other players to show the task to");
-                            GameSystem.hideCostPopup();
-                            GameSystem.hidePopup();
-                        }
+                ActionListener takeTaskForFree = e -> {
+                    task.setOwnedBy(player);
+                    System.out.println("Task claimed!");
+                    GameSystem.hidePopup();
+                    GameSystem.refreshJournal();
+                };
+
+                ActionListener rejectTask = e -> {
+                    // Reject task logic
+                    if (GameSystem.getTurnOrder().length > 1) {
+                        System.out.println("Show the task to other players");
+                        GameSystem.hideCostPopup();
+                        GameSystem.hidePopup();
+                        GameSystem.toggleTransfer(task);
+                    } else {
+                        System.out.println("No other players to show the task to");
+                        GameSystem.hideCostPopup();
+                        GameSystem.hidePopup();
                     }
                 };
 

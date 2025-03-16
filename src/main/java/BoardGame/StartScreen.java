@@ -1,8 +1,6 @@
 package BoardGame;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -117,17 +115,14 @@ public class StartScreen extends JPanel {
         playerTextFields[i].setText("Player " + (i + 1));
 
         final int index = i;
-        playerButtons[i].addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                playerButtons[index].setIcon(playerBackgroundIcon);
-                playerButtons[index].setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                if (index < MAX_PLAYERS - 1) {
-                    playerButtons[index + 1].setVisible(true);
-                }
-                playerButtons[index].add(playerTextFields[index]);
-                numOfPlayers++;
+        playerButtons[i].addActionListener(e -> {
+            playerButtons[index].setIcon(playerBackgroundIcon);
+            playerButtons[index].setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            if (index < MAX_PLAYERS - 1) {
+                playerButtons[index + 1].setVisible(true);
             }
+            playerButtons[index].add(playerTextFields[index]);
+            numOfPlayers++;
         });
     }
 
@@ -154,12 +149,9 @@ public class StartScreen extends JPanel {
         startButton.setBounds((WIDTH - BUTTON_WIDTH) / 2, (int) (HEIGHT * 0.8), BUTTON_WIDTH, BUTTON_HEIGHT);
         startButton.setFont(new java.awt.Font("Segoe UI", 0, 16));
         startButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameSystem.setTurnOrder(getPlayers());
-                GameSystem.startGame();
-            }
+        startButton.addActionListener(e -> {
+            GameSystem.setTurnOrder(getPlayers());
+            GameSystem.startGame();
         });
 
         add(startButton);

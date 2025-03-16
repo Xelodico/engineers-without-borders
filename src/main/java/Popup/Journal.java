@@ -313,35 +313,22 @@ public class Journal extends JPanel {
             completeButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
             task.add(completeButton);
 
-            ActionListener okSingleButton = new ActionListener() {
-                @Override
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    GameSystem.hidePopup();
+            ActionListener okSingleButton = e -> GameSystem.hidePopup();
+
+            ActionListener progressTaskActionListener = e -> {
+                GameSystem.hideCostPopup();
+                if (GameSystem.progressTask(t)) {
+                    GameSystem.refreshJournal();
+                    GameSystem.showPopup("Task progressed successfuly!", t.getTitle() + " was progressed!", "Ok", null,
+                            okSingleButton, null);
+                } else {
+                    GameSystem.showPopup("Task not progressed!",
+                            t.getTitle() + " was not progressed due to lack of resources!", "Ok", null, okSingleButton,
+                            null);
                 }
             };
 
-            ActionListener progressTaskActionListener = new ActionListener() {
-                @Override
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    GameSystem.hideCostPopup();
-                    if (GameSystem.progressTask(t)) {
-                        GameSystem.refreshJournal();
-                        GameSystem.showPopup("Task progressed successfuly!", t.getTitle() + " was progressed!", "Ok",
-                                null, okSingleButton, null);
-                    } else {
-                        GameSystem.showPopup("Task not progressed!",
-                                t.getTitle() + " was not progressed due to lack of resources!", "Ok", null,
-                                okSingleButton, null);
-                    }
-                }
-            };
-
-            ActionListener rejectTaskActionListener = new ActionListener() {
-                @Override
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    GameSystem.hideCostPopup();
-                }
-            };
+            ActionListener rejectTaskActionListener = e -> GameSystem.hideCostPopup();
 
             completeButton.addActionListener(e -> {
                 GameSystem.showCostPopup("Do you wish to progress this Task?", "It will cost you ",

@@ -59,69 +59,50 @@ public class TaskSquare extends Square {
     @Override
     public boolean activateSquareEffect() {
 
-        ActionListener okSingleButton = new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GameSystem.hidePopup();
-            }
-        };
+        ActionListener okSingleButton = e -> GameSystem.hidePopup();
 
-        ActionListener rejectTask = new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // Reject task logic
-                if (GameSystem.getTurnOrder().length > 1) {
-                    System.out.println("Show the task to other players");
-                    GameSystem.hideCostPopup();
-                    GameSystem.toggleTransfer(task);
-                } else {
-                    System.out.println("No other players to show the task to");
-                    GameSystem.hideCostPopup();
-                    GameSystem.showPopup("Task not claimed!", task.getTitle() + " was not claimed due to poor funding.",
-                            "Ok", null, okSingleButton, null);
-                }
-            }
-        };
-
-        ActionListener beginHelping = new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // Discounting task logic
-                if (GameSystem.discountSubTask(task)) {
-                    GameSystem.showPopup("Task discounted!", "The current Subtask \""
-                            + task.getCurrentSubTask().getTitle() + "\" has been discounted!\nGood luck!", "OK", null,
-                            okSingleButton, null);
-                } else {
-                    GameSystem.showPopup("Not enough resources!",
-                            "You do not have enough resources to help with this task.", "OK", null, okSingleButton,
-                            null);
-                }
+        ActionListener rejectTask = e -> {
+            // Reject task logic
+            if (GameSystem.getTurnOrder().length > 1) {
+                System.out.println("Show the task to other players");
                 GameSystem.hideCostPopup();
+                GameSystem.toggleTransfer(task);
+            } else {
+                System.out.println("No other players to show the task to");
+                GameSystem.hideCostPopup();
+                GameSystem.showPopup("Task not claimed!", task.getTitle() + " was not claimed due to poor funding.",
+                        "Ok", null, okSingleButton, null);
             }
         };
 
-        ActionListener ignoreHelping = new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GameSystem.hideCostPopup();
+        ActionListener beginHelping = e -> {
+            // Discounting task logic
+            if (GameSystem.discountSubTask(task)) {
+                GameSystem.showPopup("Task discounted!", "The current Subtask \""
+                        + task.getCurrentSubTask().getTitle() + "\" has been discounted!\nGood luck!", "OK", null,
+                        okSingleButton, null);
+            } else {
+                GameSystem.showPopup("Not enough resources!",
+                        "You do not have enough resources to help with this task.", "OK", null, okSingleButton,
+                        null);
             }
+            GameSystem.hideCostPopup();
         };
 
-        ActionListener takeTask = new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // Take task logic
-                if (GameSystem.purchaseTask(GameSystem.getPlayerAt(), task.getResourceType(), task)) {
-                    task.setOwnedBy(GameSystem.getPlayerAt());
-                } else {
-                    GameSystem.showPopup("Not enough resources!",
-                            "You do not have enough resources to claim this task.", "OK", null, okSingleButton, null);
-                    return;
-                }
+        ActionListener ignoreHelping = e -> GameSystem.hideCostPopup();
 
-                System.out.println("Task claimed!");
-                GameSystem.hideCostPopup();
+        ActionListener takeTask = e -> {
+            // Take task logic
+            if (GameSystem.purchaseTask(GameSystem.getPlayerAt(), task.getResourceType(), task)) {
+                task.setOwnedBy(GameSystem.getPlayerAt());
+            } else {
+                GameSystem.showPopup("Not enough resources!",
+                        "You do not have enough resources to claim this task.", "OK", null, okSingleButton, null);
+                return;
             }
+
+            System.out.println("Task claimed!");
+            GameSystem.hideCostPopup();
         };
 
         super.activateSquareEffect();
