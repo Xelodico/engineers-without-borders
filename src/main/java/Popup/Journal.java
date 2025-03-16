@@ -328,7 +328,7 @@ public class Journal extends JPanel {
             };
             
             completeButton.addActionListener(e -> {
-                GameSystem.showCostPopup("Do you wish to progress this Task?", "It will cost you ", t.getResourceType().toString(), t.getResourceCost(), progressTaskActionListener, rejectTaskActionListener);
+                GameSystem.showCostPopup("Do you wish to progress this Task?", "It will cost you ", t.getResourceType().toString(), t.getCurrentSubTask().getResourceCost(), progressTaskActionListener, rejectTaskActionListener);
                 if (GameSystem.checkWinCondition()) {
                     GameSystem.toggleJournal();
                     GameSystem.toggleEndGame(Ending.GOOD);

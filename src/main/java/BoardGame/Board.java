@@ -180,12 +180,25 @@ public class Board extends JPanel {
         for (SquareType type : SquareType.values()) {
             existingSquares.put(type, new HashSet<>());
         }
-
+        
         for (int i = 0; i < squareArray.size(); i++) {
             SquareType type = squareArray.get(i).getSquareType();
             existingSquares.get(type).add(i); // Track all existing square types
 
             if (type == SquareType.SQUARE) {
+                // If the game has started, don't place the moneySquare on a coordinate that a Player is standing on
+                if (players != null) {
+                    boolean playerOnSquare = false;
+                    for (Player player : players) {
+                        if (player.getCoord() == i) {
+                            playerOnSquare = true;
+                            break;
+                        }
+                    }
+                    if (playerOnSquare) {
+                        continue;
+                    }
+                }
                 availablePositions.add(i); // Collect blank squares
             }
         }
@@ -215,6 +228,8 @@ public class Board extends JPanel {
                     continue;
                 }
             }
+
+            
 
             squareArray.set(index, squareType);
             existingSquares.get(squareType.getSquareType()).add(index); // Track the new placement

@@ -78,16 +78,19 @@ public class TaskSquare extends Square {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Discounting task logic
-                System.out.println("Discounting the task!");
-                GameSystem.discountSubTask(task);
-                GameSystem.hidePopup();
+                if(GameSystem.discountSubTask(task)) {
+                    GameSystem.showPopup("Task discounted!", "The current Subtask \"" + task.getCurrentSubTask().getTitle() + "\" has been discounted!\nGood luck!", "OK", null, okSingleButton, null);
+                } else {
+                    GameSystem.showPopup("Not enough resources!", "You do not have enough resources to help with this task.", "OK", null, okSingleButton, null);
+                }
+                GameSystem.hideCostPopup();
             }
         };
 
         ActionListener ignoreHelping = new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GameSystem.hidePopup();
+                GameSystem.hideCostPopup();
             }
         };
 
@@ -113,8 +116,11 @@ public class TaskSquare extends Square {
         if (task.getOwnedBy() == null) {
             GameSystem.showCostPopup("Do you want to get this task?", task.getTitle() + "\nDo you want to buy this task for ", task.getResourceType().toString(), task.getResourceCost(), takeTask, rejectTask);
         } else if (task.getOwnedBy() != GameSystem.getPlayerAt()) {
-            GameSystem.showPopup("Do you want to help complete this task?", task.getTitle(), "Yes", "No",
-                    beginHelping, ignoreHelping);
+            if(task.getCurrentSubTask().isDiscounted()) {
+                GameSystem.showPopup("Task already discounted!", "The current Subtask \"" + task.getCurrentSubTask().getTitle() + "\" has already been discounted!\nCome back again later!", "OK", null, okSingleButton, null);
+            } else {
+                GameSystem.showCostPopup("Do you want to help with this task?", "The current Subtask is \"" + task.getCurrentSubTask().getTitle() + "\".\nWould you like to help out by spending ", task.getCurrentSubTask().getResourceType().toString(), task.getCurrentSubTask().getResourceCost() / 2, beginHelping, ignoreHelping);
+            }
         } else {
             GameSystem.showPopup("You already own this task!", task.getTitle(), "OK", null, okSingleButton, null);
         }

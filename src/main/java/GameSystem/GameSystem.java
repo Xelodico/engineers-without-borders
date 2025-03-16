@@ -61,9 +61,9 @@ public abstract class GameSystem {
 
     // Global variables for resource purchase price and scores for calculating the
     // solution implementation percentage
-    private final static int RESOURCE_PRICE = 20;
-    private final static int resourceRewardAmount = 30;
-    private final static int maintenanceCostEachRound = 5;
+    private static final int RESOURCE_PRICE = 20;
+    private static final int RESOURCE_REWARD_AMOUNT = 30;
+    private static final int MAINTENANCE_COST_EACH_ROUND = 5;
     private static int maxScore;
     private static int currentTotalAwardedScore;
 
@@ -104,6 +104,11 @@ public abstract class GameSystem {
         gameBoardUI.startGame(); // Start the game through the UI
         gameBoardUI.refresh(); // Refresh the UI to reflect updated game state
         toggleTutorial();
+
+        for(int i = 0; i < tasks.size(); i++) {
+            getPlayerAt().addTask(tasks.get(i));
+            tasks.get(i).setOwnedBy(getPlayerAt());
+        }
     }
 
     /**
@@ -284,9 +289,9 @@ public abstract class GameSystem {
     
                 // Deduct money from each player at the end of the round
                 for(Player player : turnOrder){
-                    player.changeMoney(-maintenanceCostEachRound);
+                    player.changeMoney(-MAINTENANCE_COST_EACH_ROUND);
                     if(player.getMoney() <= 0){
-                        showPopup("Game Finished!", getPlayerAt().getName() + " ran out of Money!", "End Game", null, ranOutOfMoney, null);
+                        showPopup("Game Finished!", player.getName() + " ran out of Money!", "End Game", null, ranOutOfMoney, null);
                 }
             }
             refreshResources();
@@ -380,7 +385,7 @@ public abstract class GameSystem {
 
         // Subtract funds from player and add resources
         currentPlayer.changeMoney(-RESOURCE_PRICE);
-        currentPlayer.changeResource(resourceRewardAmount, resourceType);
+        currentPlayer.changeResource(RESOURCE_REWARD_AMOUNT, resourceType);
 
         return true;
     }
@@ -406,7 +411,7 @@ public abstract class GameSystem {
     }
 
     public static int getResourceAwardedAmount() {
-        return resourceRewardAmount;
+        return RESOURCE_REWARD_AMOUNT;
     }
 
     public static boolean discountSubTask(Task taskToDiscount){
@@ -415,7 +420,7 @@ public abstract class GameSystem {
         if (currentSubTask.getTitle().equals("")){
             return false;
         }
-    
+
         Player currentPlayer = getPlayerAt();
         int playerResourceAmount = currentPlayer.getResource(currentSubTask.getResourceType());
         if (playerResourceAmount < currentSubTask.getResourceCost()){
@@ -423,12 +428,11 @@ public abstract class GameSystem {
             return false;
         } else {
             // Continue with discounting the task
-            currentPlayer.changeResource(currentSubTask.getResourceCost() / 2, currentSubTask.getResourceType());
-            currentPlayer.changeScoreBy(currentSubTask.getCompletionScore() / 2);
-            
-            if(!currentSubTask.discountSubTask()){
-                return false;
-            }
+            currentPlayer.changeResource(-currentSubTask.getResourceCost() / 2, currentSubTask.getResourceType());
+            int scoreIncrease = currentSubTask.getCompletionScore() / 2;
+            currentPlayer.changeScoreBy(scoreIncrease);
+            currentTotalAwardedScore += scoreIncrease;
+            currentSubTask.discountSubTask();
         }
 
         System.out.println(currentSubTask.getResourceCost());

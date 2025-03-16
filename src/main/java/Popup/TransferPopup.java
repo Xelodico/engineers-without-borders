@@ -69,8 +69,16 @@ public class TransferPopup extends JPanel {
         };
 
         JButton cancelButton = createButton("Cancel");
-        cancelButton.addActionListener(e -> {GameSystem.toggleTransfer(null);
-        GameSystem.showPopup("Task not claimed!", task.getTitle() + " was not claimed due to poor funding.", "Ok", null, okSingleButton, null);});
+        cancelButton.addActionListener(e -> {
+            GameSystem.toggleTransfer(null);
+            if(task.getOwnedBy() == null) {
+                GameSystem.showPopup("Task not claimed!", task.getTitle() + " was not claimed due to poor funding.", "Ok", null, okSingleButton, null);
+            } else {
+                GameSystem.showPopup("Task not transferred!", task.getTitle() + " was not transferred to another player.", "Ok", null, okSingleButton, null);
+            }
+            
+            
+        });
         cancelButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(cancelButton);
         add(Box.createVerticalStrut(10));
@@ -101,9 +109,6 @@ public class TransferPopup extends JPanel {
      * @param players An array of Player objects representing the players.
      */
     public void renderButtons(Player[] players) {
-
-        
-
         buttonContainer.removeAll();
         for (Player player : players) {
             if (player != null) {
@@ -129,6 +134,17 @@ public class TransferPopup extends JPanel {
                         
                         System.out.println("Task claimed!");
                         GameSystem.hideCostPopup();
+                        GameSystem.refreshJournal();
+                    }
+                };
+
+                ActionListener takeTaskForFree = new ActionListener() {
+                    @Override
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        task.setOwnedBy(player);
+                        System.out.println("Task claimed!");
+                        GameSystem.hidePopup();
+                        GameSystem.refreshJournal();
                     }
                 };
         
@@ -139,10 +155,12 @@ public class TransferPopup extends JPanel {
                         if (GameSystem.getTurnOrder().length > 1) {
                             System.out.println("Show the task to other players");
                             GameSystem.hideCostPopup();
+                            GameSystem.hidePopup();
                             GameSystem.toggleTransfer(task);
                         } else {
                             System.out.println("No other players to show the task to");
                             GameSystem.hideCostPopup();
+                            GameSystem.hidePopup();
                         }
                     }
                 };
@@ -151,7 +169,14 @@ public class TransferPopup extends JPanel {
                     button.setEnabled(false);
                 } else {
                     button.addActionListener(e -> {
-                        GameSystem.showCostPopup(player.getName() + ", do you want to get this task?", task.getTitle() + "\nDo you want to buy this task for ", task.getResourceType().toString(), task.getResourceCost(), takeTask, rejectTask);
+                        if(task.getOwnedBy() == null) {
+                            // If the task is not owned by anyone, give the ability to buy this task to others.
+                            GameSystem.showCostPopup(player.getName() + ", do you want to get this task?", task.getTitle() + "\nDo you want to buy this task for ", task.getResourceType().toString(), task.getResourceCost(), takeTask, rejectTask);
+                        } else {
+                            // If the task is owned by someone, give the ability to transfer this task to others for free.
+                            GameSystem.showPopup("Do you want to accept this Task?", "Do you wish to accept the Task: " + task.getTitle(), "Yes", "No", takeTaskForFree, rejectTask);
+                        }
+                        
                         // GameSystem.purchaseTask(player, task.getResourceType(), task);
                         // task.setOwnedBy(player);
                         GameSystem.toggleTransfer(null);
