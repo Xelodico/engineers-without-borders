@@ -395,7 +395,6 @@ public class Player {
     public int rollDie() {
         Random randomGen = new Random();
         int randomNumber = randomGen.nextInt(6) + 1;
-        System.out.println(randomNumber);
         this.movesLeft = randomNumber;
         return randomNumber;
     }

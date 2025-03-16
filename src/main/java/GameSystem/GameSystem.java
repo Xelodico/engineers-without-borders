@@ -437,8 +437,6 @@ public abstract class GameSystem {
      */
     public static double getImplementationPercent() {
         double percentUnrounded = (double) currentTotalAwardedScore / maxScore;
-        System.out.println("Current Awarded Score total is " + currentTotalAwardedScore);
-        System.out.println();
         return Math.round(percentUnrounded * 1000.0) / 1000.0;
     }
 
@@ -617,7 +615,6 @@ public abstract class GameSystem {
                 scoreCalculation += currentSub.getCompletionScore();
             }
         }
-        System.out.println(scoreCalculation);
         return scoreCalculation;
 
     }

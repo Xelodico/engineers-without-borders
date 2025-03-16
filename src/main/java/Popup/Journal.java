@@ -114,7 +114,6 @@ public class Journal extends JPanel {
         int originalScrollValue = scrollPane.getVerticalScrollBar().getValue();
         solutionImplementation
                 .setText("Solution Implementation: " + (int) (GameSystem.getImplementationPercent() * 100) + "%");
-        System.out.println(GameSystem.getImplementationPercent());
 
         page.removeAll(); // Remove all existing components
         addCloseButton(page); // Re-add the close button
