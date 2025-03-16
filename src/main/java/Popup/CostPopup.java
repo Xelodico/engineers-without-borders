@@ -1,5 +1,8 @@
 package Popup;
 
+import BoardGame.ResourceType;
+import GameSystem.GameSystem;
+
 /**
  * The CostPopup class represents a popup window that displays a message with a
  * cost and currency.
@@ -35,7 +38,7 @@ public class CostPopup extends Popup {
      * @param currency the currency type to be displayed
      * @param cost     the cost to be displayed
      */
-    public void showPopup(String title, String message, String currency, int cost) {
+    public void showPopup(String title, String message, ResourceType currency, int cost) {
         setTitle(title);
         setDescription(formatMessage(message, currency, cost));
         setNoButtonAction(e -> hidePopup());
@@ -57,7 +60,15 @@ public class CostPopup extends Popup {
      * @param cost     the cost
      * @return the formatted message
      */
-    private String formatMessage(String message, String currency, int cost) {
-        return message + cost + " " + currency + "?";
+    private String formatMessage(String message, ResourceType currency, int cost) {
+
+        int currentAmount = 0;
+        if (currency == ResourceType.MONEY) {
+            currentAmount = GameSystem.getPlayerAt().getMoney();
+        } else {
+            currentAmount = GameSystem.getPlayerAt().getResource(currency);
+        }
+
+        return message + cost + " " + currency.toString() + "?\n You currently have " + currentAmount + " " + currency + ".";
     }
 }

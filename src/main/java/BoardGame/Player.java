@@ -300,6 +300,8 @@ public class Player {
                 break;
             case KNOWLEDGE:
                 this.knowledge = resource;
+            default:
+                break;
         }
         GameSystem.refreshResources();
     }
@@ -340,6 +342,8 @@ public class Player {
                 } else {
                     this.knowledge += changeAmount;
                 }
+            default:
+                break;
         }
         GameSystem.refreshResources();
     }

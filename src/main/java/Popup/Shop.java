@@ -65,7 +65,7 @@ public class Shop extends JPanel {
                 new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resources/coldAsphalt.png"))));
         item1.setBounds(412, 188, 70, 70);
         item1.addActionListener(e -> {
-            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Cold Asphalt for ", "Rand",
+            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Cold Asphalt for ", ResourceType.MONEY,
                     GameSystem.getResourcePrice(),
                     e1 -> {
                         if (GameSystem.purchaseResource(ResourceType.ASPHALT)) {
@@ -95,7 +95,7 @@ public class Shop extends JPanel {
                 new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resources/influence.png"))));
         item2.setBounds(600, 188, 70, 70);
         item2.addActionListener(e -> {
-            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Influence for ", "Rand",
+            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Influence for ", ResourceType.MONEY,
                     GameSystem.getResourcePrice(),
                     e1 -> {
                         if (GameSystem.purchaseResource(ResourceType.INFLUENCE)) {
@@ -123,7 +123,7 @@ public class Shop extends JPanel {
                 new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resources/knowledge.png"))));
         item3.setBounds(412, 360, 70, 70);
         item3.addActionListener(e -> {
-            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Knowledge for ", "Rand",
+            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Knowledge for ", ResourceType.MONEY,
                     GameSystem.getResourcePrice(),
                     e1 -> {
                         if (GameSystem.purchaseResource(ResourceType.KNOWLEDGE)) {
@@ -151,7 +151,7 @@ public class Shop extends JPanel {
                 new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/resources/volunteers.png"))));
         item4.setBounds(600, 360, 70, 70);
         item4.addActionListener(e -> {
-            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Volunteers for ", "Rand",
+            GameSystem.showCostPopup("Purchase Resource", "Do you want to buy Volunteers for ", ResourceType.MONEY,
                     GameSystem.getResourcePrice(),
                     e1 -> {
                         if (GameSystem.purchaseResource(ResourceType.VOLUNTEERS)) {

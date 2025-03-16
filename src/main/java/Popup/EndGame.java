@@ -68,6 +68,7 @@ public class EndGame extends JPanel {
     private void createEpilogueContainer() {
         JPanel epilogueContainer = new JPanel();
         epilogueContainer.setLayout(new BoxLayout(epilogueContainer, BoxLayout.Y_AXIS));
+        epilogueContainer.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
         add(epilogueContainer);
 
         textArea = new JTextPane();
@@ -94,8 +95,8 @@ public class EndGame extends JPanel {
         continueButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         continueButton.addActionListener(e -> showStats());
 
-        epilogueContainer.add(continueButton);
         epilogueContainer.add(Box.createVerticalStrut(20));
+        epilogueContainer.add(continueButton);
 
         cardPanel.add(epilogueContainer, "epilogue");
     }

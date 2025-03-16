@@ -94,7 +94,7 @@ public class BoardGameUI extends JFrame {
         toggleEnableButtons();
     }
 
-    public void showCostPopup(String title, String desc, String currency, int cost, ActionListener yesAction,
+    public void showCostPopup(String title, String desc, ResourceType currency, int cost, ActionListener yesAction,
             ActionListener noAction) {
         costPopup.showPopup(title, desc, currency, cost);
         costPopup.setYesButtonAction(yesAction);

@@ -108,7 +108,7 @@ public class TaskSquare extends Square {
         super.activateSquareEffect();
         if (task.getOwnedBy() == null) {
             GameSystem.showCostPopup("Do you want to get this task?",
-                    task.getTitle() + "\nDo you want to buy this task for ", task.getResourceType().toString(),
+                    task.getTitle() + "\nDo you want to buy this task for ", task.getResourceType(),
                     task.getResourceCost(), takeTask, rejectTask);
         } else if (task.getOwnedBy() != GameSystem.getPlayerAt()) {
             if (task.getCurrentSubTask().isDiscounted()) {
@@ -119,8 +119,8 @@ public class TaskSquare extends Square {
             } else {
                 GameSystem.showCostPopup("Do you want to help with this task?",
                         "The current Subtask is \"" + task.getCurrentSubTask().getTitle()
-                                + "\".\nWould you like to help out by spending ",
-                        task.getCurrentSubTask().getResourceType().toString(),
+                                + "\".\n\nWould you like to help out by spending ",
+                        task.getCurrentSubTask().getResourceType(),
                         task.getCurrentSubTask().getResourceCost() / 2, beginHelping, ignoreHelping);
             }
         } else {

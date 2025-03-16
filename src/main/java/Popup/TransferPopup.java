@@ -165,7 +165,7 @@ public class TransferPopup extends JPanel {
                             // others.
                             GameSystem.showCostPopup(player.getName() + ", do you want to get this task?",
                                     task.getTitle() + "\nDo you want to buy this task for ",
-                                    task.getResourceType().toString(), task.getResourceCost(), takeTask, rejectTask);
+                                    task.getResourceType(), task.getResourceCost(), takeTask, rejectTask);
                         } else {
                             // If the task is owned by someone, give the ability to transfer this task to
                             // others for free.

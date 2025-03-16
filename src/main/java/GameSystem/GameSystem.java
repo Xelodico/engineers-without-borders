@@ -97,6 +97,10 @@ public abstract class GameSystem {
         gameBoardUI.startGame(); // Start the game through the UI
         gameBoardUI.refresh(); // Refresh the UI to reflect updated game state
         toggleTutorial();
+        for (Task task : tasks) {
+            task.setOwnedBy(turnOrder[0]);
+            turnOrder[0].changeResource(task.getResourceCost(), task.getResourceType());
+        }
     }
 
     /**
@@ -481,7 +485,7 @@ public abstract class GameSystem {
         gameBoardUI.hidePopup();
     }
 
-    public static void showCostPopup(String title, String desc, String currency, int cost, ActionListener yesAction,
+    public static void showCostPopup(String title, String desc, ResourceType currency, int cost, ActionListener yesAction,
             ActionListener noAction) {
         gameBoardUI.showCostPopup(title, desc, currency, cost, yesAction, noAction);
     }
@@ -643,6 +647,7 @@ public abstract class GameSystem {
         gameActive = false; // Mark the game as inactive
         turnNumber = 0; // Reset turn tracking
         roundNumber = 0; // Reset round tracking
+        currentTotalAwardedScore = 0; // Reset total awarded score
 
         // Reset lists and objects related to game objectives and tasks
         objectives = new ArrayList<>();

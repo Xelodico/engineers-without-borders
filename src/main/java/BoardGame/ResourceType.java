@@ -11,7 +11,8 @@ public enum ResourceType {
 	ASPHALT,
 	VOLUNTEERS,
 	INFLUENCE,
-	KNOWLEDGE;
+	KNOWLEDGE,
+	MONEY;
 
 	/**
 	 * Returns a string representation of the resource type.
@@ -27,6 +28,8 @@ public enum ResourceType {
 			return "Influence";
 		} else if (this == KNOWLEDGE) {
 			return "Knowledge";
+		} else if (this == MONEY) {
+			return "Rand";
 		} else {
 			return "UNKNOWN RESOURCE";
 		}
