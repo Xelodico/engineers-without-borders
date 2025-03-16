@@ -269,11 +269,11 @@ public abstract class GameSystem {
      * This listener will hide the popup and end the game.
      */
     static ActionListener ranOutOfMoney = new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GameSystem.hidePopup();
-                endGame();
-            }
+        @Override
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            GameSystem.hidePopup();
+            toggleEndGame(Ending.BAD);
+        }
     };
     
         /**
@@ -329,7 +329,7 @@ public abstract class GameSystem {
         SubTask currentStep = selectedTask.getCurrentSubTask();
         boolean resourceCheck = currentPlayer.getResource(resourceType) >= currentStep.getResourceCost();
 
-        if(!resourceCheck) {
+        if (!resourceCheck) {
             return false;
         }
 
@@ -345,7 +345,6 @@ public abstract class GameSystem {
 
             // Progress the task onto the next subtask
             selectedTask.completeStep();
-            
 
             // If the task is now fully complete, award the task's completion score to the
             // player
@@ -355,7 +354,8 @@ public abstract class GameSystem {
 
                 // Update the UI to reflect the task's progress
                 final int[] squarePosition = new int[1];
-                gameBoard.getSquareArray().stream().filter(square -> square instanceof TaskSquare && ((TaskSquare) square).getTask() == selectedTask)
+                gameBoard.getSquareArray().stream().filter(
+                        square -> square instanceof TaskSquare && ((TaskSquare) square).getTask() == selectedTask)
                         .forEach(square -> squarePosition[0] = gameBoard.getSquareArray().indexOf(square));
                 gameBoard.setSquareAt(squarePosition[0], new Square());
             }
@@ -386,6 +386,7 @@ public abstract class GameSystem {
         // Subtract funds from player and add resources
         currentPlayer.changeMoney(-RESOURCE_PRICE);
         currentPlayer.changeResource(RESOURCE_REWARD_AMOUNT, resourceType);
+        currentPlayer.increaseMoneySpent(RESOURCE_PRICE);
 
         return true;
     }
@@ -414,16 +415,17 @@ public abstract class GameSystem {
         return RESOURCE_REWARD_AMOUNT;
     }
 
-    public static boolean discountSubTask(Task taskToDiscount){
+    public static boolean discountSubTask(Task taskToDiscount) {
         SubTask currentSubTask = taskToDiscount.getCurrentSubTask();
         System.out.println(currentSubTask.getResourceCost());
-        if (currentSubTask.getTitle().equals("")){
+        if (currentSubTask.getTitle().equals("")) {
             return false;
         }
 
+
         Player currentPlayer = getPlayerAt();
         int playerResourceAmount = currentPlayer.getResource(currentSubTask.getResourceType());
-        if (playerResourceAmount < currentSubTask.getResourceCost()){
+        if (playerResourceAmount < currentSubTask.getResourceCost()) {
             // You do not have enough money to discount this task
             return false;
         } else {
@@ -432,6 +434,7 @@ public abstract class GameSystem {
             int scoreIncrease = currentSubTask.getCompletionScore() / 2;
             currentPlayer.changeScoreBy(scoreIncrease);
             currentTotalAwardedScore += scoreIncrease;
+            currentPlayer.changeTimesHelped(1);
             currentSubTask.discountSubTask();
         }
 
@@ -471,88 +474,6 @@ public abstract class GameSystem {
 
         // If all objectives are completed, return true
         return true;
-    }
-
-    /**
-     * TODO: Remove method once achievements are implemented.
-     */
-    public static void endGame() {
-        // TODO: Remove placeholder players
-        Player player1 = new Player("Kal", 0, 100, 4);
-        player1.changeMoney(5000);
-        player1.increaseMoneySpent(1000);
-        player1.setScore(100);
-        Player player2 = new Player("Nathan", 0, 120, 2);
-        player2.changeMoney(1000);
-        player2.increaseMoneySpent(500);
-        player2.setScore(500);
-        turnOrder = new Player[] { player1, player2 };
-
-        // Display player scores
-        System.out.println("Final Scores:");
-
-        // Stores the indices of players who achieved notable milestones:
-        // - Highest Scorer: The player with the most points.
-        // - Lowest Spender: The player who spent the least amount of money.
-        // - Traveller: The player who moved the most across the board.
-        // - Resource Hogger: The player who collected the most resources.
-        // TODO: Consider adding a "Team Player" achievement for the most contributive
-        // player.
-        int highestScorer = 0, lowestSpender = 0, traveller = 0, resourceHogger = 0;
-        int maxScore = 0, minSpent = Integer.MAX_VALUE, maxResources = 0, maxTravelled = 0;
-
-        // Iterate through each player to determine the top achievers
-        // TODO: Update to reflect changes to resources in Player class
-        for (int i = 0; i < turnOrder.length; i++) {
-            // Determine the player with the highest score
-            if (turnOrder[i].getScore() > maxScore) {
-                highestScorer = i;
-                maxScore = turnOrder[i].getScore();
-            }
-
-            // Determine the player who spent the least money
-            if (turnOrder[i].getMoneySpent() < minSpent) {
-                lowestSpender = i;
-                minSpent = turnOrder[i].getMoneySpent();
-            }
-
-            // Determine the player who accumulated the most resources
-            // if (turnOrder[i].getResources() > maxResources) {
-            // resourceHogger = i;
-            // maxResources = turnOrder[i].getResources();
-            // }
-
-            // Determine the player who travelled the most
-            if (turnOrder[i].getMovesTravelled() > maxTravelled) {
-                traveller = i;
-                maxTravelled = turnOrder[i].getMovesTravelled();
-            }
-
-            // Print player stats
-            System.out.println(turnOrder[i].getName() + ":\n" +
-                    "Score: " + turnOrder[i].getScore() + "\n" +
-                    // "Resources: " + turnOrder[i].getResources() + "\n" +
-                    "Money: " + turnOrder[i].getMoney() + "\n");
-        }
-
-        // Display Player Achievements
-        System.out.println("Special Achievements!");
-        System.out.println("Highest Scorer: " + getPlayerAt(highestScorer).getName() +
-                " (" + getPlayerAt(highestScorer).getScore() + " points)");
-        System.out.println("The Cheapskate: " + getPlayerAt(lowestSpender).getName() +
-                " (Spent " + getPlayerAt(lowestSpender).getMoneySpent() + " rand)");
-        // System.out.println("The Resource Hogger: " +
-        // getPlayerAt(resourceHogger).getName() +
-        // " (Kept " + getPlayerAt(resourceHogger).getResources() + " bags of cold
-        // asphalt)");
-        System.out.println("The Traveller: " + getPlayerAt(traveller).getName() +
-                " (Travelled " + getPlayerAt(traveller).getMovesTravelled() + " squares)");
-
-        // showPopup("Thanks for playing Pavers Valley!", "Start a new game?", "Yes",
-        // "No");
-
-        // Terminate the game process
-        System.exit(0);
     }
 
     /**
@@ -671,7 +592,7 @@ public abstract class GameSystem {
                                 subtask.setResourceType(ResourceType.VOLUNTEERS);
                                 break;
                         }
-                        
+
                         task.addStep(subtask);
                     }
 
@@ -717,7 +638,8 @@ public abstract class GameSystem {
     }
 
     /**
-     * Replaces the current square of the player with a new generic square and generates a new MoneySquare
+     * Replaces the current square of the player with a new generic square and
+     * generates a new MoneySquare
      * at a random location on the game board.
      */
     public static void replaceMoneySquare() {

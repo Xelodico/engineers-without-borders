@@ -515,25 +515,22 @@ public class GameSystemTest {
 
     /**
      * Tests that purchasing a resource is successful when the player has sufficient
-     * quantity.
-     * <p>
-     * The player is initialized with at least 150 units of VOLUNTEERS and 500
      * money.
+     * <p>
+     * The player is initialized with at least 500 money.
      * When {@code GameSystem.purchaseResource(ResourceType.VOLUNTEERS)} is called,
      * the purchase should succeed:
      * <ul>
-     * <li>The player's money is reduced by 100 (the cost of the purchase).</li>
-     * <li>The player's VOLUNTEERS resource increases by 25.</li>
+     * <li>The player's money is reduced by 20 (the cost of the purchase).</li>
+     * <li>The player's VOLUNTEERS resource increases by 30.</li>
      * </ul>
      * </p>
      */
     @Test
     public void testPurchaseResourceSuccess() {
         Player player = new Player("Purchaser", 0);
-        // Ensure the player has sufficient VOLUNTEERS resource.
-        player.setResource(150, ResourceType.VOLUNTEERS);
         // Provide the player with some money.
-        player.changeMoney(500);
+        player.setMoney(500);
         int initialMoney = player.getMoney();
         int initialResource = player.getResource(ResourceType.VOLUNTEERS);
         Player[] players = { player };
@@ -541,18 +538,17 @@ public class GameSystemTest {
 
         boolean success = GameSystem.purchaseResource(ResourceType.VOLUNTEERS);
         assertTrue(success, "Purchase should succeed with sufficient resource.");
-        assertEquals(initialMoney - 100, player.getMoney(),
-                "Player's money should be reduced by RESOURCE_PRICE (100).");
-        assertEquals(initialResource + 25, player.getResource(ResourceType.VOLUNTEERS),
-                "Player's resource should increase by 25.");
+        assertEquals(initialMoney - GameSystem.getResourcePrice(), player.getMoney(),
+                "Player's money should be reduced by RESOURCE_PRICE (20).");
+        assertEquals(initialResource + GameSystem.getResourceAwardedAmount(),
+                player.getResource(ResourceType.VOLUNTEERS),
+                "Player's resource should increase by 30.");
     }
 
     /**
      * Tests that purchasing a resource fails when the player has insufficient
-     * resource quantity.
+     * money.
      * <p>
-     * The player's resource for KNOWLEDGE is set below the required threshold (less
-     * than 100).
      * When {@code GameSystem.purchaseResource(ResourceType.KNOWLEDGE)} is called,
      * the purchase should fail,
      * and neither the player's money nor the KNOWLEDGE resource should change.
@@ -561,9 +557,8 @@ public class GameSystemTest {
     @Test
     public void testPurchaseResourceFailure() {
         Player player = new Player("Purchaser", 0);
-        // Set insufficient KNOWLEDGE resource (below RESOURCE_PRICE, 100).
-        player.setResource(50, ResourceType.KNOWLEDGE);
-        player.changeMoney(500);
+        // Provide the player with some money insufficient to buy resources (20).
+        player.setMoney(10);
         int initialMoney = player.getMoney();
         int initialResource = player.getResource(ResourceType.KNOWLEDGE);
         Player[] players = { player };
@@ -623,12 +618,12 @@ public class GameSystemTest {
     @Test
     public void testCheckWinConditionAllComplete() throws Exception {
         // Retrieve the list of objectives from the game system
-        ArrayList<Objective> completeList = GameSystem.getObjectives();
+        ArrayList<Objective> objectives = GameSystem.getObjectives();
 
         // Iterate through each objective and mark all tasks as complete
-        for (Objective o : completeList) {
+        for (Objective o : objectives) {
             for (Task t : o.getTasks()) {
-                t.setCurrentStepNumber(t.getSteps().length); // Set task to final step
+                t.setCompleted(true);
             }
         }
 
@@ -654,7 +649,7 @@ public class GameSystemTest {
         for (int i = 0; i < mixedList.size() / 2; i++) {
             Objective o = mixedList.get(i);
             for (Task t : o.getTasks()) {
-                t.setCurrentStepNumber(t.getSteps().length); // Set task to final step
+                t.setCompleted(true);
             }
         }
 
