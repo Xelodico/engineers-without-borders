@@ -3,6 +3,8 @@ package BoardGame;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.Image;
+import java.util.Objects;
 
 import javax.swing.*;
 
@@ -24,16 +26,18 @@ public class StartScreen extends JPanel {
 
     private static final int BUTTON_WIDTH = 240;
     private static final int BUTTON_HEIGHT = 55;
-    private static final int BUTTON_SPACING = 10;
+    private static final int BUTTON_SPACING = 20;
     private static final int MAX_PLAYERS = 4;
 
     private static final int[] STARTING_COORDS = GameSystem.getSpawnLocations();
 
-    private final ImageIcon playerBackgroundIcon = new ImageIcon(getClass().getResource("/images/playerTurn.png"));
-    private final ImageIcon addPlayerIcon = new ImageIcon(getClass().getResource("/images/addPlayer.png"));
+    private final ImageIcon playerBackground = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/playerTurn.png")));
+    private final ImageIcon playerBackgroundIcon = new ImageIcon(playerBackground.getImage().getScaledInstance(BUTTON_WIDTH, BUTTON_HEIGHT, Image.SCALE_SMOOTH));
+    private final ImageIcon addPlayer = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/addPlayer.png")));
+    private final ImageIcon addPlayerIcon = new ImageIcon(addPlayer.getImage().getScaledInstance(BUTTON_WIDTH, BUTTON_HEIGHT, Image.SCALE_SMOOTH));
 
-    private JButton[] playerButtons = new JButton[MAX_PLAYERS]; // Array to hold buttons
-    private JTextField[] playerTextFields = new JTextField[MAX_PLAYERS]; // Array to hold text fields for player names
+    private final JButton[] playerButtons = new JButton[MAX_PLAYERS]; // Array to hold buttons
+    private final JTextField[] playerTextFields = new JTextField[MAX_PLAYERS]; // Array to hold text fields for player names
     private int numOfPlayers = 1;
 
     /**
@@ -57,7 +61,7 @@ public class StartScreen extends JPanel {
         title.setBounds(0, 0, WIDTH, (int) (HEIGHT * 0.15));
         title.setHorizontalAlignment(JLabel.CENTER);
         title.setVerticalAlignment(JLabel.BOTTOM);
-        title.setFont(new Font("Segoe UI", 0, 26));
+        title.setFont(new Font("Segue UI", Font.PLAIN, 26));
         add(title);
     }
 
@@ -94,9 +98,10 @@ public class StartScreen extends JPanel {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.setContentAreaFilled(false);
-        button.setBounds((WIDTH - 240) / 2, (int) (HEIGHT * 0.2) + (index * (BUTTON_HEIGHT + BUTTON_SPACING)),
+        button.setBounds((WIDTH - BUTTON_WIDTH) / 2, (int) (HEIGHT * 0.2) + (index * (BUTTON_HEIGHT + BUTTON_SPACING)),
                 BUTTON_WIDTH, BUTTON_HEIGHT);
         button.setHorizontalTextPosition(JButton.CENTER);
+
         return button;
     }
 
@@ -116,6 +121,7 @@ public class StartScreen extends JPanel {
         playerButtons[i].addActionListener(e -> {
             playerButtons[index].setIcon(playerBackgroundIcon);
             playerButtons[index].setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            playerTextFields[i].setVisible(true);
             if (index < MAX_PLAYERS - 1) {
                 playerButtons[index + 1].setVisible(true);
             }
@@ -131,9 +137,9 @@ public class StartScreen extends JPanel {
      */
     private JTextField createPlayerTextField() {
         JTextField textField = new JTextField();
-        textField.setBounds(0, 0, 240, 55);
+        textField.setBounds(0, 0, BUTTON_WIDTH, BUTTON_HEIGHT);
         textField.setHorizontalAlignment(JTextField.CENTER);
-        textField.setFont(new Font("Segoe UI", 0, 16));
+        textField.setFont(new Font("Segue UI", Font.PLAIN, 16));
         textField.setBorder(null);
         textField.setOpaque(false);
         return textField;
@@ -145,7 +151,7 @@ public class StartScreen extends JPanel {
     private void addStartButton() {
         JButton startButton = new JButton("Start Game");
         startButton.setBounds((WIDTH - BUTTON_WIDTH) / 2, (int) (HEIGHT * 0.8), BUTTON_WIDTH, BUTTON_HEIGHT);
-        startButton.setFont(new Font("Segoe UI", 0, 16));
+        startButton.setFont(new Font("Segue UI", Font.PLAIN, 16));
         startButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         startButton.addActionListener(e -> {
             GameSystem.setTurnOrder(getPlayers());
