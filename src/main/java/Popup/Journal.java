@@ -24,6 +24,7 @@ import javax.imageio.ImageIO;
  * Each objective contains multiple tasks, with vertical spacing between them.
  * 
  * @author Nathan Watkins
+ * @author Curtis McCartney (Supporting)
  */
 public class Journal extends JPanel {
 

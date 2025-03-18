@@ -10,8 +10,9 @@ import java.awt.event.ActionListener;
  * monetary benefit to the player.
  * The square gives a random amount of money to the player when they land on it.
  *
- * @author Kal Worthington
- * @author Antons Bogdanovs
+ * @author Curtis McCartney
+ * @author Kal Worthington (Supporting)
+ * @author Antons Bogdanovs (Supporting)
  */
 public class MoneySquare extends Square {
     private int money; // Stores the money value for this square.

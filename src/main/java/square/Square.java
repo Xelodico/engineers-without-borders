@@ -17,7 +17,7 @@ public class Square {
      * Constructs a new Square instance.
      */
     public Square() {
-
+        // No default behavior.
     }
 
     /**

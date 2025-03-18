@@ -10,8 +10,9 @@ import GameSystem.*;
  * task.
  * Players can attempt to complete the task when they land on this square.
  *
- * @author Kal Worthington
- * @author Antons Bogdanovs
+ * @author Curtis McCartney
+ * @author Kal Worthington (Supporting)
+ * @author Antons Bogdanovs (Supporting)
  */
 public class TaskSquare extends Square {
 
