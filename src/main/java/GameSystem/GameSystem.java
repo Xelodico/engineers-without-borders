@@ -97,10 +97,10 @@ public abstract class GameSystem {
         gameBoardUI.startGame(); // Start the game through the UI
         gameBoardUI.refresh(); // Refresh the UI to reflect updated game state
         toggleTutorial();
-        for (Task task : tasks) {
-            task.setOwnedBy(turnOrder[0]);
-            turnOrder[0].changeResource(task.getResourceCost(), task.getResourceType());
-        }
+        // for (Task task : tasks) {
+        //     task.setOwnedBy(turnOrder[0]);
+        //     turnOrder[0].changeResource(task.getResourceCost(), task.getResourceType());
+        // }
     }
 
     /**
