@@ -10,7 +10,14 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import BoardGame.*;
+import BoardGame.Board;
+import BoardGame.BoardGameUI;
+import BoardGame.Direction;
+import BoardGame.Objective;
+import BoardGame.Player;
+import BoardGame.ResourceType;
+import BoardGame.SubTask;
+import BoardGame.Task;
 import Popup.EndGame.Ending;
 import square.MoneySquare;
 import square.ShopSquare;
@@ -46,6 +53,7 @@ public abstract class GameSystem {
     // Keeps track of the current turn within a round
     private static int turnNumber;
 
+    // Lists to store objectives and tasks for the game
     private static ArrayList<Objective> objectives;
     private static ArrayList<Task> tasks;
 
@@ -62,13 +70,14 @@ public abstract class GameSystem {
 
     /**
      * Initialises the game by setting up essential components.
-     * Ensures initialisation happens only once by checking `gameActive`.
+     * Ensures initialisation happens only once by checking {@code gameActive}
      */
     public static void initialise() {
         if (!gameActive) {
             turnNumber = 0; // Reset turn number
             roundNumber = 0; // Reset round count
 
+            // Create new lists to store objectives and tasks
             objectives = new ArrayList<>();
             tasks = new ArrayList<>();
 
@@ -96,11 +105,7 @@ public abstract class GameSystem {
         roundNumber++; // Increment the round counter
         gameBoardUI.startGame(); // Start the game through the UI
         gameBoardUI.refresh(); // Refresh the UI to reflect updated game state
-        toggleTutorial();
-        // for (Task task : tasks) {
-        //     task.setOwnedBy(turnOrder[0]);
-        //     turnOrder[0].changeResource(task.getResourceCost(), task.getResourceType());
-        // }
+        toggleTutorial(); // Start the tutorial
     }
 
     /**
@@ -227,33 +232,39 @@ public abstract class GameSystem {
 
     /**
      * Moves the current player in the specified direction on the game board.
-     * It updates the player's position, checks for movement restrictions, and
-     * triggers any effects related to the occupied tile.
+     * 
+     * This method updates the player's position if they have remaining moves,
+     * checks if they land on a special square (e.g., a shop), updates the game
+     * board, and triggers the effect of the tile they land on.
      *
      * @param direction The direction in which the player wishes to move.
      */
     public static void movePlayer(Direction direction) {
         // Retrieve the player whose turn it is
         Player currentPlayer = getPlayerAt();
+
+        // Ensure the player has remaining moves before proceeding
         if (currentPlayer.getMovesLeft() > 0) {
-            // Execute the move action within the board boundaries
+            // Execute the move action, ensuring it remains within board boundaries
             currentPlayer.moveAction(direction, gameBoard.boardSideLength);
         }
 
+        // Check if the player has landed on a shop square and toggle shop button
+        // visibility
         if (gameBoard.getSquareAt(currentPlayer.getCoord()) instanceof ShopSquare) {
-            gameBoardUI.setShopButtonVisible(true);
+            gameBoardUI.setShopButtonVisible(true); // Enable shop access
         } else {
-            gameBoardUI.setShopButtonVisible(false);
+            gameBoardUI.setShopButtonVisible(false); // Hide shop button
         }
 
-        // Update players on board and activate the tile they fell on
+        // Update the game board to reflect the new player position
         gameBoard.renderPlayers(turnOrder);
 
-        // Get the square the player has landed on, and activate it's effect (later
-        // added using a button).
+        // Retrieve the square the player has landed on
         Square sqrAtPosition = gameBoard.getSquareAt(currentPlayer.getCoord());
-        sqrAtPosition.activateSquareEffect();
 
+        // Activate the effect of the landed square
+        sqrAtPosition.activateSquareEffect();
     }
 
     /**
@@ -267,7 +278,13 @@ public abstract class GameSystem {
 
     /**
      * Moves the turn to the next player.
+     * 
      * If all players have taken their turn, the game progresses to the next round.
+     * At the start of a new round, each player pays a maintenance cost, and if a
+     * player runs out of money, the game ends for all of them. The method also
+     * checks if the next player lands on a shop square and updates the shop button
+     * visibility accordingly.
+     * 
      */
     public static void nextTurn() {
         // If the last player in the turn order has finished their turn, reset to the
@@ -276,159 +293,243 @@ public abstract class GameSystem {
             turnNumber = 0; // Reset turn number to first player
             roundNumber++; // Start a new round
 
-            // Deduct money from each player at the end of the round
+            // Deduct maintenance cost from each player at the end of the round
             for (Player player : turnOrder) {
                 player.changeMoney(-MAINTENANCE_COST_EACH_ROUND);
+
+                // If a player runs out of money, trigger the game-ending popup
                 if (player.getMoney() <= 0) {
                     showPopup("Game Finished!", player.getName() + " ran out of Money!", "End Game", null,
                             ranOutOfMoney, null);
                 }
             }
+
+            // Refresh game resources at the beginning of a new round
             refreshResources();
         } else {
             // Otherwise, move to the next player's turn
             turnNumber++;
         }
 
+        // Check if the next player's current square is a shop and update shop button
+        // visibility
         if (gameBoard.getSquareAt(getPlayerAt().getCoord()) instanceof ShopSquare) {
-            gameBoardUI.setShopButtonVisible(true);
+            gameBoardUI.setShopButtonVisible(true); // Enable shop access
         } else {
-            gameBoardUI.setShopButtonVisible(false);
+            gameBoardUI.setShopButtonVisible(false); // Hide shop button
         }
-
-    }
-
-    public static int[] getSpawnLocations() {
-        return new int[] { 40 };
     }
 
     /**
-     * Completes one step of the selected Task object and awards the current player
-     * points before moving to
-     * the next step
+     * Retrieves the designated spawn locations on the board.
      * 
-     * @param selectedTask - The task to progress
+     * These locations are used to determine where players or specific game
+     * elements should be placed at the start of the game.
+     * 
+     * @return An array of integers representing spawn locations.
+     */
+    public static int[] getSpawnLocations() {
+        return new int[] { 40 }; // Predefined spawn location on the board
+    }
+
+    /**
+     * Progresses the selected task by completing one step and awarding points to
+     * the current player.
+     * 
+     * This method checks if the player has enough resources to complete the current
+     * step.
+     * If the step is completed successfully, it deducts resources, updates the
+     * player's score, and moves the task to the next subtask. If the task is fully
+     * completed, additional completion points are awarded, and the corresponding
+     * board square is updated.
+     *
+     * @param selectedTask The task to progress.
+     * @return {@code true} if the task progresses successfully, {@code false} if
+     *         resources are insufficient.
      */
     public static boolean progressTask(Task selectedTask) {
-        // Get current player
+        // Get the current player whose turn it is
         Player currentPlayer = getPlayerAt();
 
-        // Check that the next step is able to be completed and task is not completed
-        // already
+        // Retrieve the required resource type and current step of the task
         ResourceType resourceType = selectedTask.getResourceType();
         SubTask currentStep = selectedTask.getCurrentSubTask();
-        boolean resourceCheck = currentPlayer.getResource(resourceType) >= currentStep.getResourceCost();
 
+        // Check if the player has enough resources to complete the step
+        boolean resourceCheck = currentPlayer.getResource(resourceType) >= currentStep.getResourceCost();
         if (!resourceCheck) {
-            return false;
+            return false; // Task progression fails due to insufficient resources
         }
 
+        // Ensure the task is not already completed
         if (!selectedTask.isCompleted()) {
-            // Subtract from current player's resources
+            // Deduct the required resources from the player's inventory
             int newResourceAmount = currentPlayer.getResource(resourceType) - currentStep.getResourceCost();
             currentPlayer.setResource(newResourceAmount, resourceType);
 
-            // Update player score and global score
+            // Award points to the player for completing the step
             int scoreIncrease = currentStep.getCompletionScore();
             currentPlayer.changeScoreBy(scoreIncrease);
             currentTotalAwardedScore += scoreIncrease;
 
-            // Progress the task onto the next subtask
+            // Move the task to the next subtask
             selectedTask.completeStep();
 
-            // If the task is now fully complete, award the task's completion score to the
-            // player
+            // If the task is now fully complete, award additional completion points
             if (selectedTask.isCompleted()) {
                 currentPlayer.changeScoreBy(selectedTask.getCompletionScore());
                 currentTotalAwardedScore += selectedTask.getCompletionScore();
 
-                // Update the UI to reflect the task's progress
+                // Find the square containing the completed task and replace it with a normal
+                // square
                 final int[] squarePosition = new int[1];
-                gameBoard.getSquareArray().stream().filter(
-                        square -> square instanceof TaskSquare && ((TaskSquare) square).getTask() == selectedTask)
+                gameBoard.getSquareArray().stream()
+                        .filter(square -> square instanceof TaskSquare
+                                && ((TaskSquare) square).getTask() == selectedTask)
                         .forEach(square -> squarePosition[0] = gameBoard.getSquareArray().indexOf(square));
+
+                // Update the board, removing the completed task
                 gameBoard.setSquareAt(squarePosition[0], new Square());
             }
         }
-        return true;
+        return true; // Task successfully progressed
     }
 
     /**
-     * Subtracts funds equal to RESOURCE_PRICE from the current player's funds and
-     * gives them a set amount of
-     * resources of the type inputed in return.
-     * Cannot purchase if the player doesn't have enough funds
+     * Attempts to purchase a specified resource for the current player.
      * 
-     * @param resourceType - The type of resource being purchased
-     * @return - True if there was enough money to purchase the resources, false if
-     *         not
+     * This method deducts a fixed amount of money ({@code RESOURCE_PRICE})
+     * from the player's funds and grants them a predefined amount of the
+     * requested resource ({@code RESOURCE_REWARD_AMOUNT}).
+     * If the player does not have enough funds, the purchase fails.
+     *
+     * @param resourceType The type of resource being purchased.
+     * @return {@code true} if the purchase was successful, {@code false} if the
+     *         player lacks funds.
      */
     public static boolean purchaseResource(ResourceType resourceType) {
-        // Get current player
+        // Retrieve the player whose turn it is
         Player currentPlayer = getPlayerAt();
 
-        // Check that player has enough funds to buy some resources (from RESOURCE_PRICE
-        // constant)
+        // Ensure the player has enough funds to purchase the resource
         if (currentPlayer.getMoney() < RESOURCE_PRICE) {
-            return false;
+            return false; // Purchase fails due to insufficient funds
         }
 
-        // Subtract funds from player and add resources
+        // Deduct the resource cost from the player's balance
         currentPlayer.changeMoney(-RESOURCE_PRICE);
+
+        // Grant the player the purchased resource
         currentPlayer.changeResource(RESOURCE_REWARD_AMOUNT, resourceType);
+
+        // Track the total amount of money the player has spent
         currentPlayer.increaseMoneySpent(RESOURCE_PRICE);
 
-        return true;
+        return true; // Purchase was successful
     }
 
+    /**
+     * Attempts to purchase a task using the specified resource type.
+     * 
+     * This method checks if the player has enough resources to acquire the task.
+     * If successful, the required amount of resources is deducted from the player's
+     * inventory, and ownership of the task is assigned to the player.
+     *
+     * @param player       The player attempting to purchase the task.
+     * @param resourceType The type of resource being used for the purchase.
+     * @param task         The task being acquired by the player.
+     * @return {@code true} if the purchase was successful, {@code false} if the
+     *         player lacks sufficient resources.
+     */
     public static boolean purchaseTask(Player player, ResourceType resourceType, Task task) {
-        // Get current player
+        // Retrieve the current player making the purchase
         Player currentPlayer = player;
 
-        // Check that player has enough resources to buy the task
+        // Ensure the player has enough resources to afford the task
         if (currentPlayer.getResource(resourceType) < task.getResourceCost()) {
-            return false;
+            return false; // Purchase fails due to insufficient resources
         }
 
-        // Subtract resources from player and add task
+        // Deduct the resource cost from the player's inventory
         currentPlayer.changeResource(-task.getResourceCost(), resourceType);
+
+        // Assign ownership of the task to the player
         task.setOwnedBy(player);
 
-        return true;
+        return true; // Purchase was successful
     }
 
+    /**
+     * Retrieves the fixed price required to purchase a resource.
+     * 
+     * @return The cost of a resource in game currency.
+     */
     public static int getResourcePrice() {
         return RESOURCE_PRICE;
     }
 
+    /**
+     * Retrieves the amount of resources awarded when a player purchases them.
+     * 
+     * @return The number of resource units given per purchase.
+     */
     public static int getResourceAwardedAmount() {
         return RESOURCE_REWARD_AMOUNT;
     }
 
+    /**
+     * Allows a player to assist another player by discounting the cost of a
+     * subtask.
+     * 
+     * This method enables cooperative gameplay by letting players use their
+     * resources to partially fund a subtask for another player. The assisting
+     * player spends half the original resource cost, gains half of the completion
+     * score as a reward, and increases their "times helped" counter.
+     * 
+     * If the subtask is valid and the assisting player has sufficient resources,
+     * the subtask is marked as discounted.
+     * </p>
+     * 
+     * @param taskToDiscount The task whose current subtask is being discounted.
+     * @return {@code true} if the discount was successfully applied, {@code false}
+     *         if the discount was not possible.
+     */
     public static boolean discountSubTask(Task taskToDiscount) {
+        // Retrieve the current subtask of the specified task
         SubTask currentSubTask = taskToDiscount.getCurrentSubTask();
-        System.out.println(currentSubTask.getResourceCost());
+
+        // Check if the subtask is valid for a discount (must have a title)
         if (currentSubTask.getTitle().equals("")) {
-            return false;
+            return false; // Subtask is invalid for discounting
         }
 
+        // Get the assisting player
         Player currentPlayer = getPlayerAt();
+
+        // Retrieve the player's available resource amount for the required type
         int playerResourceAmount = currentPlayer.getResource(currentSubTask.getResourceType());
+
+        // Ensure the player has enough resources to apply the discount
         if (playerResourceAmount < currentSubTask.getResourceCost()) {
-            // You do not have enough money to discount this task
-            return false;
+            return false; // Not enough resources to assist with the task
         } else {
-            // Continue with discounting the task
+            // Apply the discount by reducing the player's resource count by half the
+            // original cost
             currentPlayer.changeResource(-currentSubTask.getResourceCost() / 2, currentSubTask.getResourceType());
+
+            // Award the assisting player half of the original completion score
             int scoreIncrease = currentSubTask.getCompletionScore() / 2;
             currentPlayer.changeScoreBy(scoreIncrease);
             currentTotalAwardedScore += scoreIncrease;
+
+            // Increment the assisting player's "times helped" counter
             currentPlayer.changeTimesHelped(1);
+
+            // Mark the subtask as discounted
             currentSubTask.discountSubTask();
         }
 
-        System.out.println(currentSubTask.getResourceCost());
-        return true;
+        return true; // Discount successfully applied
     }
 
     /**
@@ -464,20 +565,32 @@ public abstract class GameSystem {
     }
 
     /**
-     * Displays a popup message to the player with customizable buttons.
+     * Displays a customisable popup message to the player.
+     * 
+     * This method triggers a popup window with a title, description, and optional
+     * "Yes" and "No" buttons. The buttons can have custom text and associated
+     * actions, allowing for interactive choices within the game.
      *
      * @param title     The title of the popup window.
-     * @param desc      The description or message to display in the popup.
-     * @param yesButton The text for the "Yes" button.
-     * @param noButton  The text for the "No" button.
+     * @param desc      The message or description displayed in the popup.
+     * @param yesButton The text for the "Yes" button (can be {@code null} if not
+     *                  needed).
+     * @param noButton  The text for the "No" button (can be {@code null} if not
+     *                  needed).
+     * @param yesAction The action triggered when the "Yes" button is clicked (can
+     *                  be {@code null}).
+     * @param noAction  The action triggered when the "No" button is clicked (can be
+     *                  {@code null}).
      */
     public static void showPopup(String title, String desc, String yesButton, String noButton, ActionListener yesAction,
             ActionListener noAction) {
+        // Delegate the popup creation to the game UI
         gameBoardUI.showPopup(title, desc, yesButton, noButton, yesAction, noAction);
     }
 
     /**
      * Hides the currently displayed popup window in the game UI.
+     * 
      * This method ensures that any active popups are closed when they
      * are no longer needed, improving the user experience.
      */
@@ -485,12 +598,34 @@ public abstract class GameSystem {
         gameBoardUI.hidePopup();
     }
 
-    public static void showCostPopup(String title, String desc, ResourceType currency, int cost, ActionListener yesAction,
-            ActionListener noAction) {
+    /**
+     * Displays a cost-related popup message to the player.
+     * 
+     * This method triggers a popup that presents a cost decision to the player,
+     * displaying a title, description, required resource type, and cost amount.
+     * The popup includes optional "Yes" and "No" buttons with customisable actions.
+     *
+     * @param title     The title of the popup window.
+     * @param desc      The message or description displayed in the popup.
+     * @param currency  The type of resource being used as currency for the cost.
+     * @param cost      The amount of the resource required.
+     * @param yesAction The action triggered when the "Yes" button is clicked (can
+     *                  be {@code null}).
+     * @param noAction  The action triggered when the "No" button is clicked (can be
+     *                  {@code null}).
+     */
+    public static void showCostPopup(String title, String desc, ResourceType currency, int cost,
+            ActionListener yesAction, ActionListener noAction) {
+        // Delegate the popup creation to the game UI
         gameBoardUI.showCostPopup(title, desc, currency, cost, yesAction, noAction);
     }
 
+    /**
+     * Hides the currently displayed cost popup.
+     * This method closes the cost-related popup if it is currently visible.
+     */
     public static void hideCostPopup() {
+        // Delegate the hide action to the game UI
         gameBoardUI.hideCostPopup();
     }
 
@@ -529,38 +664,63 @@ public abstract class GameSystem {
         gameBoardUI.toggleTransfer(task);
     }
 
+    /**
+     * Refreshes the in-game journal UI.
+     * 
+     * This method updates the journal interface, ensuring that the latest
+     * information is displayed to the player.
+     */
     public static void refreshJournal() {
         gameBoardUI.refreshJournal();
     }
 
+    /**
+     * Triggers the end-game sequence based on the game's outcome.
+     * 
+     * This method determines whether the game ends with a success or failure
+     * and updates the UI accordingly.
+     * 
+     * @param ending The final game outcome (e.g., GOOD or BAD ending).
+     */
     public static void toggleEndGame(Ending ending) {
         gameBoardUI.toggleEndGame(ending);
     }
 
     /**
-     * Generates Objectives, Tasks, and Subtasks.
+     * Loads and generates Objectives, Tasks, and Subtasks from a JSON file.
+     * 
+     * This method reads task-related data from a JSON file and dynamically
+     * creates Objective, Task, and SubTask objects. Each task is assigned a
+     * resource type based on its corresponding objective.
      */
     private static void createData() {
         String file = "src/main/resources/tasks.json";
         try {
+            // Read JSON file contents into a string
             String contents = new String((Files.readAllBytes(Paths.get(file))));
             JSONArray o = new JSONArray(contents);
+
+            // Iterate through each objective in the JSON array
             o.forEach((objective) -> {
                 JSONObject obj = (JSONObject) objective;
                 Objective o1 = new Objective(obj.getString("objective"));
                 objectives.add(o1);
 
+                // Iterate through tasks within the objective
                 obj.getJSONArray("tasks").forEach((t) -> {
                     JSONObject tObj = (JSONObject) t;
                     Task task = new Task();
                     task.setTitle(tObj.getString("task"));
                     tasks.add(task);
 
+                    // Assign subtasks to the task
                     JSONArray subtasksArr = tObj.getJSONArray("subtasks");
                     for (int i = 0; i < subtasksArr.length(); i++) {
                         SubTask subtask = new SubTask();
                         subtask.setTitle(subtasksArr.getString(i));
                         task.setBelongsTo(o1);
+
+                        // Assign resource type based on objective title
                         switch (o1.getTitle()) {
                             case "Repair Potholes (Cold Asphalt)":
                                 task.setResourceType(ResourceType.ASPHALT);
@@ -582,54 +742,63 @@ public abstract class GameSystem {
 
                         task.addStep(subtask);
                     }
-
                     o1.addTask(task);
                 });
             });
 
         } catch (IOException | NullPointerException e) {
+            // Handle file read errors and unexpected null references
             System.err.println("Error reading file: " + file);
             System.exit(1);
         }
 
+        // Assign UI colors to the first four objectives to enable colour-coded board
+        // squares
         objectives.get(0).setUiColour(Color.BLUE);
         objectives.get(1).setUiColour(Color.RED);
         objectives.get(2).setUiColour(Color.MAGENTA);
         objectives.get(3).setUiColour(Color.CYAN);
-
     }
 
     /**
-     * Calculates the total score of all tasks and subtasks in the game
-     * Should be called ideally after data has already been initialised
+     * Calculates the total maximum score achievable in the game.
      * 
-     * @return The total score of all tasks and subtasks in the game
+     * This method iterates through all tasks and their corresponding subtasks,
+     * summing up their completion scores to determine the highest possible score.
+     * It should be called after all game data has been initialised to ensure
+     * accurate calculations.
+     * 
+     * @return The total maximum score of all tasks and subtasks in the game.
      */
     private static int calculateMaxScore() {
         int scoreCalculation = 0;
 
-        // Loop through all tasks and add their completion score to the calculation
-        // (including step scores)
+        // Iterate through all tasks and accumulate their completion scores
         for (Task currentTask : tasks) {
             scoreCalculation += currentTask.getCompletionScore();
 
-            // Loop through all of this task's steps and add their score to the calculation
-            // as well
+            // Include the completion scores of all subtasks within the task
             for (SubTask currentSub : currentTask.getSteps()) {
                 scoreCalculation += currentSub.getCompletionScore();
             }
         }
         return scoreCalculation;
-
     }
 
     /**
-     * Replaces the current square of the player with a new generic square and
-     * generates a new MoneySquare
-     * at a random location on the game board.
+     * Handles the transition after a player lands on a MoneySquare and claims its
+     * reward.
+     * 
+     * This method generates a new MoneySquare at a random location on the board
+     * while converting the current MoneySquare (where the player landed) into a
+     * generic square after the money has been claimed. This ensures dynamic
+     * gameplay by keeping MoneySquares available in different locations.
      */
     public static void replaceMoneySquare() {
+        // Generate one new MoneySquare at a random location on the board
         gameBoard.generateNewSquares(1, new MoneySquare());
+
+        // Replace the MoneySquare the player landed on with a standard generic square
         gameBoard.setSquareAt(getPlayerAt().getCoord(), new Square());
     }
 
@@ -664,7 +833,16 @@ public abstract class GameSystem {
         gameBoardUI = null;
     }
 
+    /**
+     * Updates the resource values displayed in the game UI.
+     * 
+     * This method ensures that the player's resource values are updated
+     * dynamically in the UI to reflect any changes in resource amounts.
+     * It should be called whenever resources are modified.
+     * 
+     */
     public static void refreshResources() {
+        // Update the displayed resource values in the game UI
         gameBoardUI.setResourceValues();
     }
 
