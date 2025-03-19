@@ -74,8 +74,12 @@ public class TransferPopup extends JPanel {
         cancelButton.addActionListener(e -> {
             GameSystem.toggleTransfer(null);
             if (task.getOwnedBy() == null) {
-                GameSystem.showPopup("Task not claimed!", task.getTitle() + " was not claimed due to poor funding.",
+                GameSystem.showPopup("Task not claimed!", task.getTitle() + " was not claimed due to poor funding.\n" +
+                                        "As a consequence, 5 Rand has been taken from all Players!",
                         "Ok", null, okSingleButton, null);
+                        for(int i = 0; i < GameSystem.getTurnOrder().length; i++){
+                            GameSystem.getTurnOrder()[i].changeMoney(-5);
+                        }
             } else {
                 GameSystem.showPopup("Task not transferred!",
                         task.getTitle() + " was not transferred to another player.", "Ok", null, okSingleButton, null);
