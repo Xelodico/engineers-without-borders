@@ -35,7 +35,7 @@ There are special squares on the board, these are:
 There are 4 Objectives, each with their own tasks and subtasks:
 1. Secure Grant (using your Influence)
 2. Repair Potholes (with Cold Asphalt)
-3. Train Volunteers (with Teaching Material)
+3. Train Volunteers (with Knowledge)
 4. Secure Longevity (using Volunteers from the community)
 Each player is assigned an objective at the start of the game. Tasks can be collected by landing on a task square.
 Objectives, tasks and subtasks can be viewed anytime by clicking the Journal icon.

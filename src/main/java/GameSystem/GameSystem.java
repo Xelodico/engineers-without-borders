@@ -730,7 +730,7 @@ public abstract class GameSystem {
                                 task.setResourceType(ResourceType.INFLUENCE);
                                 subtask.setResourceType(ResourceType.INFLUENCE);
                                 break;
-                            case "Train Volunteers (Teaching Material)":
+                            case "Train Volunteers (Knowledge)":
                                 task.setResourceType(ResourceType.KNOWLEDGE);
                                 subtask.setResourceType(ResourceType.KNOWLEDGE);
                                 break;
