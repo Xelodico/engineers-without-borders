@@ -193,20 +193,6 @@ public class Board extends JPanel {
             existingSquares.get(type).add(i); // Track all existing square types
 
             if (type == SquareType.SQUARE) {
-                // If the game has started, don't place the moneySquare on a coordinate that a
-                // Player is standing on
-                if (players != null) {
-                    boolean playerOnSquare = false;
-                    for (Player player : players) {
-                        if (player.getCoord() == i) {
-                            playerOnSquare = true;
-                            break;
-                        }
-                    }
-                    if (playerOnSquare) {
-                        continue;
-                    }
-                }
                 availablePositions.add(i); // Collect blank squares
             }
         }
