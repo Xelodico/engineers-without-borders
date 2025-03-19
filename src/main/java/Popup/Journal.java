@@ -307,7 +307,14 @@ public class Journal extends JPanel {
             completeButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
             task.add(completeButton);
 
-            ActionListener okSingleButton = e -> GameSystem.hidePopup();
+            ActionListener okSingleButton = e -> {
+                GameSystem.hidePopup();
+                
+                if (GameSystem.checkWinCondition()) {
+                    GameSystem.toggleJournal();
+                    GameSystem.toggleEndGame(Ending.GOOD);
+                }
+            };
 
             ActionListener progressTaskActionListener = e -> {
                 GameSystem.hideCostPopup();
@@ -328,10 +335,6 @@ public class Journal extends JPanel {
                 GameSystem.showCostPopup("Do you wish to progress this Task?", "It will cost you ",
                         t.getResourceType(), t.getCurrentSubTask().getResourceCost(),
                         progressTaskActionListener, rejectTaskActionListener);
-                if (GameSystem.checkWinCondition()) {
-                    GameSystem.toggleJournal();
-                    GameSystem.toggleEndGame(Ending.GOOD);
-                }
                 refresh();
             });
         }
