@@ -224,6 +224,11 @@ public class Board extends JPanel {
                 }
             }
 
+            for(int i = 0; i <GameSystem.getTurnOrder().length; i++){
+                if(GameSystem.getTurnOrder()[i].getCoord() == index){
+                    continue;
+                }
+            }
             squareArray.set(index, squareType);
             existingSquares.get(squareType.getSquareType()).add(index); // Track the new placement
             placed++;
