@@ -69,6 +69,7 @@ public class CostPopup extends Popup {
             currentAmount = GameSystem.getPlayerAt().getResource(currency);
         }
 
-        return message + cost + " " + currency.toString() + "?\n You currently have " + currentAmount + " " + currency + ".";
+        return message + cost + " " + currency.toString() + "?\n You currently have " + currentAmount + " " + currency
+                + ".";
     }
 }

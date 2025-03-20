@@ -309,7 +309,7 @@ public class Journal extends JPanel {
 
             ActionListener okSingleButton = e -> {
                 GameSystem.hidePopup();
-                
+
                 if (GameSystem.checkWinCondition()) {
                     GameSystem.toggleJournal();
                     GameSystem.toggleEndGame(Ending.GOOD);

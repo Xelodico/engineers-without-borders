@@ -31,13 +31,18 @@ public class StartScreen extends JPanel {
 
     private static final int[] STARTING_COORDS = GameSystem.getSpawnLocations();
 
-    private final ImageIcon playerBackground = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/PlayerTurn.png")));
-    private final ImageIcon playerBackgroundIcon = new ImageIcon(playerBackground.getImage().getScaledInstance(BUTTON_WIDTH, BUTTON_HEIGHT, Image.SCALE_SMOOTH));
-    private final ImageIcon addPlayer = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/addPlayer.png")));
-    private final ImageIcon addPlayerIcon = new ImageIcon(addPlayer.getImage().getScaledInstance(BUTTON_WIDTH, BUTTON_HEIGHT, Image.SCALE_SMOOTH));
+    private final ImageIcon playerBackground = new ImageIcon(
+            Objects.requireNonNull(getClass().getResource("/images/PlayerTurn.png")));
+    private final ImageIcon playerBackgroundIcon = new ImageIcon(
+            playerBackground.getImage().getScaledInstance(BUTTON_WIDTH, BUTTON_HEIGHT, Image.SCALE_SMOOTH));
+    private final ImageIcon addPlayer = new ImageIcon(
+            Objects.requireNonNull(getClass().getResource("/images/addPlayer.png")));
+    private final ImageIcon addPlayerIcon = new ImageIcon(
+            addPlayer.getImage().getScaledInstance(BUTTON_WIDTH, BUTTON_HEIGHT, Image.SCALE_SMOOTH));
 
     private final JButton[] playerButtons = new JButton[MAX_PLAYERS]; // Array to hold buttons
-    private final JTextField[] playerTextFields = new JTextField[MAX_PLAYERS]; // Array to hold text fields for player names
+    private final JTextField[] playerTextFields = new JTextField[MAX_PLAYERS]; // Array to hold text fields for player
+                                                                               // names
     private int numOfPlayers = 1;
 
     /**

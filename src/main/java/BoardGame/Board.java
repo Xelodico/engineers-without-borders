@@ -225,8 +225,8 @@ public class Board extends JPanel {
             }
 
             if (GameSystem.getTurnOrder() != null) {
-                for(int i = 0; i <GameSystem.getTurnOrder().length; i++){
-                    if(GameSystem.getTurnOrder()[i].getCoord() == index){
+                for (int i = 0; i < GameSystem.getTurnOrder().length; i++) {
+                    if (GameSystem.getTurnOrder()[i].getCoord() == index) {
                         continue;
                     }
                 }
