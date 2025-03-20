@@ -247,6 +247,8 @@ public abstract class GameSystem {
         if (currentPlayer.getMovesLeft() > 0) {
             // Execute the move action, ensuring it remains within board boundaries
             currentPlayer.moveAction(direction, gameBoard.boardSideLength);
+        } else {
+            return;
         }
 
         // Check if the player has landed on a shop square and toggle shop button
