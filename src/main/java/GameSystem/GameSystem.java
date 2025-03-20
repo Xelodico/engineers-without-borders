@@ -298,12 +298,6 @@ public abstract class GameSystem {
             // Deduct maintenance cost from each player at the end of the round
             for (Player player : turnOrder) {
                 player.changeMoney(-MAINTENANCE_COST_EACH_ROUND);
-
-                // If a player runs out of money, trigger the game-ending popup
-                if (player.getMoney() <= 0) {
-                    showPopup("Game Finished!", player.getName() + " ran out of Money!", "End Game", null,
-                            ranOutOfMoney, null);
-                }
             }
 
             // Refresh game resources at the beginning of a new round
@@ -311,6 +305,14 @@ public abstract class GameSystem {
         } else {
             // Otherwise, move to the next player's turn
             turnNumber++;
+        }
+
+        for (Player player : turnOrder) {
+            // If a player runs out of money, trigger the game-ending popup
+            if (player.getMoney() <= 0) {
+                showPopup("Game Finished!", player.getName() + " ran out of Money!", "End Game", null,
+                        ranOutOfMoney, null);
+            }
         }
 
         // Check if the next player's current square is a shop and update shop button
