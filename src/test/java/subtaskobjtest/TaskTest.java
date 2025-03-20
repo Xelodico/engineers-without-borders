@@ -44,7 +44,7 @@ class TaskTest {
 	
 	@Test
 	void testIsCompleted() {
-		task.setCurrentStepNumber(3);
+		task.setCompleted(true);
 		assertTrue(task.isCompleted(), "isCompleted() should return true");
 	}
 	

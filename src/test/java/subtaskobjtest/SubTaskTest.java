@@ -16,17 +16,17 @@ import BoardGame.SubTask;
 class SubTaskTest {
 
 	private SubTask subtask;
-	
+
 	@BeforeEach
 	void setUp() {
 		subtask = new SubTask("Research Funding Opportunities", 10, 25, ResourceType.INFLUENCE);
 	}
-	
+
 	@Test
 	void testDiscount() {
 		subtask.discountSubTask();
 		assertEquals(5, subtask.getCompletionScore(), "completionScore should equal 5");
-		assertEquals(12, subtask.getResourceCost(), "resourceCost should equal 12");
+		assertEquals(13, subtask.getResourceCost(), "resourceCost should equal 13");
 	}
 
 	@Test

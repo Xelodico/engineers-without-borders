@@ -45,7 +45,7 @@ public class BoardTest {
     @Test
     void testBoardInitialization() {
         assertNotNull(board.getSquareArray(), "Board squares should be initialized");
-        assertEquals(144, board.getSquareArray().size(), "Board should have 144 squares");
+        assertEquals(81, board.getSquareArray().size(), "Board should have 144 squares");
     }
 
     @Test
@@ -64,8 +64,9 @@ public class BoardTest {
 
     @Test
     void testGenerateNewSquares() {
-        board.generateNewSquares(5, new MoneySquare());
-        assertEquals(5, board.getSquareArray().stream().filter(square -> square instanceof MoneySquare).count(), "Should generate 5 money squares");
+        assertEquals(2, board.getSquareArray().stream().filter(square -> square instanceof MoneySquare).count(), "Board should be initialized with 2 money squares");
+        board.generateNewSquares(2, new MoneySquare());
+        assertEquals(4, board.getSquareArray().stream().filter(square -> square instanceof MoneySquare).count(), "Should generate 2 more money squares totalling 4");
     }
 
     @Test

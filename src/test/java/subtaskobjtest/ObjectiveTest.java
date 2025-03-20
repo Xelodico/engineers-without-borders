@@ -44,17 +44,17 @@ class ObjectiveTest {
 	
 	@Test
 	void testIsCompletedSuccess() {
-		t1.setCurrentStepNumber(3);
-		t2.setCurrentStepNumber(3);
-		t3.setCurrentStepNumber(3);
+		t1.setCompleted(true);
+		t2.setCompleted(true);
+		t3.setCompleted(true);
 		assertTrue(objective.isCompleted(), "isCompleted() should return true");
 	}
 	
 	@Test
 	void testIsCompletedFailure() {
-		t1.setCurrentStepNumber(3);
-		t2.setCurrentStepNumber(0);
-		t3.setCurrentStepNumber(3);
+		t1.setCompleted(true);
+		t2.setCompleted(false);
+		t3.setCompleted(true);
 		assertFalse(objective.isCompleted(), "isCompleted() should return false");
 	}
 

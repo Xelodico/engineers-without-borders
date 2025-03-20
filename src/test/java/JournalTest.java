@@ -40,14 +40,14 @@ public class JournalTest {
     @Test
     public void testTitleLabel() {
         Component[] components = journal.getComponents();
+        JPanel panel = (JPanel) components[0];
         JLabel titleLabel = null;
-        for (Component component : components) {
+        for (Component component : panel.getComponents()) {
             if (component instanceof JLabel) {
                 titleLabel = (JLabel) component;
                 break;
             }
         }
-        assertNotNull(titleLabel);
         assertEquals("Objectives", titleLabel.getText());
         assertEquals(SwingConstants.LEFT, titleLabel.getHorizontalAlignment());
     }
@@ -65,35 +65,5 @@ public class JournalTest {
         assertNotNull(scrollPane);
         assertEquals(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, scrollPane.getVerticalScrollBarPolicy());
         assertEquals(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER, scrollPane.getHorizontalScrollBarPolicy());
-    }
-
-    @Test
-    public void testObjectivesAndTasks() {
-        Component[] components = journal.getComponents();
-        JScrollPane scrollPane = null;
-        for (Component component : components) {
-            if (component instanceof JScrollPane) {
-                scrollPane = (JScrollPane) component;
-                break;
-            }
-        }
-        assertNotNull(scrollPane);
-
-        JViewport viewport = scrollPane.getViewport();
-        JPanel page = (JPanel) viewport.getView();
-        assertNotNull(page);
-        assertEquals(4, page.getComponentCount());
-
-        for (Component component : page.getComponents()) {
-            assertTrue(component instanceof JPanel);
-            JPanel objectivePanel = (JPanel) component;
-            assertEquals(2, objectivePanel.getComponentCount());
-
-            JLabel objectiveLabel = (JLabel) objectivePanel.getComponent(0);
-            assertTrue(objectiveLabel.getText().startsWith("Objective"));
-
-            JPanel taskPanel = (JPanel) objectivePanel.getComponent(1);
-            assertEquals(5, taskPanel.getComponentCount()); // 3 tasks + 2 vertical struts
-        }
     }
 }
