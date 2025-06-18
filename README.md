@@ -21,42 +21,42 @@ Developed by a team of second year Computer Science students, this project showc
 
 ---
 
-## 🖼️ Screenshots (WIP)
+## 🖼️ Screenshots
 
-**Start Screen**:
+### **Start Screen**
 
 ![Start Screen](https://github.com/Xelodico/random-resources/blob/main/images/Engineers%20Without%20Borders/Game%20Screenshots/start%20screen.png?raw=true)
 
-**Tutorial**:
+### **Tutorial**
 
 ![Tutorial](https://github.com/Xelodico/random-resources/blob/main/images/Engineers%20Without%20Borders/Game%20Screenshots/tutorial.png?raw=true)
 
-**Main Window**:
+### **Main Window**
 
 ![Main Window](https://github.com/Xelodico/random-resources/blob/main/images/Engineers%20Without%20Borders/Game%20Screenshots/main%20window.png?raw=true)
 
-**Prompt**:
+### **Prompt**
 
 ![Prompt](https://github.com/Xelodico/random-resources/blob/main/images/Engineers%20Without%20Borders/Game%20Screenshots/prompt.png?raw=true)
 
-**Endgame**:
+### **Endgame**
 
 ![Endgame 1](https://github.com/Xelodico/random-resources/blob/main/images/Engineers%20Without%20Borders/Game%20Screenshots/endgame.png?raw=true)
 ![Endgame 2](https://github.com/Xelodico/random-resources/blob/main/images/Engineers%20Without%20Borders/Game%20Screenshots/endgame2.png?raw=true)
 
-**Journal**:
+### **Journal**
 
 ![Journal](https://github.com/Xelodico/random-resources/blob/main/images/Engineers%20Without%20Borders/Game%20Screenshots/journal.png?raw=true)
 
-**Shop**:
+### **Shop**
 
 ![Shop](https://github.com/Xelodico/random-resources/blob/main/images/Engineers%20Without%20Borders/Game%20Screenshots/shop.png?raw=true)
 
 ## 🏃‍♂️‍➡️ Running
 
-1. Download the source code.
-2. Import the code into a new Java project.
-3. Run the Java project.
+1. Download `Group2GameCode.zip`.
+2. Extract the `.zip` file.
+3. Run the `CSC2058-2425-G2.jar` file.
 
 ---
 
